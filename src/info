@@ -1,0 +1,51 @@
+main
+- header
+- user-info-box
+- userPicture
+
+
+menu
+- app-name(menu-header)
+- info
+- self-instruction
+- picture
+- emergencyContact
+- healthInfo
+
+self-instruction-page
+- self-info-box
+- detail box
+
+self-instruction-register-page
+- register-btn
+- self-img
+- input box(name, birthday, guardian contact, self contact, home address, detail )
+
+self-instruction-modify-page
+- header txt만 변경예정 나머지는 그대로
+- 이전 기록 미리 예시로 적음
+
+photo album
+- add box
+- photo title ( modify, delete )
+- photo box
+- photo detail
+- next and previous
+
+photo album add / modify
+- delete icon + modify complete and add btn
+- photo box
+- photo title
+- photo description
+
+emergency call page
+- add btn + cur data 
+- call box
+
+health info
+- medicine photo
+- medicine detail
+
+user register
+-img
+- user regiser
