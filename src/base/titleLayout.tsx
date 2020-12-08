@@ -1,52 +1,46 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
-const Whole = styled.View`
-`;
+const Whole = styled.View``;
 
-const TitleLayout = styled.View`
-
-    height: 48px;
-    /* height: 100%; */
-    background: ${props=>(props.color)};
-    border: 1px;
-    border-radius: 5px;
+// Main(Medicine photo, self Photo, Emergency call) Layout
+const TitleBox = styled.View`
+    height: 50px;
+    padding: 0 20px;
 
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
-
+    
+    background: ${props=>(props.color)};
+    border: 1px;
+    border-radius: 5px;
 `;
 
 const TitleTxt = styled.Text`
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
-
     color: #FFFFFF;
 `;
 
-
+const LeftBtn = styled.Image``;
 
 interface Props{
     title: string;
     color: string;
 };
 
-function titleLayout({title, color}:Props){
+function TitleLayout({title, color}:Props){
 
     return(
         <Whole>
-            <TitleLayout color={color}>
+            <TitleBox color={color}>
                 <TitleTxt>{title}</TitleTxt>
-                <FontAwesomeIcon icon={faChevronLeft} size={22} color={'#ffffff'} />
-            </TitleLayout>
-            
+                <LeftBtn source={require('../img/leftBtn.png')}/>
+                
+            </TitleBox>        
         </Whole>
     );
 }
 
-export default titleLayout;
+export default TitleLayout;

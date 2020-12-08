@@ -13,8 +13,6 @@ const Whole = styled.View`
 `;
 
 const BtnText = styled.Text`
-    font-family: Noto Sans;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
 

@@ -1,75 +1,41 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import MainFunctionLayout from '../base/MainFunctionLayout';
-import MainDescriptionLayout from '../base/MainDescriptionLayout';
-import PagingBtnLayout from '../base/PagingBtnLayout';
 import Header from '../base/Header';
 import TopSectionInfo from '../base/TopSectionInfo';
-import TitleLayout from '../base/titleLayout';
-import {InputBox, InputList, InputSideTxt, Input, InputLabel} from '../base/input';
+import PhotoLayout from '../base/PhotoLayout';
+import {InputBox, Input, InputLabel} from '../base/input';
+import { ScrollView } from 'react-native';
+import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
 
 const Whole = styled.View`
-    padding: 0 22px;
-`;
-
-const PhotoLayout = styled.View`
-    height: 100%;
-    border: 1px;
-    justify-content: center;
-    align-items: center;
-`;
-
-const DefaultPhotoBox = styled.View`
-
-`;
-
-const PhotoBoxImg = styled.Image``;
-
-const PhotoBoxDefaultTxt = styled.Text`
-    font-family: Noto Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 16px;
-
-    color: rgba(51, 51, 51, 0.5);
+    width: ${getDeviceWidth()}px;
+    height: ${getDeviceHeightNoInfo()}px;
+    /* border: 3px red; */
+    flex-grow:1;
+    padding: 0 4%;
+    /* justify-content: space-around; */
 `;
 
 function PhotoZoneModifyPage(){
-    
     return(
         <>
-        <Header text="사진첩 | 수정하기"/>
-        <Whole>
-            <TopSectionInfo type="MODIFY" text="수정 완료" />
-             
-            <MainFunctionLayout >
-                <PhotoLayout>
-                    {/* 이거아니면 && 이미지 */}
-                    <DefaultPhotoBox>
-                        <PhotoBoxImg source={require("../img/camera.png")}/>
-                        <PhotoBoxDefaultTxt>사진을 선택해주세요.</PhotoBoxDefaultTxt>
-                        
-                    </DefaultPhotoBox>
-                </PhotoLayout>
-                </MainFunctionLayout>
-            
-            <InputBox>
-                <InputLabel>제목</InputLabel>
-                <Input/>
-            </InputBox>
+            <Header text="사진첩 | 수정하기"/>
+            <ScrollView>
+                <TopSectionInfo type="MODIFY" text="수정 완료"/>
+                <Whole>
+                    <PhotoLayout text="사진을 선택해주세요." src="camera" height={180}/>
 
-            <InputBox>
-                <InputLabel>내용</InputLabel>
-                <Input style={{height:189}}/>
-            </InputBox>
-            
-
-
-        
-        </Whole>
+                    <InputBox>
+                        <InputLabel>제목</InputLabel>
+                        <Input style={{height:40}}/>
+                    </InputBox>
+                    <InputBox>
+                        <InputLabel >내용</InputLabel>
+                        <Input placeholder="사진에 대한 이야기를 적어주세요." placeholderTextColor="rgba(34, 34, 34, 0.5);" style={{height:189, fontSize:10}}/>
+                    </InputBox>
+                </Whole>
+            </ScrollView>
         </>
     );
 }
-
 export default PhotoZoneModifyPage;

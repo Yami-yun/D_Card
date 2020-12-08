@@ -1,27 +1,28 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import Button from '../base/button';
+import Header from '../base/Header'
 import {InputBox, InputList, InputSideTxt, Input, InputLabel} from '../base/input';
-import {Text} from 'react-native';
+import {widthCal, heightCal, getDeviceWidth, getDeviceHeight} from '../base/Tool';
 
 const Whole = styled.ScrollView`
-    /* height: 92%; */
-    border: 1px blue;
-    padding: 0 22px;
-    /* height: 900px; */
-
+    padding: 0 4%;
 `;
 
 const BtnLayout = styled.View`
     /* height: 10%; */
     /* border-bottom-width: 1px; */
-    margin-top: 27px;
+    height: ${heightCal(90)}px;
+    /* border: 1px blue; */
+    
+    padding-top: 25px;
     align-items:flex-end;
 `;
 
 const ImgLayout = styled.View`
     /* height: 40%; */
-    height: 244px;
+    height: 200px;
+    /* border : 1px; */
     /* border-bottom-width: 1px; */
     justify-content: center;
     align-items: center;
@@ -72,6 +73,8 @@ function InstructionModify(){
 
     return(
         // <Whole style={{flex:1}}>
+        <>
+        <Header text="사진첩"/>
             <Whole >
 
                 <BtnLayout><Button text="수정 완료"/></BtnLayout>
@@ -135,7 +138,7 @@ function InstructionModify(){
                 </InputLayout>
 
             </Whole>
-        // </Whole>
+        </>
         
     );
 }

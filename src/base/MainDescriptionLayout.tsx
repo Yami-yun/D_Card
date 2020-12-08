@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components/native';
-
+import {widthCal, heightCal, getDeviceWidth, getDeviceHeight} from '../base/Tool';
 
 const Whole = styled.View`
 
-    height: 42%;
+    height: ${heightCal(197)}px;
     border: 1px solid #9D9A9A;
     border-radius: 5px;
     padding: 30px 21px;

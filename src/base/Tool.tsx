@@ -1,35 +1,42 @@
 import { Dimensions } from 'react-native';
 
 const w = Dimensions.get('window').width;
-const h = Dimensions.get('window').height;
 
+const header = 50;
+const info = 80;
+const h = Dimensions.get('window').height - header;
 
-interface Props{
-    t?:string;
-    d:any;
-};
+const calW = 360;
+const calH = 692 - header;
 
-const log = ({t, d}:Props) => {
-    if(t === undefined){
-        console.log("test : ", d);    
-    }
-    else{
-        console.log(t, " : ", d);
-    }
-}
-
-const widthCal = (width:number) => {
-    
-    return width / w * 100;
+const widthCal = (width:number) => { 
+    return (width / calW) * w;
 }
 
 const heightCal = (height:number) => {
-    // log({d:h});
-    log({d:height / h * 100});
-    return height / h * 100;
+    return (height / calH) * h;
 }
 
+const heightCalNoInfo = (height:number) => {
+    return (height / (calH  - info)) * (h  - info);
+}
 
+const test = () => {
 
+}
 
-export {widthCal, heightCal};
+const getDeviceWidth  = () => {
+    return w;
+}
+
+const getDeviceHeight  = () => {
+    console.log(h);
+    return h;
+}
+
+const getDeviceHeightNoInfo  = () => {
+    console.log(h - info - 24);
+    return (h - info - 24);
+}
+
+export {widthCal, heightCal, test, getDeviceWidth, getDeviceHeight, heightCalNoInfo, getDeviceHeightNoInfo};

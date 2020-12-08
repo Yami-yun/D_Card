@@ -1,39 +1,57 @@
 import React from "react";
 import styled from "styled-components/native";
 import {StyleSheet, Image, View} from "react-native";
-import {widthCal, heightCal} from '../base/Tool';
+import {widtCal, heightCal} from '../base/Tool';
 
 
 const Whole = styled.View`
-    /* height: 45%; */
-    height: ${heightCal(310)}%;
-    display:flex;
-    align-items:center;
-    border: 1px;
-    /* margin-bottom: 33px; */
-    margin-bottom: ${(props: { page: string; }) => props.page === "instruction" ? 60 : 33}px;
+
+    /* margin-bottom: ${(props: { page: string; }) => props.page === "instruction" ? 30 : 33}px; */
+    
+    /* border: 1px; */
 `;
 
-const SelfInstructionDescriptionTxt = styled.Text`
-    width: ${widthCal(290)}%;
+const DescriptionBox = styled.View`
+    /* width: 360px; */
+    width: 100%;
+    height: ${heightCal(240)}px;
+    margin-top: ${heightCal(96)}px;
+    padding-top: ${heightCal(74)}px;
+    padding-left: 24px;
 
-    font-family: Noto Sans;
-    font-style: normal;
+    background: #ffffff;
+    border: 1px rgba(196, 196, 196, 0.8);
+`;
+
+const DescriptionTxt = styled.Text`
+    /* width: 230px; */
+    width: 80%;
+
     font-weight: normal;
     font-size: 12px;
     line-height: 26px;
-    /* border: 1px; */
-
     color: #333333;
 `;
 
 const PencilIcon = styled.Image`
-    
-    width: 40px;
-    height: 40px;
     position : absolute;
-    left : 290px;
+    right : 1px;
     top: 40px;
+    width: 45px;
+    height: 45px;
+`;
+
+const ImageBox = styled.Image`
+    position: absolute;
+    top: ${heightCal(36)}px;
+
+    width: 100%;
+    height: ${heightCal(141)}px;
+
+    align-items:center;
+    justify-content: center;
+
+    /* border : 1px blue; */
 `;
 
 interface Props{
@@ -46,77 +64,38 @@ interface Props{
     page: "instruction" | "main";
 };
 
-
-
 function SelfInstructionLayout({imgRoute, name, birthday, guardianCall, myCall, homeAddress, page}:Props){
-    console.log("test",imgRoute);
-
 
     return(
         <Whole page={page}>
             
-            <View style={[styles.SelfInstructionDescriptionBox, page === "main" && styles.SelfInstructionDescriptionBoxMain]} >
-                {/* <MainPersonalDescriptionBox> */}
-                <SelfInstructionDescriptionTxt>이름 : {name}</SelfInstructionDescriptionTxt>
-                {birthday && <SelfInstructionDescriptionTxt>생일 : {birthday}</SelfInstructionDescriptionTxt>}
-                <SelfInstructionDescriptionTxt>보호자 연락처 : {guardianCall}</SelfInstructionDescriptionTxt>
-                {myCall && <SelfInstructionDescriptionTxt>연락처 : {myCall}</SelfInstructionDescriptionTxt>}
-                <SelfInstructionDescriptionTxt>집 주소 : {homeAddress}</SelfInstructionDescriptionTxt>
-                {/* </MainPersonalDescriptionBox> */}
-            </View>
+            <DescriptionBox style={styles.SelfInstructionDescriptionBoxMain}>
 
-            <Image resizeMode="contain" source={imgRoute===undefined ? require('../img/defaultPersonalImg.png') : imgRoute} style={styles.SelfInstructionImg}/>
+                <DescriptionTxt>이름 : {name}</DescriptionTxt>
+                {birthday && <DescriptionTxt>생일 : {birthday}</DescriptionTxt>}
+                <DescriptionTxt>보호자 연락처 : {guardianCall}</DescriptionTxt>
+                {myCall && <DescriptionTxt>연락처 : {myCall}</DescriptionTxt>}
+                <DescriptionTxt>집 주소 : {homeAddress}</DescriptionTxt>
+                
+            </DescriptionBox>
 
-            {/* <MainPersonalImg source={imgRoute===undefined ? require('../img/defaultPersonalImg.png') : imgRoute}/> */}
+            <ImageBox resizeMode="contain" source={imgRoute===undefined ? require('../img/defaultPersonalImg.png') : imgRoute} style={styles.SelfInstructionImg}/>
+
             <PencilIcon source={require('../img/pencilIcon.png')}/>
         </Whole>
     );
 }
-//141
 
 const styles = StyleSheet.create({
 
     SelfInstructionImg:{
-        position: 'absolute',
-        left: 109,
-        top: 34,
-        // width: widthCal(991),
-        // height: heightCal(991),
-        width: 141,
-        height: 141,
+       
         elevation: 7,
-
     },
+
     SelfInstructionDescriptionBoxMain: {
-        width: 315,
-        height: 196,
-        marginTop: 96,
-        backgroundColor: "#ffffff",
-        borderColor: "rgba(196, 196, 196, 0.8)",
-        borderWidth: 1,
-        paddingTop: 74,
-        paddingLeft: 24,
-        // shadowColor: 'rgba(0, 0, 0, 0.25)',
-        elevation: 5,
-
-        
+        elevation: 5,    
     },
-    
-    SelfInstructionDescriptionBox: {
-        width: 315,
-        height: 240,
-        marginTop: 96,
-        backgroundColor: "#ffffff",
-        borderColor: "rgba(196, 196, 196, 0.8)",
-        borderWidth: 1,
-        paddingTop: 74,
-        paddingLeft: 24,
-        // shadowColor: 'rgba(0, 0, 0, 0.25)',
-        elevation: 5,
-
-        
-    },
-
   });
 
 export default SelfInstructionLayout;

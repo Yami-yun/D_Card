@@ -2,20 +2,21 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import {widthCal, heightCal} from '../base/Tool';
-// import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 const Whole= styled.View`
-    border: 1px;
     align-items:center;
+
+    margin: ${heightCal(30)}px 0;
+    
 `;
 
 const InstructionDetailBox = styled.View`
-    /* width: ${widthCal(315)}%;
-    height: ${heightCal(410)}%; */
-    width: 315px;
-    height: 228px;
+    /* width: ${widthCal(315)}%;*/
+    height: ${heightCal(216)}px;
+    width: 100%;
+    /* height: 288px; */
 
-    border: 1px;
+    /* border: 1px; */
 `;
 
 const InstructionDetailHeader = styled.View`
