@@ -8,14 +8,16 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
+import Test from '../Test';
 
 import Header from '../base/Header'
 import SelfInstructionLayout from '../base/SelfInstructionLayout';
 import MainPhotoLayout from '../main/MainPhotoLayout';
 import {getDeviceWidth, getDeviceHeight} from '../base/Tool';
+// import {View} from 'react-native';
 
 const Whole = styled.View`
-    
+
     width: ${getDeviceWidth()}px;
     height: ${getDeviceHeight()}px;
     
@@ -23,7 +25,7 @@ const Whole = styled.View`
     padding: 4% 4%;
     justify-content: center;
 
-    border: red;
+    /* border: red; */
     /* justify-content: center; */
     /* margin-bottom: 5%; */
 `;
@@ -31,20 +33,21 @@ const Whole = styled.View`
 interface Props{
 
 };
-
+// <View style={{position:'absolute'}}>
 const MainPage = ({}:Props)=> {
 
   
   return (
     <>
+    
         <Header text="치매노인수첩 [ D-Card ]"/> 
         <Whole>
             <SelfInstructionLayout homeAddress="광주광역시 남구 봉선동 라인하이츠 
                     아파트  109동 110호" page="main"/>
             <MainPhotoLayout/>
         </Whole>
-    </>
 
+  </>
   );
 };
 

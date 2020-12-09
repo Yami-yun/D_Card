@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import {StyleSheet, Image, View} from "react-native";
-import {widtCal, heightCal} from '../base/Tool';
+import {heightCal} from '../base/Tool';
 
 
 const Whole = styled.View`
@@ -41,7 +41,9 @@ const PencilIcon = styled.Image`
     height: 45px;
 `;
 
-const ImageBox = styled.Image`
+const ImageView = styled.Image``;
+
+const ImageBox = styled.View`
     position: absolute;
     top: ${heightCal(36)}px;
 
@@ -79,7 +81,9 @@ function SelfInstructionLayout({imgRoute, name, birthday, guardianCall, myCall, 
                 
             </DescriptionBox>
 
-            <ImageBox resizeMode="contain" source={imgRoute===undefined ? require('../img/defaultPersonalImg.png') : imgRoute} style={styles.SelfInstructionImg}/>
+            <ImageBox style={styles.SelfInstructionImg}>
+                <ImageView resizeMode="contain" source={imgRoute===undefined ? require('../img/defaultPersonalImg.png') : imgRoute} />
+            </ImageBox>
 
             <PencilIcon source={require('../img/pencilIcon.png')}/>
         </Whole>

@@ -1,14 +1,13 @@
-import React from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import styled from 'styled-components/native';
+import * as Animatable from 'react-native-animatable';
+import { Animated, StyleSheet, View } from 'react-native';
+import { useMenuStateContext, useSetMenuStateContext} from "./base/context";
 
-const Whole = styled.View`
-     position:absolute;
-     width: 55.55%;
-     height: 100%;
-     background: #8EB9E1;
-`;
+
 
 const TopLayout = styled.View`
+
     height: 80px;
     padding-top: 22px;
     padding-left: 12px;
@@ -21,6 +20,7 @@ const TopTextLayout = styled.View`
 `;
 
 const AppNameTxt = styled.Text`
+
     font-weight: bold;
     font-size: 12px;
     color: #222222;
@@ -32,12 +32,15 @@ const EnrollTxt = styled.Text`
     color: rgba(0, 0, 0, 0.5);
 `;
 
-const CloseBtn = styled.Image`
+const CloseBtnBox = styled.TouchableHighlight`
     position: absolute;
     top:21px;
     right:12px;
     width: 38px;
     height: 38px;
+`;
+
+const CloseBtn = styled.Image`
 `;
 
 const MenuItemLayout = styled.View`
@@ -81,15 +84,48 @@ const CopyrightTxt = styled.Text`
     color: rgba(0, 0, 0, 0.5);
 `;
 
+interface Props{
+    isClose: boolean;
+    children: JSX.Element | Array<JSX.Element>;
+
+};
+
+// const Test = ({isClose, children}: Props) => (
+//         <Whole animation={isClose ? 'bounceInRight' : 'bounceInLeft'} iterationCount={2} >
+//             {children}
+//         </Whole>
+// )
+// {menuStateContext && <Animated.View  style={[{translateX: fadeAnim}, styles.menu ]}></Animated.View>
+
 function SideMenu(){
+    const menuStateContext = useMenuStateContext();
+    const setMenuStateContext = useSetMenuStateContext();
+    const [isCloseMenu, setIsCloseMenu] = useState(0);
+    
+    const aniRef = useRef(null);
+    const fadeAnim = useRef(new Animated.Value(-300)).current
+    
+    const isClose = () => {
+        // setIsCloseMenu(-100);
+        setMenuStateContext(false);
+        console.log("Okay");
+    }
+    // , (isCloseMenu===-100)&&styles.menuNoOpacity
+    // React.useEffect(()=>{
+    //     Animated.timing(
+    //         fadeAnim, {toValue: isCloseMenu, duration: 300, useNativeDriver: true}).start();
+    //     }, [fadeAnim, isCloseMenu])
 
     return(
-        <Whole>
-            <TopLayout>
+    <>    
+    
+    {menuStateContext && <View  style={[styles.menu ]}>
+        <TopLayout id="menu">
                 
                 <AppNameTxt>치매노인수첩 [ D-Card ]</AppNameTxt>
-                <CloseBtn source={require("./img/xicon2.png")}/>
-                
+                <CloseBtnBox onPress={isClose}>
+                    <CloseBtn source={require("./img/xicon2.png")} />
+                </CloseBtnBox>
                 <TopTextLayout>
                     <EnrollTxt>로그인</EnrollTxt>
                     <EnrollTxt>  |  </EnrollTxt>
@@ -120,13 +156,33 @@ function SideMenu(){
             <CopyrightBox>
                 <CopyrightTxt>copyright © all rights reserved</CopyrightTxt>
             </CopyrightBox>
-
-            
-        </Whole>
-    
-
+    </View>
+}
+    </>
     );
 }
+
+const styles = StyleSheet.create({
+menu:{
+    position:'absolute',
+     left: 0,
+     top:0,
+     /* width: 55.55%; */
+     width:'55.5%',
+     height: '100%',
+     
+     backgroundColor: '#8EB9E1',
+
+     elevation: 9,
+},
+menuNoOpacity:{
+    display:'none',
+    opacity:0,
+    width:'85.5%',
+}
+
+});
+
 
 
 export default SideMenu;
