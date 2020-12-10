@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import {StyleSheet, Image, View} from "react-native";
 import {heightCal} from '../base/Tool';
-
+import { useSetMenuStateContext, useSetScreenDisplayStateContext} from "../base/context";
 
 const Whole = styled.View`
 
@@ -33,12 +33,16 @@ const DescriptionTxt = styled.Text`
     color: #333333;
 `;
 
-const PencilIcon = styled.Image`
+const IconBox = styled.TouchableOpacity`
     position : absolute;
     right : 1px;
     top: 40px;
     width: 45px;
     height: 45px;
+`;
+
+const PencilIcon = styled.Image`
+    
 `;
 
 const ImageView = styled.Image``;
@@ -59,25 +63,38 @@ const ImageBox = styled.View`
 interface Props{
     imgRoute?:string;
     name?:string;
-    birthday?:string;
-    guardianCall?:string;
+    birth?:string;
+    guardCall?:string;
     myCall?:string;
-    homeAddress?:string;
-    page: "instruction" | "main";
+    address?:string;
+    
 };
 
-function SelfInstructionLayout({imgRoute, name, birthday, guardianCall, myCall, homeAddress, page}:Props){
+
+
+function SelfInstructionLayout({imgRoute, name, birth, guardCall, myCall, address}:Props){
+
+    const setMenuStateContext = useSetMenuStateContext();
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+
+    
+
+    const screenChange =(screenName:string) => {
+
+        setScreenDisplayStateContext(screenName);
+        
+    }
 
     return(
-        <Whole page={page}>
+        <Whole>
             
             <DescriptionBox style={styles.SelfInstructionDescriptionBoxMain}>
 
                 <DescriptionTxt>이름 : {name}</DescriptionTxt>
-                {birthday && <DescriptionTxt>생일 : {birthday}</DescriptionTxt>}
-                <DescriptionTxt>보호자 연락처 : {guardianCall}</DescriptionTxt>
-                {myCall && <DescriptionTxt>연락처 : {myCall}</DescriptionTxt>}
-                <DescriptionTxt>집 주소 : {homeAddress}</DescriptionTxt>
+                { birth !== "" && <DescriptionTxt>생일 : {birth}</DescriptionTxt> }
+                <DescriptionTxt>보호자 연락처 : {guardCall}</DescriptionTxt>
+                {myCall !== "" && <DescriptionTxt>연락처 : {myCall}</DescriptionTxt>}
+                <DescriptionTxt>집 주소 : {address}</DescriptionTxt>
                 
             </DescriptionBox>
 
@@ -85,7 +102,9 @@ function SelfInstructionLayout({imgRoute, name, birthday, guardianCall, myCall, 
                 <ImageView resizeMode="contain" source={imgRoute===undefined ? require('../img/defaultPersonalImg.png') : imgRoute} />
             </ImageBox>
 
-            <PencilIcon source={require('../img/pencilIcon.png')}/>
+            <IconBox onPress={ ()=>{screenChange("INSTRUCTION_MODIFY")} }  >
+                <PencilIcon source={require('../img/pencilIcon.png')}/>
+            </IconBox>
         </Whole>
     );
 }

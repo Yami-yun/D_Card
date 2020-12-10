@@ -12,8 +12,10 @@ import styled from 'styled-components/native';
 import {getDeviceWidth, getDeviceHeight} from './base/Tool';
 import Test from './Test';
 import Header from './base/Header';
+import PageControl from './PageControl';
 
-import { AppStateProvider } from './base/context';
+
+import { AppStateProvider, useSetMenuStateContext } from './base/context';
 
 import MainPage from './main/MainPage';
 import InstructionMainPage from './self-instruction/InstructionMainPage';
@@ -31,26 +33,17 @@ import AppInfoPage from './appInfo/AppInfoPage';
 interface Props{
 
 };
-
-const App = ({}:Props)=> {
-console.log(getDeviceWidth(), getDeviceHeight());
-
-const panResponder = useRef(
-  PanResponder.create({
-    onStartShouldSetPanResponder : ()=> true,
-    onPanResponderRelease: (e, gestureState) => {
-      console.log(gestureState.x0, gestureState.y0);
-    },
     
-  })).current;
+const App = ({}:Props)=> {
+  const deviceW = getDeviceWidth()
 
   return (
-    <AppStateProvider>
 
-      <View {...panResponder.panHandlers}>
+    <AppStateProvider>
+       <PageControl >
         {/* <Test/> */}
-        <MainPage/>
-        <SideMenu />
+        {/* <MainPage/>
+        <SideMenu /> */}
         {/* <InstructionMainPage/ > */}
         {/* <InstructionModify/> */}
 
@@ -65,7 +58,8 @@ const panResponder = useRef(
         {/* <SideMenu/> */}
         
         {/* <AppInfoPage/> */}
-      </View>
+       </PageControl>
+
     </AppStateProvider>
 
   );

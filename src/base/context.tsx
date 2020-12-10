@@ -3,6 +3,7 @@ import React, {
     createContext,
     useContext,
     useState,
+    
   } from "react";
 
 
@@ -68,8 +69,58 @@ import React, {
 //     }
 
 // }
+
+const initInstructionData =
+{
+    name:"",
+    birth:"",
+    guardCall:"",
+    myCall:"",
+    address:"",
+    detail:""
+};
+
+
+function InstructionDataReducer(state, action){
+    switch(action.type){
+        case "MODIFY":
+            let birthCmp= action.data.birth;
+            let gCall = action.data.guardCall;
+            let mCall = action.data.myCall;
+            let gCallCmp = gCall.numFront + "-" + gCall.numMiddle + "-" + gCall.numBack;
+            let mCallCmp = mCall.numFront + "-" + mCall.numMiddle + "-" + mCall.numBack;
+            // 전화번호 입력 안할 시, 처리함
+            if(gCallCmp === "--"){
+                gCallCmp = "";
+            }
+
+            if(mCallCmp === "--"){
+                mCallCmp = "";
+            }
+            return state = {
+                name:action.data.name,
+                birth:(birthCmp.y + birthCmp.m + birthCmp.d),
+                guardCall:gCallCmp,
+                myCall:mCallCmp,
+                address:action.data.address,
+                detail:action.data.detail,
+            };
+        //state = {...state, }
+            
+
+        case "ADD":
+
+            return action.data;
+
+    }
+}
+
 const MenuStateContext = createContext<boolean>(undefined);
 const SetMenuStateContext = createContext(undefined);
+const ScreenDisplayStateContext = createContext<string>(undefined);
+const SetScreenDisplayStateContext = createContext(undefined);
+const InstructionDataContext = createContext(undefined);
+const SetInstructionDataContext = createContext(undefined);
 
 interface Props{
     children: JSX.Element | Array<JSX.Element>;
@@ -78,16 +129,44 @@ interface Props{
 export function AppStateProvider({children}:Props){
 
     const [menuState, setMenuState] = useState<boolean>(false);
-
-    const test = () => {console.log("Test10")};
+    const [screenDisplayState, setScreenDisplayState] = useState<string>("MAIN");
+    const [instructionData, setInstructinoData] = useReducer(InstructionDataReducer, initInstructionData);
 
     return(
         <MenuStateContext.Provider value={menuState}>
             <SetMenuStateContext.Provider value={setMenuState}>
-                {children}
+                <ScreenDisplayStateContext.Provider value={screenDisplayState}>
+                    <SetScreenDisplayStateContext.Provider value={setScreenDisplayState}>
+                        <SetInstructionDataContext.Provider value={setInstructinoData}>
+                            <InstructionDataContext.Provider value={instructionData}>
+                                {children}
+                            </InstructionDataContext.Provider>
+                        </SetInstructionDataContext.Provider>
+                    </SetScreenDisplayStateContext.Provider>
+                </ScreenDisplayStateContext.Provider>
             </SetMenuStateContext.Provider>
         </MenuStateContext.Provider>
     );
+}
+
+export function useSetInstructionDataContext(){
+    const context = useContext(SetInstructionDataContext);
+    return context;
+}
+
+export function useInstructionDataContext(){
+    const context = useContext(InstructionDataContext);
+    return context;
+}
+
+export function useScreenDisplayStateContext(){
+    const context = useContext(ScreenDisplayStateContext);
+    return context;
+}
+
+export function useSetScreenDisplayStateContext(){
+    const context = useContext(SetScreenDisplayStateContext);
+    return context;
 }
 
 export function useMenuStateContext(){

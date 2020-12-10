@@ -8,6 +8,8 @@ target 'D_Card' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'D_CardTests' do
     inherit! :complete
     # Pods for testing

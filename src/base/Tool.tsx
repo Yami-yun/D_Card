@@ -30,12 +30,12 @@ const getDeviceWidth  = () => {
 }
 
 const getDeviceHeight  = () => {
-    console.log(h);
+    // console.log(h);
     return h;
 }
 
 const getDeviceHeightNoInfo  = () => {
-    console.log(h - info - 24);
+    // console.log(h - info - 24);
     return (h - info - 24);
 }
 

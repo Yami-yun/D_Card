@@ -47,7 +47,7 @@ interface Props{
  text: string;
 };
 
-function Header({text}:Props){
+function Header({text }:Props){
 
     const setMenuStateContext = useSetMenuStateContext();
     const menuStateContext = useMenuStateContext();
@@ -56,7 +56,6 @@ function Header({text}:Props){
     const isOpen = () => {
         
         setMenuStateContext(true);
-        console.log(menuStateContext);
     };
     
     
@@ -65,7 +64,7 @@ function Header({text}:Props){
     <>
 
         <Whole>
-            <MenuIconBox onPress={isOpen}>
+            <MenuIconBox onPress={isOpen} >
                 <MenuIcon source={require("../img/menuIcon.png")}/>
             </MenuIconBox>
             <HeaderTxt>

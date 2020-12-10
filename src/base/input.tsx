@@ -25,6 +25,9 @@ const Input = styled.TextInput`
 
     border: 1px #9D9A9A;
     border-radius: 5px;
+
+    line-height: 16px;
+    color: rgba(34, 34, 34, 0.5);
 `;
 
 const BigInput = styled.TextInput`

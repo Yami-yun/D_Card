@@ -51,7 +51,11 @@ const InstructionDetailBodyTxt = styled.Text`
     color: rgba(0, 0, 0, 0.5);
 `;
 
-function InstructionDetail(){
+interface Props{
+    detail?:string;
+}
+
+function InstructionDetail({detail}:Props){
 
     
     return(<Whole>
@@ -59,16 +63,7 @@ function InstructionDetail(){
             <InstructionDetailHeader><InstructionDetailHeaderTxt>자세한 내용</InstructionDetailHeaderTxt></InstructionDetailHeader>
             <InstructionDetailBody>
                 <InstructionDetailBodyTxt>
-                    사진에 대한 내용이 들어갑니다.
-                    사진에 대한 내용이 들어갑니다.
-                    사진에 대한 내용이 들어갑니다.
-                    사진에 대한 내용이 들어갑니다.
-                    사진에 대한 내용이 들어갑니다.
-                    사진에 대한 내용이 들어갑니다.
-                    사진에 대한 내용이 들어갑니다.
-                    사진에 대한 내용이 들어갑니다.
-                    
-                       데이터 길이 제한
+                    {detail}
                 </InstructionDetailBodyTxt>
             </InstructionDetailBody>
         </InstructionDetailBox>

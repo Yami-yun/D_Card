@@ -14,6 +14,7 @@ import Header from '../base/Header'
 import SelfInstructionLayout from '../base/SelfInstructionLayout';
 import MainPhotoLayout from '../main/MainPhotoLayout';
 import {getDeviceWidth, getDeviceHeight} from '../base/Tool';
+import {useInstructionDataContext} from '../base/context';
 // import {View} from 'react-native';
 
 const Whole = styled.View`
@@ -30,20 +31,16 @@ const Whole = styled.View`
     /* margin-bottom: 5%; */
 `;
 
-interface Props{
-
-};
 // <View style={{position:'absolute'}}>
-const MainPage = ({}:Props)=> {
+const MainPage = ()=> {
 
-  
+  const instructionDataContext = useInstructionDataContext();
   return (
     <>
     
-        <Header text="치매노인수첩 [ D-Card ]"/> 
+        <Header text="치매노인수첩 [ D-Card ]" /> 
         <Whole>
-            <SelfInstructionLayout homeAddress="광주광역시 남구 봉선동 라인하이츠 
-                    아파트  109동 110호" page="main"/>
+            <SelfInstructionLayout {...instructionDataContext} />
             <MainPhotoLayout/>
         </Whole>
 

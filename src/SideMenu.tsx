@@ -1,8 +1,9 @@
 import React, {useState, useRef, useEffect} from 'react';
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 import * as Animatable from 'react-native-animatable';
 import { Animated, StyleSheet, View } from 'react-native';
-import { useMenuStateContext, useSetMenuStateContext} from "./base/context";
+import { useMenuStateContext, useSetMenuStateContext, useScreenDisplayStateContext, useSetScreenDisplayStateContext} from "./base/context";
+import 'react-native-gesture-handler';
 
 
 
@@ -13,10 +14,14 @@ const TopLayout = styled.View`
     padding-left: 12px;
 `;
 
-const TopTextLayout = styled.View`
+const TopTextLayout = styled.TouchableHighlight.attrs({
+    activeOpacity: 0.6,
+    underlayColor:"rgba(255, 255, 255, 0)"}
+)`
+    width: 80px;
     margin-top : 5px;
-    display:flex;
     flex-direction: row;
+    ${props => {props.txtColor === "hover" && css`color: #222222`}};
 `;
 
 const AppNameTxt = styled.Text`
@@ -43,7 +48,7 @@ const CloseBtnBox = styled.TouchableHighlight`
 const CloseBtn = styled.Image`
 `;
 
-const MenuItemLayout = styled.View`
+const MenuItemBox = styled.View`
     height: 60px;
     padding-left: 13px;
     padding-right: 22px;
@@ -56,10 +61,18 @@ const MenuItemLayout = styled.View`
     border-bottom-color: #335C90;
 `;
 
+const MenuItemLayoutBtn = styled.TouchableHighlight.attrs({
+    activeOpacity: 0.6,
+    underlayColor:"rgba(255, 255, 255, 0.9)"}
+)`
+
+`;
+
 const MenuItemTxt = styled.Text`
     font-weight: normal;
     font-size: 12px;
     color: #000000;
+    ${props => {props.txtColor === "hover" && css`color: #222222`}};
 `;
 
 const MoveIcon = styled.Text`
@@ -100,15 +113,26 @@ interface Props{
 function SideMenu(){
     const menuStateContext = useMenuStateContext();
     const setMenuStateContext = useSetMenuStateContext();
-    const [isCloseMenu, setIsCloseMenu] = useState(0);
-    
+    const screenDisplayStateContext = useScreenDisplayStateContext();
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    // const [isCloseMenu, setIsCloseMenu] = useState(0);
+    // console.log(screenDisplayStateContext);
     const aniRef = useRef(null);
-    const fadeAnim = useRef(new Animated.Value(-300)).current
+
+    let txtColor:"basic" | "press" = "basic";
+    // const fadeAnim = useRef(new Animated.Value(-300)).current;
+
+    const screenChange =(screenName:string) => {
+        setMenuStateContext(false);
+        setScreenDisplayStateContext(screenName);
+        txtColor = "press";
+        // console.log(screenDisplayStateContext);
+    }
     
     const isClose = () => {
         // setIsCloseMenu(-100);
         setMenuStateContext(false);
-        console.log("Okay");
+        // console.log("Okay");
     }
     // , (isCloseMenu===-100)&&styles.menuNoOpacity
     // React.useEffect(()=>{
@@ -116,48 +140,74 @@ function SideMenu(){
     //         fadeAnim, {toValue: isCloseMenu, duration: 300, useNativeDriver: true}).start();
     //     }, [fadeAnim, isCloseMenu])
 
+    /*
+        0 : <MainPage/>
+        1 :<InstructionMainPage/ >
+        2 :<InstructionModify/>
+
+        3 : <PhotoZoneMainPage />
+        4 : <PhotoZoneModifyPage/>
+
+        5: <EmergencyCallMainPage/>
+        6 : <EmergencyCallModifyPage/>
+
+        7 : <HealthInfoMainPage/>
+        8 : <HealthInfoModifyPage/>
+        9 : <AppInfoPage/>
+    */
+    
+
+
+
     return(
     <>    
-    
-    {menuStateContext && <View  style={[styles.menu ]}>
-        <TopLayout id="menu">
-                
+        {menuStateContext && <View  style={[styles.menu]}>
+            <TopLayout>
+                    
                 <AppNameTxt>치매노인수첩 [ D-Card ]</AppNameTxt>
                 <CloseBtnBox onPress={isClose}>
                     <CloseBtn source={require("./img/xicon2.png")} />
                 </CloseBtnBox>
-                <TopTextLayout>
-                    <EnrollTxt>로그인</EnrollTxt>
-                    <EnrollTxt>  |  </EnrollTxt>
-                    <EnrollTxt>회원가입</EnrollTxt>
+                <TopTextLayout onPress={()=>{screenChange("MAIN")}}>
+                    <EnrollTxt txtColor={txtColor}>홈으로 가기</EnrollTxt>
                 </TopTextLayout>
-                
+                    
             </TopLayout>
-            <MenuItemLayout style={{borderTopWidth: 3, borderTopColor: '#335C90'}}>
-                <MenuItemTxt>치매노인수첩 [ D- Card ]란?</MenuItemTxt>
-                <MoveIcon>›</MoveIcon>
-            </MenuItemLayout>
-            <MenuItemLayout>
-                <MenuItemTxt>자기소개</MenuItemTxt>
-                <MoveIcon>›</MoveIcon>
-            </MenuItemLayout>
-            <MenuItemLayout>
-                <MenuItemTxt>사진첩</MenuItemTxt>
-                <MoveIcon>›</MoveIcon>
-            </MenuItemLayout>
-            <MenuItemLayout>
-                <MenuItemTxt>긴급연락처</MenuItemTxt>
-                <MoveIcon>›</MoveIcon>
-            </MenuItemLayout>
-            <MenuItemLayout>
-                <MenuItemTxt>건강정보</MenuItemTxt>
-                <MoveIcon>›</MoveIcon>
-            </MenuItemLayout>
-            <CopyrightBox>
-                <CopyrightTxt>copyright © all rights reserved</CopyrightTxt>
-            </CopyrightBox>
-    </View>
-}
+                <MenuItemLayoutBtn name="치매노인수첩 [ D- Card ]란?" onPress={()=>{screenChange("APP_INFO")}}>
+                    <MenuItemBox style={{borderTopWidth: 3, borderTopColor: '#335C90'}}>
+                        <MenuItemTxt>치매노인수첩 [ D- Card ]란?</MenuItemTxt>
+                        <MoveIcon>›</MoveIcon>
+                    </MenuItemBox>
+                </MenuItemLayoutBtn>
+
+            <MenuItemLayoutBtn name="자기소개" onPress={()=>{screenChange("INSTRUCTION_MAIN")}}>
+                    <MenuItemBox>
+                        <MenuItemTxt txtColor={txtColor}>자기소개</MenuItemTxt>
+                        <MoveIcon>›</MoveIcon>
+                    </MenuItemBox>
+                </MenuItemLayoutBtn>
+                <MenuItemLayoutBtn name="사진첩" onPress={()=>{screenChange("PHOTO_MAIN")}}>
+                    <MenuItemBox>
+                        <MenuItemTxt txtColor={txtColor}>사진첩</MenuItemTxt>
+                        <MoveIcon>›</MoveIcon>
+                    </MenuItemBox>
+                </MenuItemLayoutBtn>
+                <MenuItemLayoutBtn name="긴급연락처" onPress={()=>{screenChange("EMERGENCY_CALL_MAIN")}}>
+                    <MenuItemBox>
+                        <MenuItemTxt txtColor={txtColor}>긴급연락처</MenuItemTxt>
+                        <MoveIcon>›</MoveIcon>
+                    </MenuItemBox>
+                </MenuItemLayoutBtn>
+                <MenuItemLayoutBtn name="건강정보" onPress={()=>{screenChange("HEALTH_INFO_MAIN")}}>
+                    <MenuItemBox>
+                        <MenuItemTxt txtColor={txtColor}>건강정보</MenuItemTxt>
+                        <MoveIcon>›</MoveIcon>
+                    </MenuItemBox>
+                </MenuItemLayoutBtn>
+                <CopyrightBox>
+                    <CopyrightTxt>copyright smunal © all rights reserved </CopyrightTxt>
+                </CopyrightBox>
+        </View>}
     </>
     );
 }

@@ -26,7 +26,7 @@ function PhotoZoneMainPage(){
     return(
         <>
         <Header text="사진첩"/>
-        <TopSectionInfo totalCount={2} type="INFO" text="추가 하기"/>
+        <TopSectionInfo totalCount={2} type="INFO" text="추가 하기" />
         <Whole>
             
             <TView >  
