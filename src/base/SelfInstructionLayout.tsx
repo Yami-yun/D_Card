@@ -9,6 +9,8 @@ const Whole = styled.View`
     /* margin-bottom: ${(props: { page: string; }) => props.page === "instruction" ? 30 : 33}px; */
     
     /* border: 1px; */
+
+    align-items: center;
 `;
 
 const DescriptionBox = styled.View`
@@ -45,39 +47,65 @@ const PencilIcon = styled.Image`
     
 `;
 
-const ImageView = styled.Image``;
+const ImageView = styled.Image`
+    width: 150px;
+    height: 150px;
+
+    /* border: 2px solid #164580; */
+    border-radius: 256px;
+    
+    
+`;
 
 const ImageBox = styled.View`
     position: absolute;
     top: ${heightCal(36)}px;
 
-    width: 100%;
-    height: ${heightCal(141)}px;
+    /* width: 100%; */
+    /* height: ${heightCal(141)}px; */
+
+    width: 150px;
+    height: 150px;
+
+
+    border-radius: 256px;
 
     align-items:center;
     justify-content: center;
+
+    
 
     /* border : 1px blue; */
 `;
 
 interface Props{
-    imgRoute?:string;
     name?:string;
-    birth?:string;
-    guardCall?:string;
-    myCall?:string;
+    birth?:any;
+    guardCall?:any;
+    myCall?:any;
     address?:string;
+    uri?:string;
+};
+
+const SetBirth = (birth:any) =>{
+    if(birth.y !== "" && birth.m !== "" && birth.d !== ""){
+        return birth.y + "." + birth.m + "." + birth.d;
+    }
+    return "";
+}
+
+const SetCall = (call:any) =>{
+    if(call.numFront !== "" && call.numMiddle !== "" && call.numBack !== ""){
+        return call.numFront + " - " + call.numMiddle + " - " + call.numBack;
+    }
+    return "";
     
 };
 
-
-
-function SelfInstructionLayout({imgRoute, name, birth, guardCall, myCall, address}:Props){
+function SelfInstructionLayout({name, birth, guardCall, myCall, address, uri}:Props){
 
     const setMenuStateContext = useSetMenuStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-
-    
 
     const screenChange =(screenName:string) => {
 
@@ -85,21 +113,29 @@ function SelfInstructionLayout({imgRoute, name, birth, guardCall, myCall, addres
         
     }
 
+    (()=>{
+
+    })();
+    let _birth = SetBirth(birth);
+    let _guardCall = SetCall(guardCall);
+    let _myCall = SetCall(myCall);
+
+
     return(
         <Whole>
             
             <DescriptionBox style={styles.SelfInstructionDescriptionBoxMain}>
 
                 <DescriptionTxt>이름 : {name}</DescriptionTxt>
-                { birth !== "" && <DescriptionTxt>생일 : {birth}</DescriptionTxt> }
-                <DescriptionTxt>보호자 연락처 : {guardCall}</DescriptionTxt>
-                {myCall !== "" && <DescriptionTxt>연락처 : {myCall}</DescriptionTxt>}
+                { (_birth !== "") && <DescriptionTxt>생일 : {_birth}</DescriptionTxt> }
+                <DescriptionTxt>보호자 연락처 : {_guardCall}</DescriptionTxt>
+                {(_myCall !== "") && <DescriptionTxt>연락처 : {_myCall}</DescriptionTxt>}
                 <DescriptionTxt>집 주소 : {address}</DescriptionTxt>
                 
             </DescriptionBox>
 
             <ImageBox style={styles.SelfInstructionImg}>
-                <ImageView resizeMode="contain" source={imgRoute===undefined ? require('../img/defaultPersonalImg.png') : imgRoute} />
+                <ImageView source={uri ==="" ? require('../img/defaultPersonalImg.png') : {uri} } />
             </ImageBox>
 
             <IconBox onPress={ ()=>{screenChange("INSTRUCTION_MODIFY")} }  >

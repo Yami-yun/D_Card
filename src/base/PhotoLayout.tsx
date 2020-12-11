@@ -16,10 +16,12 @@ const Whole = styled.View`
 const DefaultPhotoBox = styled.View`
     justify-content: space-around;
     align-items: center;
+
 `;
 
 const PhotoBoxImg = styled.Image`
     margin-bottom: 4.5%;
+    
 `;
 
 const PhotoBoxDefaultTxt = styled.Text`

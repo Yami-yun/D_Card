@@ -20,6 +20,20 @@ const InputSideTxt = styled.Text`
     color: #9D9A9A;
 `;
 
+const NumInput = styled.TextInput.attrs({
+    keyboardType:"number-pad",
+    
+})`
+    width: 28%;
+    padding-left: 6%;
+
+    border: 1px #9D9A9A;
+    border-radius: 5px;
+
+    line-height: 16px;
+    color: rgba(34, 34, 34, 0.5);
+`;
+
 const Input = styled.TextInput`
     padding-left: 6%;
 
@@ -49,4 +63,4 @@ const InputLabel = styled.Text`
 `;
 
 
-export {InputBox, InputList, InputSideTxt, Input, BigInput, InputLabel};
+export {InputBox, InputList, InputSideTxt, Input, BigInput, InputLabel, NumInput};

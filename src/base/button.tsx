@@ -36,7 +36,7 @@ function Button({text, processType, data, screenType}:Props){
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
 
     const clickEvent = () =>{
-
+        console.log(data);
         setInstructionDataContext({type:processType ,data:data});
         setScreenDisplayStateContext(screenType);
     }

@@ -35,29 +35,13 @@ interface Props{
 };
     
 const App = ({}:Props)=> {
-  const deviceW = getDeviceWidth()
+
 
   return (
-
+    // <Test/>
     <AppStateProvider>
        <PageControl >
-        {/* <Test/> */}
-        {/* <MainPage/>
-        <SideMenu /> */}
-        {/* <InstructionMainPage/ > */}
-        {/* <InstructionModify/> */}
-
-        {/* <PhotoZoneMainPage /> */}
-        {/* <PhotoZoneModifyPage/> */}
-
-        {/* <EmergencyCallMainPage/> */}
-        {/* <EmergencyCallModifyPage/> */}
-
-        {/* <HealthInfoMainPage/> */}
-        {/* <HealthInfoModifyPage/> */}
-        {/* <SideMenu/> */}
         
-        {/* <AppInfoPage/> */}
        </PageControl>
 
     </AppStateProvider>

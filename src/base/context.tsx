@@ -73,11 +73,24 @@ import React, {
 const initInstructionData =
 {
     name:"",
-    birth:"",
-    guardCall:"",
-    myCall:"",
+    birth:{
+        y:"",
+        m:"",
+        d:"",
+    },
+    guardCall:{
+        numFront:"",
+        numMiddle:"",
+        numBack:"",
+    },
+    myCall:{
+        numFront:"",
+        numMiddle:"",
+        numBack:"",
+    },
     address:"",
-    detail:""
+    detail:"",
+    uri:"",
 };
 
 
@@ -87,23 +100,28 @@ function InstructionDataReducer(state, action){
             let birthCmp= action.data.birth;
             let gCall = action.data.guardCall;
             let mCall = action.data.myCall;
-            let gCallCmp = gCall.numFront + "-" + gCall.numMiddle + "-" + gCall.numBack;
-            let mCallCmp = mCall.numFront + "-" + mCall.numMiddle + "-" + mCall.numBack;
-            // 전화번호 입력 안할 시, 처리함
-            if(gCallCmp === "--"){
-                gCallCmp = "";
-            }
 
-            if(mCallCmp === "--"){
-                mCallCmp = "";
-            }
             return state = {
+
                 name:action.data.name,
-                birth:(birthCmp.y + birthCmp.m + birthCmp.d),
-                guardCall:gCallCmp,
-                myCall:mCallCmp,
+                birth : {
+                    y:birthCmp.y,
+                    m:birthCmp.m,
+                    d:birthCmp.d,
+                },
+                guardCall : {
+                    numFront:gCall.numFront,
+                    numMiddle:gCall.numMiddle,
+                    numBack:gCall.numBack,
+                },
+                myCall : {
+                    numFront:mCall.numFront,
+                    numMiddle:mCall.numMiddle,
+                    numBack:mCall.numBack,
+                },
                 address:action.data.address,
                 detail:action.data.detail,
+                uri:action.data.uri,
             };
         //state = {...state, }
             
@@ -178,3 +196,20 @@ export function useSetMenuStateContext(){
     const context = useContext(SetMenuStateContext);
     return context;
 }
+
+export const ChekIsEmptyData = (data) => {
+    let isCheck = false;
+    for (let key in data){
+        if(data[key].length !== 0 && data[key].length !== undefined){
+            return true;
+        }
+        if(data[key].length === undefined){
+            isCheck = ChekIsEmptyData(data[key]);
+        }
+
+        // data에 값이 들어가 있다면 true 반환
+        if(isCheck){
+            return true;
+        }
+    }
+};

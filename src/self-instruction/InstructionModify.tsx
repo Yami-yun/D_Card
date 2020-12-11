@@ -1,10 +1,13 @@
-import { faRubleSign } from '@fortawesome/free-solid-svg-icons';
-import React, {useState} from 'react';
+
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import Button from '../base/button';
 import Header from '../base/Header'
-import {InputBox, InputList, InputSideTxt, Input, InputLabel} from '../base/input';
+import {InputBox, InputList, InputSideTxt, Input, InputLabel, NumInput} from '../base/input';
 import {widthCal, heightCal, getDeviceWidth, getDeviceHeight} from '../base/Tool';
+import * as ImagePicker from '../imagePicker/index';
+
+import {useInstructionDataContext, ChekIsEmptyData} from '../base/context';
 // import { Button, StyleSheet } from "react-native";
 
 
@@ -36,6 +39,7 @@ const ImgLayout = styled.View`
 const PersonalImgBox = styled.View`
     width: 150px;
     height: 150px;
+    /* border-radius: 5px; */
     /* border: 1px; */
     margin-bottom: 12px;
 `;
@@ -43,17 +47,19 @@ const PersonalImgBox = styled.View`
 const PersonalImg = styled.Image`
     width: 150px;
     height: 150px;
+    border-radius: 256px;
+    border: 2px solid #164580;
 `;
 
-const ImgAddIcon = styled.Image`
+const ImgAddIconBox = styled.TouchableOpacity`
     position: absolute;
     width: 50px;
     height: 50px;
-    bottom: 0.2px;
-    right: 0.2px;
-    
-
+    bottom: 0px;
+    right: 0px;
 `;
+
+const ImgAddIcon = styled.Image``;
 
 
 const ImgAddDescription = styled.Text`
@@ -91,24 +97,52 @@ const inputForm = {
         numBack:"",
     },
     address:"",
-    detail:""
+    detail:"",
+    uri:"",
 };
+
+
+// empty: undefined   no empty : true  16
+
 
 function InstructionModify(){
 
-    const [form, setForm] = useState(inputForm);
+    const instructionDataContext = useInstructionDataContext();
 
+    const [form, setForm] = useState(instructionDataContext);
+
+    const HeaderTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "자기소개 등록" : "자기소개  |  수정하기"; 
+    const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
+
+
+    const pickImg = () =>{ 
+        ImagePicker.launchImageLibrary(
+            {
+                mediaType: 'photo',
+                includeBase64: false,
+                maxHeight: 1200,
+                maxWidth: 1200,
+            },
+                (response) => {
+                    setForm({...form, uri:response.uri })
+
+                },
+            )
+    };
+    // {response === null ? <PersonalImg source={require('../img/defaultPersonalModify.png')}/> : <PersonalImg source={{uri:response}}/>}
     return(
         // <Whole style={{flex:1}}>
         <>
-        <Header text="사진첩"/>
+        <Header text={HeaderTxt}/>
             <Whole >
 
-                <BtnLayout><Button screenType="INSTRUCTION_MAIN" processType="MODIFY" text="수정 완료" data={form}/></BtnLayout>
+                <BtnLayout><Button screenType="INSTRUCTION_MAIN" processType="MODIFY" text={BtnTxt} data={form}/></BtnLayout>
                 <ImgLayout>
                     <PersonalImgBox>
-                        <PersonalImg source={require('../img/defaultPersonalModify.png')}/>
-                        <ImgAddIcon source={require('../img/imgAddIcon.png')}/>
+                        <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:form.uri} }/>
+                        <ImgAddIconBox onPress={()=>{pickImg()}}>
+                            <ImgAddIcon source={require('../img/imgAddIcon.png')}/>
+                        </ImgAddIconBox>
                     </PersonalImgBox>
                     <ImgAddDescription>사용자 사진을 선택해주세요.</ImgAddDescription>
                 </ImgLayout>
@@ -121,11 +155,11 @@ function InstructionModify(){
                         
                         <InputLabel>생일</InputLabel>
                         <InputList style={{alignItems: 'flex-end'}}>
-                            <Input maxLength={4} style={{width:"28%"}} onChangeText={text=>setForm({...form, birth:{ ...form.birth, y:text} })} value={form.birth.y} />
+                            <NumInput maxLength={4} onChangeText={text=>setForm({...form, birth:{ ...form.birth, y:text} })} value={form.birth.y} />
                             <InputSideTxt style={{marginLeft:3, marginRight:3}}>년</InputSideTxt>
-                            <Input maxLength={2} style={{width:"28%"}} onChangeText={text=>setForm({...form, birth:{ ...form.birth, m:text} })} value={form.birth.m} />
+                            <NumInput maxLength={2} onChangeText={text=>setForm({...form, birth:{ ...form.birth, m:text} })} value={form.birth.m} />
                             <InputSideTxt style={{marginLeft:3, marginRight:3}}>월</InputSideTxt>
-                            <Input maxLength={2} style={{width:"28%"}} onChangeText={text=>setForm({...form, birth:{ ...form.birth, d:text} })} value={form.birth.d} />
+                            <NumInput maxLength={2} onChangeText={text=>setForm({...form, birth:{ ...form.birth, d:text} })} value={form.birth.d} />
                             <InputSideTxt style={{marginLeft:3, marginRight:3}}>일</InputSideTxt>
                         </InputList>
                         
@@ -133,22 +167,22 @@ function InstructionModify(){
                     <InputBox>
                         <InputLabel>보호자 연락처</InputLabel>
                         <InputList style={{alignItems: 'center'}}>
-                            <Input maxLength={3} style={{width:"28%"}} onChangeText={text=>setForm({...form, guardCall:{ ...form.guardCall, numFront:text} })} value={form.guardCall.numFront}/>
+                            <NumInput maxLength={3} onChangeText={text=>setForm({...form, guardCall:{ ...form.guardCall, numFront:text} })} value={form.guardCall.numFront}/>
                             <InputSideTxt style={{marginLeft:10, marginRight:10}}>-</InputSideTxt>
-                            <Input maxLength={4} style={{width:"28%"}} onChangeText={text=>setForm({...form, guardCall:{ ...form.guardCall, numMiddle:text} })} value={form.guardCall.numMiddle}/>
+                            <NumInput maxLength={4} onChangeText={text=>setForm({...form, guardCall:{ ...form.guardCall, numMiddle:text} })} value={form.guardCall.numMiddle}/>
                             <InputSideTxt style={{marginLeft:10, marginRight:10}}>-</InputSideTxt>
-                            <Input maxLength={4} style={{width:"28%"}} onChangeText={text=>setForm({...form, guardCall:{ ...form.guardCall, numBack:text} })} value={form.guardCall.numBack}/>
+                            <NumInput maxLength={4} onChangeText={text=>setForm({...form, guardCall:{ ...form.guardCall, numBack:text} })} value={form.guardCall.numBack}/>
                             
                         </InputList>
                     </InputBox>
                     <InputBox>
                         <InputLabel>연락처</InputLabel>
                         <InputList style={{alignItems: 'center'}}>
-                        <Input maxLength={3} style={{width:"28%"}} onChangeText={text=>setForm({...form, myCall:{ ...form.myCall, numFront:text} })} value={form.myCall.numFront}/>
+                            <NumInput maxLength={3} onChangeText={text=>setForm({...form, myCall:{ ...form.myCall, numFront:text} })} value={form.myCall.numFront}/>
                             <InputSideTxt style={{marginLeft:10, marginRight:10}}>-</InputSideTxt>
-                            <Input maxLength={4} style={{width:"28%"}} onChangeText={text=>setForm({...form, myCall:{ ...form.myCall, numMiddle:text} })} value={form.myCall.numMiddle}/>
+                            <NumInput maxLength={4} onChangeText={text=>setForm({...form, myCall:{ ...form.myCall, numMiddle:text} })} value={form.myCall.numMiddle}/>
                             <InputSideTxt style={{marginLeft:10, marginRight:10}}>-</InputSideTxt>
-                            <Input maxLength={4} style={{width:"28%"}} onChangeText={text=>setForm({...form, myCall:{ ...form.myCall, numBack:text} })} value={form.myCall.numBack}/>
+                            <NumInput maxLength={4} onChangeText={text=>setForm({...form, myCall:{ ...form.myCall, numBack:text} })} value={form.myCall.numBack}/>
                             
                         </InputList>
                     </InputBox>
