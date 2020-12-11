@@ -39,16 +39,21 @@ const ImgLayout = styled.View`
 const PersonalImgBox = styled.View`
     width: 150px;
     height: 150px;
+    justify-content:center;
+    align-items:center;
     /* border-radius: 5px; */
     /* border: 1px; */
     margin-bottom: 12px;
+    border: 2px solid #164580;
+    border-radius: 256px;
+
 `;
 
 const PersonalImg = styled.Image`
     width: 150px;
     height: 150px;
     border-radius: 256px;
-    border: 2px solid #164580;
+    
 `;
 
 const ImgAddIconBox = styled.TouchableOpacity`
@@ -113,6 +118,7 @@ function InstructionModify(){
 
     const HeaderTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "자기소개 등록" : "자기소개  |  수정하기"; 
     const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
+    // const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
 
 
     const pickImg = () =>{ 
@@ -124,6 +130,7 @@ function InstructionModify(){
                 maxWidth: 1200,
             },
                 (response) => {
+                    console.log(response);
                     setForm({...form, uri:response.uri })
 
                 },
@@ -135,11 +142,12 @@ function InstructionModify(){
         <>
         <Header text={HeaderTxt}/>
             <Whole >
-
+            
                 <BtnLayout><Button screenType="INSTRUCTION_MAIN" processType="MODIFY" text={BtnTxt} data={form}/></BtnLayout>
                 <ImgLayout>
                     <PersonalImgBox>
                         <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:form.uri} }/>
+                        {/* <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:"content://com.d_card.imagepickerprovider/external/Android/data/com.d_card/files/rn_image_picker_lib_temp_b3d477be-b53a-47fe-bb2e-9f80bb7a37c3.jpg"} }/> */}
                         <ImgAddIconBox onPress={()=>{pickImg()}}>
                             <ImgAddIcon source={require('../img/imgAddIcon.png')}/>
                         </ImgAddIconBox>

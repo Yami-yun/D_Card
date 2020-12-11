@@ -5,7 +5,8 @@ import styled, {css} from 'styled-components/native';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {widthCal, heightCal, getDeviceWidth, getDeviceHeight} from '../base/Tool';
-import { useScreenDisplayStateContext, useSetScreenDisplayStateContext} from "../base/context";
+import { useSetPhotoZoneDataContext, usePhotoZoneDataContext, useScreenDisplayStateContext, useSetScreenDisplayStateContext, useSetPhotoZoneDataListContext, initPhotoZoneData} from "../base/context";
+
 // 기능 : main일 경우 내용 Count, Add, Modify 버튼 기능
 // Health , Emergency, Photo page  상단 바 역할
 const Whole = styled.View`
@@ -67,21 +68,43 @@ interface Props{
     totalCount?:number;
     type?: 'INFO' | 'MODIFY' | 'ADD' | 'H_MODIFY';
     text?: string;
+    screen: string;
 };
 
-function TopSectionInfo({totalCount, type, text}:Props){
+function TopSectionInfo({totalCount, type, text, screen}:Props){
     const screenDisplayStateContext = useScreenDisplayStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-    console.log("test");
+    const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
+    const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
+    const photoZoneDataContext = usePhotoZoneDataContext();
+
+
+    const setData = () => {
+        if(screen === "PHOTO_MODIFY"){
+            console.log("TopSectionInfo, setData ");
+            /* console.log(setPhotoZoneDataContext); */
+
+            setPhotoZoneDataListContext({type:type, data:photoZoneDataContext});
+            // data init 함수 넣기
+            setPhotoZoneDataContext({...initPhotoZoneData});
+        }
+        else if(screen === "EMERGENCY_CALL_MODIFY"){
+            console.log("EMERGENCY_CALL_MODIFY!");
+        }
+        else if(screen === "HEALTH_INFO_MODIFY"){
+            console.log("HEALTH_INFO_MODIFY!");
+        }
+    }
 
     const screenMove = () => {
 
         if(type === "INFO"){
             setScreenDisplayStateContext(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY'));
-            console.log(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY') );
+            //console.log(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY') );
         }else if(type === "MODIFY" || type === "H_MODIFY"){
             setScreenDisplayStateContext(screenDisplayStateContext.replace(/MODIFY/g, 'MAIN'));
         }else if(type === "ADD"){
+            
             setScreenDisplayStateContext(screenDisplayStateContext.replace(/MODIFY/g, 'MAIN'));
         }
     }
@@ -90,8 +113,11 @@ function TopSectionInfo({totalCount, type, text}:Props){
         {type==='INFO' && <InfoTxt>총 {totalCount}개의 내용이 존재합니다.</InfoTxt>}
         {type=== ('MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
         {type=== ('H_MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
-        <FuncBtn onPress={()=>{screenMove()}}>
-        <BtnTxt>{text}</BtnTxt>
+        <FuncBtn onPress={()=>{
+            screenMove();
+            setData();
+            }}>
+            <BtnTxt>{text}</BtnTxt>
         </FuncBtn>
         </Whole>
     );

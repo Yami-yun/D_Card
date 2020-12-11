@@ -8,6 +8,8 @@ import Header from '../base/Header';
 import TitleLayout from '../base/TitleLayout';
 import PhotoLayout from '../base/PhotoLayout';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
+import {useSetPhotoZoneDataListContext, usePhotoZoneDataListContext, usePagingDataContext} from '../base/context';
+
 
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
@@ -22,21 +24,25 @@ const TView = styled.View``;
 
 
 function PhotoZoneMainPage(){
-    
+    // let index = 0;
+    const photoZoneDataListContext = usePhotoZoneDataListContext();
+    const pagingDataContext = usePagingDataContext();
+    const curShowPhotoData = photoZoneDataListContext[pagingDataContext.PHOTO_MAIN] || "";
+    console.log(pagingDataContext);
     return(
         <>
         <Header text="사진첩"/>
-        <TopSectionInfo totalCount={2} type="INFO" text="추가 하기" />
+        <TopSectionInfo totalCount={photoZoneDataListContext.length} type="INFO" text="추가 하기" screen="PHOTO_MAIN"/>
         <Whole>
             
             <TView >  
                 <TitleLayout title='[2020.08.30] 우리 가족사진을 찍다...' color="#2A65AF"/ >
                 <MainFunctionLayout>
-                    <PhotoLayout src= "camera" text="사진을 선택해주세요." />
+                    <PhotoLayout screen="PHOTO_MAIN" defaultTypes= "camera" text="사진을 선택해주세요." src={curShowPhotoData}/>
                 </MainFunctionLayout>
             </TView>
-            <MainDescriptionLayout/>
-            <PagingBtnLayout/>
+            <MainDescriptionLayout src={curShowPhotoData}/>
+            <PagingBtnLayout screen="PHOTO_MAIN"/>
         </Whole>
         </>
     );

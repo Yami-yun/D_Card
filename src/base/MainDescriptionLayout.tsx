@@ -24,23 +24,16 @@ const DescriptionTxt = styled.Text`
 
 
 interface Props{
-    children?: JSX.Element | Array<JSX.Element>;
     title?: string;
+    src?: any;
 };
 
-function MainDescriptionLayout({children, title}:Props){
+function MainDescriptionLayout({src}:Props){
 
     return(
         <Whole>
             <DescriptionTxt>
-            사진에 대한 내용이 들어갑니다.
-사진에 대한 내용이 들어갑니다.
-사진에 대한 내용이 들어갑니다.
-사진에 대한 내용이 들어갑니다.
-사진에 대한 내용이 들어갑니다.
-사진에 대한 내용이 들어갑니다.
-사진에 대한 내용이 들어갑니다.
-사진에 대한 내용이 들어갑니다.
+                {src.description}
             </DescriptionTxt>
 
         </Whole>

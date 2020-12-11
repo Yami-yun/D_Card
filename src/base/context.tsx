@@ -94,6 +94,30 @@ const initInstructionData =
 };
 
 
+
+const initPhotoZoneDataList = [];
+
+let savePhotoZoneId = 0;
+function PhotoZoneDataListReducer(state, action){
+
+    switch(action.type){
+        case "ADD":
+            state.push({...action.data, id:savePhotoZoneId})
+            savePhotoZoneId += 1;
+            console.log("context.tsx, PhotoZoneDataReducer : ");
+            console.log(state);
+
+            return state;
+
+        case "MODIFY":
+            return state;
+
+        case "DELETE":
+            return state;
+    }
+}
+
+
 function InstructionDataReducer(state, action){
     switch(action.type){
         case "MODIFY":
@@ -133,12 +157,32 @@ function InstructionDataReducer(state, action){
     }
 }
 
+const initPhotoZoneData = {
+    id:"",
+    title:"",
+    description:"",
+    uri:"",
+    width:"",
+    height:"",
+};
+
+const initPagingData = {
+    PHOTO_MAIN:0,
+    HEALTH_INFO_MAIN:0,
+};
+
 const MenuStateContext = createContext<boolean>(undefined);
 const SetMenuStateContext = createContext(undefined);
 const ScreenDisplayStateContext = createContext<string>(undefined);
 const SetScreenDisplayStateContext = createContext(undefined);
 const InstructionDataContext = createContext(undefined);
 const SetInstructionDataContext = createContext(undefined);
+const PhotoZoneDataListContext = createContext(undefined);
+const SetPhotoZoneDataListContext = createContext(undefined);
+const PhotoZoneDataContext = createContext(undefined);
+const SetPhotoZoneDataContext = createContext(undefined);
+const PagingDataContext = createContext(undefined);
+const SetPagingDataContext = createContext(undefined);
 
 interface Props{
     children: JSX.Element | Array<JSX.Element>;
@@ -149,6 +193,9 @@ export function AppStateProvider({children}:Props){
     const [menuState, setMenuState] = useState<boolean>(false);
     const [screenDisplayState, setScreenDisplayState] = useState<string>("MAIN");
     const [instructionData, setInstructinoData] = useReducer(InstructionDataReducer, initInstructionData);
+    const [photoZoneDataList, setPhotoZoneDataList] = useReducer(PhotoZoneDataListReducer, initPhotoZoneDataList);
+    const [photoZoneData, setPhotoZoneData] = useState(initPhotoZoneData);
+    const [pagingData, setPagingData] = useState(initPagingData);
 
     return(
         <MenuStateContext.Provider value={menuState}>
@@ -157,7 +204,19 @@ export function AppStateProvider({children}:Props){
                     <SetScreenDisplayStateContext.Provider value={setScreenDisplayState}>
                         <SetInstructionDataContext.Provider value={setInstructinoData}>
                             <InstructionDataContext.Provider value={instructionData}>
-                                {children}
+                                <PhotoZoneDataListContext.Provider value={photoZoneDataList}>
+                                    <SetPhotoZoneDataListContext.Provider value={setPhotoZoneDataList}>
+                                        <PhotoZoneDataContext.Provider value={photoZoneData}>
+                                            <SetPhotoZoneDataContext.Provider value={setPhotoZoneData}>
+                                                <PagingDataContext.Provider value={pagingData}>
+                                                    <SetPagingDataContext.Provider value={setPagingData}>
+                                                        {children}
+                                                    </SetPagingDataContext.Provider>
+                                                </PagingDataContext.Provider>
+                                            </SetPhotoZoneDataContext.Provider>
+                                        </PhotoZoneDataContext.Provider>
+                                    </SetPhotoZoneDataListContext.Provider>
+                                </PhotoZoneDataListContext.Provider>
                             </InstructionDataContext.Provider>
                         </SetInstructionDataContext.Provider>
                     </SetScreenDisplayStateContext.Provider>
@@ -165,6 +224,37 @@ export function AppStateProvider({children}:Props){
             </SetMenuStateContext.Provider>
         </MenuStateContext.Provider>
     );
+}
+PagingDataContext
+
+export function usePagingDataContext(){
+    const context = useContext(PagingDataContext);
+    return context;
+}
+
+export function useSetPagingDataContext(){
+    const context = useContext(SetPagingDataContext);
+    return context;
+}
+
+export function usePhotoZoneDataContext(){
+    const context = useContext(PhotoZoneDataContext);
+    return context;
+}
+
+export function useSetPhotoZoneDataContext(){
+    const context = useContext(SetPhotoZoneDataContext);
+    return context;
+}
+
+export function usePhotoZoneDataListContext(){
+    const context = useContext(PhotoZoneDataListContext);
+    return context;
+}
+
+export function useSetPhotoZoneDataListContext(){
+    const context = useContext(SetPhotoZoneDataListContext);
+    return context;
 }
 
 export function useSetInstructionDataContext(){
@@ -213,3 +303,5 @@ export const ChekIsEmptyData = (data) => {
         }
     }
 };
+
+export {initPhotoZoneData};
