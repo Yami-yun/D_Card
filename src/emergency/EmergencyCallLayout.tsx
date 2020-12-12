@@ -61,22 +61,56 @@ const IconBox = styled.View`
     border-radius: 26px;
 `;
 
-function EmergencyCallLayout(){
-    
+const initEmergencyCallData = {
+    id:"",
+    title:"",
+    call:{
+        numFront:"",
+        numMiddle:"",
+        numBack:"",
+    },
+    importance:"",
+    description:"",
+    uri:"",
+    width:"",
+    height:"",
+};
+
+// number? >> importance?
+interface Props{
+title?:string;
+call?:{
+    numFront:"",
+    numMiddle:"",
+    numBack:"",
+};
+importance?:string;
+description?:string;
+};
+
+function EmergencyCallLayout({title, call, importance, description}:Props){
+    const color = {
+        0:"#ED3B3B",
+        1:"#FE8C49",
+        2:"#AAD462",
+    };
+    console.log("importance type??? :")
+    console.log(color[importance]);
     return(
         <>
         <Whole>
-            <TitleLayout title="1.  저희  어머니가 자주가는 가게 연락처 입니다." color="#ED3B3B"/>
+            <TitleLayout title={title} color={color[importance]} screen="EMERGENCY_CALL_MAIN"/>
             <MainFunctionLayout>
                 <EmergencyCallBox style={[styles.CallBoxShadow, {flexGrow:1}]}>
-                    <EmergencyCallNum>062 - 550 - 3838 </EmergencyCallNum>
+                    {call ? <EmergencyCallNum> {call.numFront + " - " + call.numMiddle + " - " + call.numBack} </EmergencyCallNum>
+                    : <EmergencyCallNum> {"연락처를 추가해주세요."} </EmergencyCallNum>}
                     <IconBox>
-                        <FontAwesomeIcon icon={faPhoneAlt} size={22} color={'#FF6044'} />                    
+                        <FontAwesomeIcon icon={faPhoneAlt} size={22} color={"#FF6044"} />                    
                     </IconBox>
                 </EmergencyCallBox>
                 <EmergencyDescriptionBox style={{flexGrow:4}}>
                     <EmergencyCallDescription>
-                        광주광역시 남구 봉선동 00 가게 연락처 입니다.
+                        {description}
                     </EmergencyCallDescription>
                 </EmergencyDescriptionBox>
             </MainFunctionLayout>

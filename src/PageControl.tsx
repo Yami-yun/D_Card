@@ -22,10 +22,13 @@ import InstructionMainPage from './self-instruction/InstructionMainPage';
 import SideMenu from './SideMenu';
 import InstructionModify from './self-instruction/InstructionModify';
 import PhotoZoneMainPage from './PhotoZone/PhotoZoneMainPage';
+import PhotoZoneAddPage from './PhotoZone/PhotoZoneAddPage';
 import PhotoZoneModifyPage from './PhotoZone/PhotoZoneModifyPage';
 import EmergencyCallMainPage from './emergency/EmergencyCallMainPage';
+import EmergencyCallAddPage from './emergency/EmergencyCallAddPage';
 import EmergencyCallModifyPage from './emergency/EmergencyCallModifyPage';
 import HealthInfoMainPage from './health/HealthInfoMainPage';
+import HealthInfoAddPage from './health/HealthInfoAddPage';
 import HealthInfoModifyPage from './health/HealthInfoModifyPage';
 import AppInfoPage from './appInfo/AppInfoPage';
 
@@ -79,17 +82,27 @@ const PageControl = ({children}:Props)=> {
             case "PHOTO_MAIN":
                 screen = <PhotoZoneMainPage/ >
                 break;
+
+            case "PHOTO_ADD":
+                screen = <PhotoZoneAddPage/>
+                break;
             case "PHOTO_MODIFY":
                 screen = <PhotoZoneModifyPage/ >
                 break;
             case "EMERGENCY_CALL_MAIN":
                 screen = <EmergencyCallMainPage/ >
                 break;
+            case "EMERGENCY_CALL_ADD":
+                screen = <EmergencyCallAddPage/ >
+                break;
             case "EMERGENCY_CALL_MODIFY":
                 screen = <EmergencyCallModifyPage/ >
                 break;
             case "HEALTH_INFO_MAIN":
                 screen = <HealthInfoMainPage/ >
+                break;
+            case "HEALTH_INFO_ADD":
+                screen = <HealthInfoAddPage/ >
                 break;
             case "HEALTH_INFO_MODIFY":
                 screen = <HealthInfoModifyPage/ >

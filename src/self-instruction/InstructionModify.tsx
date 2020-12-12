@@ -120,7 +120,6 @@ function InstructionModify(){
     const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
     // const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
 
-
     const pickImg = () =>{ 
         ImagePicker.launchImageLibrary(
             {

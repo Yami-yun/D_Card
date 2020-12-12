@@ -9,7 +9,7 @@ import PhotoLayout from '../base/PhotoLayout';
 import {InputBox, Input, BigInput, InputLabel} from '../base/input';
 import { ScrollView } from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useHealthInfoDataContext, useSetHealthInfoDataContext, usePagingDataContext, useHealthInfoDataListContext} from '../base/context';
+import {useHealthInfoDataContext, useSetHealthInfoDataContext} from '../base/context';
 
 // Health Info Modify Page  건강 정보 변경 페이지
 const Whole = styled.View`
@@ -135,30 +135,19 @@ function HealthInfoAddPage(){
     // const desciptionInputRef = useRef(null);
 
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
-    
-
-    const pagingDataContext = usePagingDataContext();
-    const healthInfoDataListContext = useHealthInfoDataListContext();
+    const healthInfoDataContext = useHealthInfoDataContext();
 
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [isCategoryNum, setIsCategoryNum] = useState(0);
     holderTxt.replace(/\n/g, '<br/>');
-
-    useEffect(()=>{
-        
-        setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]);
-        setIsCategoryNum(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN].importance);
-    },[])
-    const healthInfoDataContext = useHealthInfoDataContext();
-
     return(
         <>
-            <Header text="건강정보 | 수정하기"/>
+            <Header text="건강정보 | 추가하기"/>
             <Whole>
                 <ScrollView>
-                    <TopSectionInfo type="MODIFY" text="수정 완료" screen="HEALTH_INFO_MODIFY"/>
+                    <TopSectionInfo totalCount={2} type="ADD" text="등록 하기" screen = "HEALTH_INFO_MODIFY"/>
 
-                    <PhotoLayout text="복용하는 약물 사진을 넣어주세요." src={healthInfoDataContext.uri} defaultTypes="pill" screen = "HEALTH_INFO_MODIFY"/>
+                    <PhotoLayout text="복용하는 약물 사진을 넣어주세요." src="" defaultTypes="pill" screen = "HEALTH_INFO_MODIFY"/>
                     
                     <CategoryLayout >
                         <CategoryTitle>구분</CategoryTitle>
@@ -196,7 +185,6 @@ function HealthInfoAddPage(){
                     <InputBox style={{marginTop:15}}>
                         <InputLabel >내용</InputLabel>
                         <BigInput 
-
                         onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, description:text})} 
                         value={healthInfoDataContext.description} 
                         placeholder={holderTxt} 

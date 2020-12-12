@@ -10,6 +10,7 @@ import MainDescriptionLayout from '../base/MainDescriptionLayout';
 import PhotoLayout from '../base/PhotoLayout';
 import {View} from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
+import {useHealthInfoDataListContext, usePagingDataContext} from '../base/context';
 
 
 const Whole = styled.View`
@@ -22,21 +23,30 @@ const Whole = styled.View`
 `;
 
 function HealthInfoMainPage(){
-    
+    const healthInfoDataListContext = useHealthInfoDataListContext();
+    const pagingDataContext = usePagingDataContext();
+    const curShowHealthData = healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN] || "";
+    console.log(curShowHealthData.title);
+    const color = {
+        0:"#ED3B3B",
+        1:"#FE8C49",
+        2:"#AAD462",
+    };
+
     return(
         <>
             <Header text="건강 정보"/>
-            <TopSectionInfo totalCount={2} type="INFO" text="추가 하기"/>
+            <TopSectionInfo totalCount={healthInfoDataListContext.length} type="INFO" text="추가 하기" screen="HEALTH_INFO_MAIN"/>
             <Whole>
                 {/* 여기부터 */}
                 <View>  
-                    <TitleLayout title='1. 약물 복용 관련' color="#ED3B3B"/ >
+                    <TitleLayout title={curShowHealthData.title === undefined ? "1. 약물 복용 관련" : curShowHealthData.title} color={color[curShowHealthData.importance]} screen="HEALTH_INFO_MAIN"/ >
                     <MainFunctionLayout>
-                        <PhotoLayout src= "pill" text="복용하는 약물 사진을 넣어주세요." />
+                        <PhotoLayout src={curShowHealthData} defaultTypes= "pill" text="복용하는 약물 사진을 넣어주세요." screen="HEALTH_INFO_MAIN"/>
                     </MainFunctionLayout>
                 </View>
-                <MainDescriptionLayout/>
-                <PagingBtnLayout/>
+                <MainDescriptionLayout src={curShowHealthData}/>
+                <PagingBtnLayout screen="HEALTH_INFO_MAIN"/>
             </Whole>
         </>
     );

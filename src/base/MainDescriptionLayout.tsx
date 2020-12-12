@@ -13,12 +13,10 @@ const Whole = styled.View`
 
 
 const DescriptionTxt = styled.Text`
-    font-style: normal;
     font-weight: normal;
     font-size: 12px;
-
+    line-height: 16px;
     color: rgba(0, 0, 0, 0.5);
-
 `;
 
 
@@ -33,7 +31,7 @@ function MainDescriptionLayout({src}:Props){
     return(
         <Whole>
             <DescriptionTxt>
-                {src.description}
+                {src.description === undefined ? "진단명:\n복용약:\n혈액형:" : src.description}
             </DescriptionTxt>
 
         </Whole>

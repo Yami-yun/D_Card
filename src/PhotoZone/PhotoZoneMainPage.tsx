@@ -28,7 +28,7 @@ function PhotoZoneMainPage(){
     const photoZoneDataListContext = usePhotoZoneDataListContext();
     const pagingDataContext = usePagingDataContext();
     const curShowPhotoData = photoZoneDataListContext[pagingDataContext.PHOTO_MAIN] || "";
-    console.log(pagingDataContext);
+    // console.log(pagingDataContext);
     return(
         <>
         <Header text="사진첩"/>
@@ -36,7 +36,7 @@ function PhotoZoneMainPage(){
         <Whole>
             
             <TView >  
-                <TitleLayout title='[2020.08.30] 우리 가족사진을 찍다...' color="#2A65AF"/ >
+                <TitleLayout title={curShowPhotoData.title} color="#2A65AF" screen="PHOTO_MAIN"/ >
                 <MainFunctionLayout>
                     <PhotoLayout screen="PHOTO_MAIN" defaultTypes= "camera" text="사진을 선택해주세요." src={curShowPhotoData}/>
                 </MainFunctionLayout>

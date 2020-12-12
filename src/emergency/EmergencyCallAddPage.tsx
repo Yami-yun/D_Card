@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import TopSectionInfo from '../base/TopSectionInfo';
 import Header from '../base/Header';
@@ -6,7 +6,7 @@ import CategorySelectorLayout from '../base/CategorySelectorLayout';
 import {InputBox, Input, BigInput, InputLabel, InputList, InputSideTxt, NumInput} from '../base/input';
 import { ScrollView } from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useEmergencyCallDataContext, useSetEmergencyCallDataContext, usePagingDataContext, useEmergencyCallDataListContext} from '../base/context';
+import {useEmergencyCallDataContext, useSetEmergencyCallDataContext} from '../base/context';
 
 // Emenrgecy Call Book Modeify Screen
 const Whole = styled.View`
@@ -133,24 +133,13 @@ function EmergencyCallAddPage(){
     const [isCategoryNum, setIsCategoryNum] = useState(0);
 
     const setEmergencyCallDataContext = useSetEmergencyCallDataContext();
-    
-
-
-    const pagingDataContext = usePagingDataContext();
-    const emergencyCallDataListContext = useEmergencyCallDataListContext();
-
-    useEffect(()=>{
-        
-        setEmergencyCallDataContext(emergencyCallDataListContext[pagingDataContext.EMERGENCY_CALL_MAIN]);
-        setIsCategoryNum(emergencyCallDataListContext[pagingDataContext.EMERGENCY_CALL_MAIN].importance);
-    },[])
     const emergencyCallDataContext = useEmergencyCallDataContext();
 
     return(
         <>
             <Header text="긴급연락처 | 추가하기"/>
             <ScrollView>
-                <TopSectionInfo type="MODIFY" text="수정 완료" screen="EMERGENCY_CALL_MODIFY"/>
+                <TopSectionInfo type="ADD" text="등록 하기" screen="EMERGENCY_CALL_MODIFY"/>
                 <Whole>
                     <CategoryLayout >
                             <CategoryTitle>구분</CategoryTitle>

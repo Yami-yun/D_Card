@@ -1,6 +1,13 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import {useSetPagingDataContext, usePagingDataContext, usePhotoZoneDataListContext} from '../base/context';
+import {
+    useSetPagingDataContext,
+    usePagingDataContext,
+    usePhotoZoneDataListContext,
+    useSetPhotoZoneDataContext,
+    useHealthInfoDataListContext,
+    useSetHealthInfoDataContext,
+} from '../base/context';
 
 // Paging Btn Layout
 const Whole = styled.View`
@@ -31,44 +38,60 @@ const IconImg = styled.Image`
 `;
 
 interface Props{
-    screen?: "PHOTO_MAIN" | "HEALTH_INFO_MAIN";
+    screen?: "PHOTO_MAIN" | "HEALTH_INFO_MAIN" | "EMERGENCY_CALL_MAIN";
 };
 
 function PagingBtnLayout({screen}:Props){
     const setPagingDataContext = useSetPagingDataContext();
     const pagingDataContext = usePagingDataContext();
     const photoZoneDataListContext = usePhotoZoneDataListContext();
+    const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
+    const healthInfoDataListContext = useHealthInfoDataListContext();
+    const setHealthInfoDataContext = useSetHealthInfoDataContext();
+
+    const pageLen = (screen === "PHOTO_MAIN") ? photoZoneDataListContext.length : healthInfoDataListContext.length;
 
     const pagingLeft = () =>{
         if(pagingDataContext[screen] !== 0){
-            console.log("1");
+            // console.log("1");
             if(screen === "PHOTO_MAIN"){
-                console.log("2");
+                // console.log("2");
                 setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.PHOTO_MAIN - 1}); 
+                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
+            }
+            else if(screen === "HEALTH_INFO_MAIN"){
+                // console.log("3");
+                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.HEALTH_INFO_MAIN - 1});
+                setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]);
             }
             else{
-                console.log("3");
-                setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.HEALTH_INFO_MAIN - 1}); 
+                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN - 1}); 
+                // setHealthInfoDataContext({healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]});
             }
             // setPagingDataContext({...pagingDataContext, :});
         }
-        console.log(pagingDataContext);
+        // console.log(pagingDataContext);
     };
 
     const pagingRight = () =>{
-        if(pagingDataContext.[screen] !== photoZoneDataListContext.length - 1){
-            console.log("4");
+        if(pagingDataContext[screen] !== (pageLen - 1)){
+            // console.log("4");
             if(screen === "PHOTO_MAIN"){
-                console.log("5");
+                // console.log("5");
                 setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.PHOTO_MAIN + 1}); 
+                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
+            }
+            else if(screen === "HEALTH_INFO_MAIN"){
+                // console.log("6");
+                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.HEALTH_INFO_MAIN + 1}); 
+                setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]);
             }
             else{
-                console.log("6");
-                setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.HEALTH_INFO_MAIN + 1}); 
+                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN + 1}); 
             }
             // setPagingDataContext({...pagingDataContext, :});
         }
-        console.log(pagingDataContext);
+        // console.log(pagingDataContext);
     };
 
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import Header from '../base/Header';
 import TopSectionInfo from '../base/TopSectionInfo';
@@ -6,13 +6,7 @@ import PhotoLayout from '../base/PhotoLayout';
 import {InputBox, Input, InputLabel} from '../base/input';
 import { ScrollView } from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {
-    usePhotoZoneDataContext,
-    useSetPhotoZoneDataContext,
-    useSetPhotoZoneDataListContext,
-    usePhotoZoneDataListContext,
-    usePagingDataContext,
-} from '../base/context';
+import {usePhotoZoneDataContext, useSetPhotoZoneDataContext} from '../base/context';
 
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
@@ -28,27 +22,21 @@ const Whole = styled.View`
 // title:"",
 // description:"",
 
-function PhotoZoneModifyPage(){
-    
+function PhotoZoneAddPage(){
+    const photoZoneDataContext = usePhotoZoneDataContext();
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
-    const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
-    const photoZoneDataListContext = usePhotoZoneDataListContext();
-    const pagingDataContext = usePagingDataContext();
 
     
-    useEffect(()=>{
-        setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
-    },[])
-    
-    const photoZoneDataContext = usePhotoZoneDataContext();
 
     return(
         <>
-            <Header text="사진첩 | 수정하기"/>
+            <Header text="사진첩 | 추가하기"/>
             <ScrollView>
-                <TopSectionInfo type="MODIFY" text="수정 완료" screen="PHOTO_MODIFY"/>
+                <TopSectionInfo type="ADD" text="등록 하기" screen="PHOTO_MODIFY"/>
                 <Whole>
-                    <PhotoLayout text="사진을 선택해주세요." defaultTypes="camera" height={180} screen="PHOTO_MODIFY" src={photoZoneDataContext.uri}/>
+
+                    <PhotoLayout src="" defaultTypes="camera" height={180} screen="PHOTO_MODIFY"/>
+
 
                     <InputBox>
                         <InputLabel>제목</InputLabel>
@@ -69,4 +57,4 @@ function PhotoZoneModifyPage(){
         </>
     );
 }
-export default PhotoZoneModifyPage;
+export default PhotoZoneAddPage;

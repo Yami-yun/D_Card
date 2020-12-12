@@ -4,23 +4,36 @@ import styled, {css} from 'styled-components/native';
 
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {widthCal, heightCal, getDeviceWidth, getDeviceHeight} from '../base/Tool';
-import { useSetPhotoZoneDataContext, usePhotoZoneDataContext, useScreenDisplayStateContext, useSetScreenDisplayStateContext, useSetPhotoZoneDataListContext, initPhotoZoneData} from "../base/context";
+import { heightCal } from '../base/Tool';
+import {
+    useSetPhotoZoneDataContext,
+    usePhotoZoneDataContext,
+    useScreenDisplayStateContext,
+    useSetScreenDisplayStateContext,
+    useSetPhotoZoneDataListContext,
+    initPhotoZoneData,
+    usePagingDataContext,
+    useHealthInfoDataContext,
+    useSetHealthInfoDataContext,
+    useSetHealthInfoDataListContext,
+    useEmergencyCallDataContext,
+    useSetEmergencyCallDataContext,
+    useSetEmergencyCallDataListContext,
+    initHealthInfoData,
+    initEmergencyCallData,
+} from "../base/context";
 
 // 기능 : main일 경우 내용 Count, Add, Modify 버튼 기능
 // Health , Emergency, Photo page  상단 바 역할
 const Whole = styled.View`
 /* INFO Screen || Modify Screen || Add Screen */
     height: ${heightCal(90)}px;
-
-    ${(props:{type?: 'INFO' | 'MODIFY' | 'ADD' | "H_MODIFY"})=>props.type === 'ADD' ? css`justify-content: flex-end` : css`justify-content: space-between`}
-
-    height:75px;
-    /* border: 1px; */
+    /* ${(props:{type?: 'INFO' | 'MODIFY' | 'ADD' | "H_MODIFY"})=>props.type === 'ADD' ? css`justify-content: flex-end` : css`justify-content: space-between`} */
+    /* height:75px; */
     flex-direction:row;
+    justify-content: space-between;
     align-items: center;
-    
-    ${(props:{type?: 'INFO' | 'MODIFY' | 'ADD' | "H_MODIFY"})=>(props.type !== "H_MODIFY") ? css`padding: 0 4%` : css`padding: 0%`};
+    padding: 0 ${(props)=>props.screen !== "HEALTH_INFO_MODIFY" ? 4 : 0}%;
     
     padding-top: 15px;
 
@@ -42,6 +55,11 @@ const DeleteIconBox = styled.View`
 
     background: #2A65AF;
     border-radius: 30px;
+`;
+
+const EmptyBox = styled.View`
+    width:43px;
+    height: 43px;
 `;
 
 const FuncBtn = styled.TouchableHighlight.attrs({
@@ -74,9 +92,20 @@ interface Props{
 function TopSectionInfo({totalCount, type, text, screen}:Props){
     const screenDisplayStateContext = useScreenDisplayStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
     const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
     const photoZoneDataContext = usePhotoZoneDataContext();
+    
+    const pagingDataContext = usePagingDataContext();
+
+    const setHealthInfoDataContext = useSetHealthInfoDataContext();
+    const healthInfoDataContext = useHealthInfoDataContext();
+    const setHealthInfoDataListContext = useSetHealthInfoDataListContext()
+
+    const emergencyCallDataContext = useEmergencyCallDataContext();
+    const setEmergencyCallDataContext = useSetEmergencyCallDataContext();
+    const setEmergencyCallDataListContext = useSetEmergencyCallDataListContext();
 
 
     const setData = () => {
@@ -84,41 +113,54 @@ function TopSectionInfo({totalCount, type, text, screen}:Props){
             console.log("TopSectionInfo, setData ");
             /* console.log(setPhotoZoneDataContext); */
 
-            setPhotoZoneDataListContext({type:type, data:photoZoneDataContext});
+            setPhotoZoneDataListContext({type:type, data:photoZoneDataContext, index:pagingDataContext.PHOTO_MAIN});
             // data init 함수 넣기
             setPhotoZoneDataContext({...initPhotoZoneData});
         }
         else if(screen === "EMERGENCY_CALL_MODIFY"){
             console.log("EMERGENCY_CALL_MODIFY!");
+
+            setEmergencyCallDataListContext({type:type, data:emergencyCallDataContext, index:pagingDataContext.EMERGENCY_CALL_MAIN});
+            // data init 함수 넣기
+            setEmergencyCallDataContext({...initEmergencyCallData});
         }
         else if(screen === "HEALTH_INFO_MODIFY"){
             console.log("HEALTH_INFO_MODIFY!");
+
+            setHealthInfoDataListContext({type:type, data:healthInfoDataContext, index:pagingDataContext.HEALTH_INFO_MAIN});
+            // data init 함수 넣기
+            setHealthInfoDataContext({...initHealthInfoData});
         }
     }
 
     const screenMove = () => {
 
         if(type === "INFO"){
-            setScreenDisplayStateContext(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY'));
+            setPhotoZoneDataContext({...initPhotoZoneData});
+            setEmergencyCallDataContext({...initEmergencyCallData});
+            setHealthInfoDataContext({...initHealthInfoData});
+            setScreenDisplayStateContext(screenDisplayStateContext.replace(/MAIN/g, 'ADD'));
             //console.log(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY') );
         }else if(type === "MODIFY" || type === "H_MODIFY"){
             setScreenDisplayStateContext(screenDisplayStateContext.replace(/MODIFY/g, 'MAIN'));
         }else if(type === "ADD"){
-            
-            setScreenDisplayStateContext(screenDisplayStateContext.replace(/MODIFY/g, 'MAIN'));
+            setScreenDisplayStateContext(screenDisplayStateContext.replace(/ADD/g, 'MAIN'));
         }
     }
+    // type='INFO';
     return(
-        <Whole type={type} >
-        {type==='INFO' && <InfoTxt>총 {totalCount}개의 내용이 존재합니다.</InfoTxt>}
-        {type=== ('MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
-        {type=== ('H_MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
-        <FuncBtn onPress={()=>{
-            screenMove();
-            setData();
-            }}>
-            <BtnTxt>{text}</BtnTxt>
-        </FuncBtn>
+        <Whole screen={screen} >
+            {type==='INFO' && <InfoTxt>총 {totalCount}개의 내용이 존재합니다.</InfoTxt>}
+            {type=== ('MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
+            {type=== ('H_MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
+            {type=== ('ADD') && <EmptyBox></EmptyBox>}
+            
+            <FuncBtn onPress={()=>{
+                screenMove();
+                setData();
+                }}>
+                <BtnTxt>{text}</BtnTxt>
+            </FuncBtn>
         </Whole>
     );
 }

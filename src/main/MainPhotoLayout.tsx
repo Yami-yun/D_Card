@@ -72,8 +72,8 @@ const MainPhotoImgBox = styled.View`
 `;
 
 const MainPhotoImg = styled.Image`
-    width: ${widthCal(80)}px;
-    height: ${heightCal(60)}px;
+    width: ${widthCal(90)}px;
+    height: ${heightCal(80)}px;
     /* width: 80px;
     height: 60px; */
 
@@ -149,7 +149,7 @@ function MainPhotoLayout({imgRoute}: Props){
             <MainPhotoRightLayout>
                 <MainPhotoImgBox >
                     <MainPhotoImg source={imgRoute === undefined ? require("../img/camera.png") : imgRoute}/>
-                    <MainPhotoHelpTxt>사진을 선택해주세요.</MainPhotoHelpTxt>
+                    {/* <MainPhotoHelpTxt>사진을 선택해주세요.</MainPhotoHelpTxt> */}
                 </MainPhotoImgBox>
                 <MainPhotoDescriptionTxt>[2020.08.30] 우리 가족사진을 찍다...</MainPhotoDescriptionTxt>
             </MainPhotoRightLayout>
