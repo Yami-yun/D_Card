@@ -3,8 +3,8 @@ import React, {
     createContext,
     useContext,
     useState,
-    
-  } from "react";
+} from "react";
+
 
 
 const initInstructionData =
@@ -72,64 +72,111 @@ const initPhotoZoneData = {
     height:"",
 };
 
-const initPhotoZoneDataList = [
-    {
-        id:"111",
-        title:"111",
-        description:"111122",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-    {
-        id:"112",
-        title:"222",
-        description:"222222",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-    {
-        id:"113",
-        title:"333",
-        description:"333333",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-    {
-        id:"114",
-        title:"444",
-        description:"444444",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-    {
-        id:"115",
-        title:"555",
-        description:"555555",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-];
+const initPhotoZoneDataList = [];
+
+
+interface imgProcessProps{
+    process:"ADD" | "MODIFY" | "DELETE";
+    uri:string;
+    id:number;
+};
+let RNFS = require('react-native-fs');
+const baseSRC = RNFS.ExternalDirectoryPath;
+function ImgProcss({process, uri, id}:imgProcessProps){
+    if(process === "ADD"){
+        const readImgPath = `${RNFS.ExternalDirectoryPath}/${uri}`;
+        const imgPath = `${RNFS.ExternalDirectoryPath}/${id}_${uri}`;
+        RNFS.copyFile(readImgPath, imgPath)
+            .then(res => {
+                console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : ADD, [D] : IMG_WRITE_COMPLETE, ${imgPath}`);
+            })
+            .catch(err => {
+                console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : ADD, [D] : IMG_WRITE_ERROR`);
+                console.log(`1. readImgPath :, ${readImgPath}`);
+                console.log(`2. imgPath :, ${imgPath}`);
+                console.log(`3. Error Message :, ${err.message}`);
+            });
+    }
+    else if(process === "MODIFY"){
+        const readImgPath = `${RNFS.ExternalDirectoryPath}/${uri}`;
+        const imgPath = `${RNFS.ExternalDirectoryPath}/${id}_${uri}`;
+        RNFS.copyFile(readImgPath, imgPath)
+            .then(res => {
+                console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : MODIFY, [D] : IMG_MODIFY_COMPLETE, ${imgPath}`);
+            })
+            .catch(err => {
+                console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : MODIFY, [D] : IMG_MODIFY_ERROR`);
+                console.log(`1. readImgPath :, ${readImgPath}`);
+                console.log(`2. imgPath :, ${imgPath}`);
+                console.log(`3. Error Message :, ${err.message}`);
+            });
+    }
+    else if(process === "DELETE"){
+        const readImgPath = `${RNFS.ExternalDirectoryPath}/${id}_${uri}`;
+        RNFS.unlink(readImgPath)
+            .then(res => {
+                console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : DELETE, [D] : IMG_DELETE_COMPLETE, ${readImgPath}`);
+            })
+            .catch(err => {
+                console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : DELETE, [D] : IMG_DELETE_ERROR`);
+                console.log(`1. readImgPath: ${readImgPath}`);
+                console.log(`2. Error Message :, ${err.message}`);
+                // console.log(err.message);
+            });
+    }
+    
+}
+
+// function DataSave(){
+
+//     const readImgPath = `${RNFS.ExternalDirectoryPath}/${uri}`;
+//     const imgPath = `${RNFS.ExternalDirectoryPath}/${id}_${uri}`;
+//     RNFS.copyFile(readImgPath, imgPath)
+//         .then(res => {
+//             console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : ADD, [D] : IMG_WRITE_COMPLETE, ${imgPath}`);
+//         })
+//         .catch(err => {
+//             console.log(`[S] : context.tsx, [F] : ImgProcss, [T] : ADD, [D] : IMG_WRITE_ERROR`);
+//             console.log(`1. readImgPath :, ${readImgPath}`);
+//             console.log(`2. imgPath :, ${imgPath}`);
+//             console.log(`3. Error Message :, ${err.message}`);
+//         });
+
+// }
+function DataLoad(){}
+
 
 let savePhotoZoneId = 0;
 function PhotoZoneDataListReducer(state, action){
-
     switch(action.type){
         case "ADD":
-            state.push({...action.data, id:savePhotoZoneId})
+            
+            if(action.data.uri !== "" && action.data.uri !== undefined){
+                // ImgProcss({process:"DELETE", uri:action.data.uri, id:savePhotoZoneId });
+                ImgProcss({process:action.type, uri:action.data.uri, id:savePhotoZoneId});
+            }
+            else{
+                console.log("[S] : context.tsx, [F] : PhotoZoneDataListReducer, [T] : ADD, [D] : No Input URI");
+            }
+            state.push({...action.data, id:savePhotoZoneId});
             savePhotoZoneId += 1;
             console.log("[S] : context.tsx, [F] : PhotoZoneDataListReducer, [T] : ADD, [D] : ");
             console.log(state);
 
+            isADD= true;
             return state;
 
         case "MODIFY":
             // console.log()
+            if(action.data.uri !== "" && action.data.uri !== undefined){
+                ImgProcss({process:"DELETE", uri:state[action.index].uri, id:state[action.index].id });
+                ImgProcss({process:action.type, uri:action.data.uri, id:state[action.index].id });
+            }
+            else{
+                console.log("[S] : context.tsx, [F] : PhotoZoneDataListReducer, [T] : MODIFY, [D] : No Input URI");
+            }
             state[action.index] = {...action.data};
+            console.log(state);
             return state;
 
         case "DELETE":
@@ -139,12 +186,15 @@ function PhotoZoneDataListReducer(state, action){
                 index += 1;
                 if(index !== action.data){
                     cmp.push(data);
-                }             
+                }else{
+                    ImgProcss({process:action.type, uri:data.uri, id:data.id});
+                }
             });
             console.log("[S] : context.tsx, [F] : PhotoZoneDataListReducer, [T] : DELETE, [D] : ");
             console.log(state);
 
             return cmp;
+
     }
 }
 
@@ -153,77 +203,57 @@ function PhotoZoneDataListReducer(state, action){
 const initHealthInfoData = {
     id:"",
     title:"",
-    importance:"",
+    importance:0,
     description:"",
     uri:"",
     width:"",
     height:"",
 };
 
-const initHealthInfoList = [
-    {
-        id:"111",
-        title:"111",
-        description:"111111",
-        importance:"0",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-    {
-        id:"112",
-        title:"222",
-        description:"222222",
-        importance:"1",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-    {
-        id:"111",
-        title:"333",
-        description:"333333",
-        importance:"1",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-    {
-        id:"111",
-        title:"444",
-        description:"444444",
-        importance:"2",
-        uri:"content://media/external/images/media/12076",
-        width:"200",
-        height:"200",
-    },
-];
+const initHealthInfoList = [];
 
 let saveHealthInfoId = 0;
 function HealthInfoDataListReducer(state, action){
-
     switch(action.type){
         case "ADD":
-            state.push({...action.data, id:saveHealthInfoId})
-            savePhotoZoneId += 1;
+
+            state.push({...action.data, id:saveHealthInfoId});
+            if(action.data.uri !== "" && action.data.uri !== undefined){
+                ImgProcss({process:action.type, uri:action.data.uri, id:saveHealthInfoId});
+            }
+            else{
+                console.log("[S] : context.tsx, [F] : HealthInfoDataListReducer, [T] : ADD, [D] : No Input URI");
+            }
+            saveHealthInfoId += 1;
             console.log("[S] : context.tsx, [F] : HealthInfoDataListReducer, [T] : ADD, [D] : ");
-            console.log(state);
+            console.log(action.data);
 
             return state;
 
         case "MODIFY":
             // console.log()
+            if(action.data.uri !== "" && action.data.uri !== undefined){
+                ImgProcss({process:"DELETE", uri:state[action.index].uri, id:state[action.index].id });
+                ImgProcss({process:action.type, uri:action.data.uri, id:state[action.index].id });
+            }
+            else{
+                console.log("[S] : context.tsx, [F] : HealthInfoDataListReducer, [T] : MODIFY, [D] : No Input URI");
+            }
             state[action.index] = {...action.data};
+            console.log(state);
             return state;
 
         case "DELETE":
+
             let index = -1;
             let cmp = [];
             state.forEach((data)=>{
                 index += 1;
                 if(index !== action.data){
                     cmp.push(data);
-                }             
+                }else{
+                    ImgProcss({process:action.type, uri:data.uri, id:data.id});
+                }
             });
             console.log("[S] : context.tsx, [F] : HealthInfoDataListReducer, [T] : DELETE, [D] : ");
             console.log(state);
@@ -242,56 +272,13 @@ const initEmergencyCallData = {
         numMiddle:"",
         numBack:"",
     },
-    importance:"",
+    importance:0,
     description:"",
 };
 
-const initEmergencyCallList = [
-    {
-        id:"1",
-        title:"1",
-        call:{
-            numFront:"010",
-            numMiddle:"1111",
-            numBack:"1111",
-        },
-        importance:"0",
-        description:"1111",
-    },
-    {
-        id:"2",
-        title:"2",
-        call:{
-            numFront:"010",
-            numMiddle:"2222",
-            numBack:"2222",
-        },
-        importance:"1",
-        description:"2222",
-    },
-    {
-        id:"3",
-        title:"3",
-        call:{
-            numFront:"010",
-            numMiddle:"3333",
-            numBack:"3333",
-        },
-        importance:"2",
-        description:"3333",
-    },
-    {
-        id:"4",
-        title:"4",
-        call:{
-            numFront:"010",
-            numMiddle:"4444",
-            numBack:"4444",
-        },
-        importance:"2",
-        description:"4444",
-    },
-];
+const initEmergencyCallList = [];
+
+let isADD = false;
 
 function EmergencyCallDataListReducer(state, action){
 
@@ -302,25 +289,25 @@ function EmergencyCallDataListReducer(state, action){
             console.log("[S] : context.tsx, [F] : EmergencyCallDataListReducer, [T] : ADD, [D] : ");
             console.log(state);
 
+            
+
             return state;
 
         case "MODIFY":
-            state[action.index] = {...action.data};
+            let cmp = state.filter((data)=> data.id === action.index);
+            cmp = {...action.data};
+            state = state.filter((data)=> data.id !== action.index);
+            state.push(cmp);
+            console.log("[S] : context.tsx, [F] : EmergencyCallDataListReducer, [T] : MODIFY, [D] : ");
+            console.log(state);
             return state;
 
         case "DELETE":
-            let index = -1;
-            let cmp = [];
-            state.forEach((data)=>{
-                index += 1;
-                if(index !== action.data){
-                    cmp.push(data);
-                }             
-            });
+
+            state = state.filter(data=>data.id !== action.data );
             console.log("[S] : context.tsx, [F] : EmergencyCallDataListReducer, [T] : DELETE, [D] : ");
             console.log(state);
-
-            return ;
+            return state;
 
     }
 }
@@ -331,10 +318,15 @@ const initPagingData = {
     EMERGENCY_CALL_MAIN:0,
 };
 
+const screenState = {
+    screen:"MAIN",
+    stage:0,
+};
+
 const MenuStateContext = createContext<boolean>(undefined);
 const SetMenuStateContext = createContext(undefined);
 
-const ScreenDisplayStateContext = createContext<string>(undefined);
+const ScreenDisplayStateContext = createContext(undefined);
 const SetScreenDisplayStateContext = createContext(undefined);
 
 const InstructionDataContext = createContext(undefined);
@@ -357,6 +349,10 @@ const SetEmergencyCallDataContext = createContext(undefined);
 const EmergencyCallDataContext = createContext(undefined);
 const SetEmergencyCallDataListContext = createContext(undefined);
 const EmergencyCallDataListContext = createContext(undefined);
+
+const AppInfoPageContext= createContext(undefined);
+const SetAppInfoPageContext= createContext(undefined);
+
 interface Props{
     children: JSX.Element | Array<JSX.Element>;
 };
@@ -364,7 +360,7 @@ interface Props{
 export function AppStateProvider({children}:Props){
 
     const [menuState, setMenuState] = useState<boolean>(false);
-    const [screenDisplayState, setScreenDisplayState] = useState<string>("MAIN");
+    const [screenDisplayState, setScreenDisplayState] = useState(screenState);
     const [instructionData, setInstructinoData] = useReducer(InstructionDataReducer, initInstructionData);
 
     const [photoZoneDataList, setPhotoZoneDataList] = useReducer(PhotoZoneDataListReducer, initPhotoZoneDataList);
@@ -377,6 +373,9 @@ export function AppStateProvider({children}:Props){
 
     const [emergencyCallData, setEmergencyCallData] = useState(initEmergencyCallData);
     const [emergencyCallDataList, setEmergencyCallDataList] = useReducer(EmergencyCallDataListReducer, initEmergencyCallList);
+
+    const [appInfoPage, setAppInfoPage] = useState(0);
+
     return(
         <MenuStateContext.Provider value={menuState}>
             <SetMenuStateContext.Provider value={setMenuState}>
@@ -398,7 +397,11 @@ export function AppStateProvider({children}:Props){
                                                                             <SetEmergencyCallDataContext.Provider value={setEmergencyCallData}>
                                                                                 <EmergencyCallDataListContext.Provider value={emergencyCallDataList}>
                                                                                     <SetEmergencyCallDataListContext.Provider value={setEmergencyCallDataList}>
-                                                                                        {children}
+                                                                                        <AppInfoPageContext.Provider value={appInfoPage}>
+                                                                                            <SetAppInfoPageContext.Provider value={setAppInfoPage}>
+                                                                                            {children}
+                                                                                            </SetAppInfoPageContext.Provider>
+                                                                                        </AppInfoPageContext.Provider>
                                                                                     </SetEmergencyCallDataListContext.Provider>
                                                                                 </EmergencyCallDataListContext.Provider>
                                                                             </SetEmergencyCallDataContext.Provider>
@@ -420,6 +423,16 @@ export function AppStateProvider({children}:Props){
             </SetMenuStateContext.Provider>
         </MenuStateContext.Provider>
     );
+}
+
+export function useAppInfoPageContext(){
+    const context = useContext(AppInfoPageContext);
+    return context;
+}
+
+export function useSetAppInfoPageContext(){
+    const context = useContext(SetAppInfoPageContext);
+    return context;
 }
 
 export function useEmergencyCallDataListContext(){
@@ -539,4 +552,4 @@ export const ChekIsEmptyData = (data) => {
     }
 };
 
-export {initPhotoZoneData, initHealthInfoData, initEmergencyCallData};
+export {initPhotoZoneData, initHealthInfoData, initEmergencyCallData, baseSRC, isADD};

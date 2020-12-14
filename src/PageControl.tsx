@@ -6,12 +6,12 @@
  * @flow strict-local
  */
 
-import React, {useRef, useEffect} from 'react';
-import {PanResponder, View} from 'react-native';
+import React, {useRef, useEffect, useState} from 'react';
+import {PanResponder, View, BackHandler, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import {getDeviceWidth, getDeviceHeight} from './base/Tool';
 
-import { useSetMenuStateContext, useSetScreenDisplayStateContext, useScreenDisplayStateContext } from './base/context';
+import { useSetMenuStateContext, useSetScreenDisplayStateContext, useScreenDisplayStateContext, useSetAppInfoPageContext } from './base/context';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -43,32 +43,47 @@ const Stack = createStackNavigator();
 
 
 const PageControl = ({children}:Props)=> {
-  const deviceW = getDeviceWidth()
-  const setMenuStateContext = useSetMenuStateContext();
-  let isMenuChange = false;
+    const deviceW = getDeviceWidth()
+    const setMenuStateContext = useSetMenuStateContext();
+    let isMenuChange = false;
 
-  const screenDisplayStateContext = useScreenDisplayStateContext();
+    const screenDisplayStateContext = useScreenDisplayStateContext();
+    const setAppInfoPageContext = useSetAppInfoPageContext();
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    let swipeX = 0;
 
 
-  const panResponder = useRef(
+
+    const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder : ()=> true,
-      onPanResponderRelease: (e, gestureState) => {
-        // console.log(gestureState.x0, gestureState.y0);
-        
+        onStartShouldSetPanResponder : ()=> true,
+        onPanResponderRelease: (e, gestureState) => {
+
+
+        if(gestureState.dx > 80 && swipeX !== 0){
+            swipeX -= 1;
+            setAppInfoPageContext(swipeX);
+            console.log("Left Move");
+            console.log(swipeX);
+        }
+        else if(gestureState.dx < -80  && swipeX !== 3){
+            swipeX += 1;
+            setAppInfoPageContext(swipeX);
+            console.log("Right Move");
+            console.log(swipeX);
+
+        }
+
         if(deviceW * 0.57 < gestureState.x0){
             isMenuChange = true;
             setMenuStateContext(false);
             // console.log("test11");
-          
-        }
-      },
-      
+        }},
     })).current;
 
     const Page = () =>{
         let screen = undefined;
-        switch(screenDisplayStateContext){
+        switch(screenDisplayStateContext.screen){
             
             case "MAIN":
                 screen = <MainPage/>;
@@ -82,7 +97,6 @@ const PageControl = ({children}:Props)=> {
             case "PHOTO_MAIN":
                 screen = <PhotoZoneMainPage/ >
                 break;
-
             case "PHOTO_ADD":
                 screen = <PhotoZoneAddPage/>
                 break;
@@ -108,7 +122,7 @@ const PageControl = ({children}:Props)=> {
                 screen = <HealthInfoModifyPage/ >
                 break;
             case "APP_INFO":
-                screen = <AppInfoPage/ >
+                screen = <AppInfoPage / >
                 break;
             default:
                 console.log("default");
@@ -117,28 +131,13 @@ const PageControl = ({children}:Props)=> {
         return screen;
     }
 
-  return (
-      <Whole {...panResponder.panHandlers}>
-   
+    return (
+        <Whole {...panResponder.panHandlers}>
         {/* <MainPage/> */}
         {Page()}
         <SideMenu />
-        {/* <InstructionMainPage/ > */}
-        {/* <InstructionModify/> */}
 
-        {/* <PhotoZoneMainPage /> */}
-        {/* <PhotoZoneModifyPage/> */}
-
-        {/* <EmergencyCallMainPage/> */}
-        {/* <EmergencyCallModifyPage/> */}
-
-        {/* <HealthInfoMainPage/> */}
-        {/* <HealthInfoModifyPage/> */}
-        {/* <SideMenu/> */}
-        
-        {/* <AppInfoPage/> */}
-
-      </Whole>
-  );
+        </Whole>
+    );
 };
 export default PageControl;

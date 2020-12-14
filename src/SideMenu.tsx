@@ -2,7 +2,18 @@ import React, {useState, useRef, useEffect} from 'react';
 import styled, {css} from 'styled-components/native';
 import * as Animatable from 'react-native-animatable';
 import { Animated, StyleSheet, View } from 'react-native';
-import { useMenuStateContext, useSetMenuStateContext, useScreenDisplayStateContext, useSetScreenDisplayStateContext} from "./base/context";
+import { 
+    useMenuStateContext, 
+    useSetMenuStateContext, 
+    useScreenDisplayStateContext, 
+    useSetScreenDisplayStateContext, 
+    usePhotoZoneDataListContext, 
+    useSetPhotoZoneDataContext, 
+    useSetPagingDataContext, 
+    usePagingDataContext,
+    useSetHealthInfoDataContext,
+    useHealthInfoDataListContext,
+} from "./base/context";
 import 'react-native-gesture-handler';
 
 
@@ -115,6 +126,12 @@ function SideMenu(){
     const setMenuStateContext = useSetMenuStateContext();
     const screenDisplayStateContext = useScreenDisplayStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    const photoZoneDataListContext = usePhotoZoneDataListContext();
+    const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
+    const setPagingDataContext = useSetPagingDataContext();
+    const pagingDataContext = usePagingDataContext();
+    const setHealthInfoDataContext = useSetHealthInfoDataContext();
+    const healthInfoDataListContext = useHealthInfoDataListContext();
     // const [isCloseMenu, setIsCloseMenu] = useState(0);
     // console.log(screenDisplayStateContext);
     const aniRef = useRef(null);
@@ -122,7 +139,7 @@ function SideMenu(){
     let txtColor:"basic" | "press" = "basic";
     // const fadeAnim = useRef(new Animated.Value(-300)).current;
 
-    const screenChange =(screenName:string) => {
+    const screenChange =(screenName) => {
         setMenuStateContext(false);
         setScreenDisplayStateContext(screenName);
         txtColor = "press";
@@ -155,8 +172,6 @@ function SideMenu(){
         8 : <HealthInfoModifyPage/>
         9 : <AppInfoPage/>
     */
-    
-
 
 
     return(
@@ -168,37 +183,52 @@ function SideMenu(){
                 <CloseBtnBox onPress={isClose}>
                     <CloseBtn source={require("./img/xicon2.png")} />
                 </CloseBtnBox>
-                <TopTextLayout onPress={()=>{screenChange("MAIN")}}>
+                <TopTextLayout onPress={()=>{screenChange({screen:"MAIN", stage:0})}}>
                     <EnrollTxt txtColor={txtColor}>홈으로 가기</EnrollTxt>
                 </TopTextLayout>
                     
             </TopLayout>
-                <MenuItemLayoutBtn name="치매노인수첩 [ D- Card ]란?" onPress={()=>{screenChange("APP_INFO")}}>
+                <MenuItemLayoutBtn name="치매노인수첩 [ D- Card ]란?" onPress={()=>{screenChange({screen:"APP_INFO", stage:1}); }}>
                     <MenuItemBox style={{borderTopWidth: 3, borderTopColor: '#335C90'}}>
                         <MenuItemTxt>치매노인수첩 [ D- Card ]란?</MenuItemTxt>
                         <MoveIcon>›</MoveIcon>
                     </MenuItemBox>
                 </MenuItemLayoutBtn>
 
-            <MenuItemLayoutBtn name="자기소개" onPress={()=>{screenChange("INSTRUCTION_MAIN")}}>
+            <MenuItemLayoutBtn name="자기소개" onPress={()=>{screenChange({screen:"INSTRUCTION_MAIN", stage:1}); }}>
                     <MenuItemBox>
                         <MenuItemTxt txtColor={txtColor}>자기소개</MenuItemTxt>
                         <MoveIcon>›</MoveIcon>
                     </MenuItemBox>
                 </MenuItemLayoutBtn>
-                <MenuItemLayoutBtn name="사진첩" onPress={()=>{screenChange("PHOTO_MAIN")}}>
+                <MenuItemLayoutBtn name="사진첩" onPress={()=>{
+                    screenChange({screen : "PHOTO_MAIN", stage:1});
+                    if(photoZoneDataListContext[0] !== undefined){
+                        setPhotoZoneDataContext({...photoZoneDataListContext[0]});
+                    }
+                    setPagingDataContext({...pagingDataContext, "PHOTO_MAIN" :0});
+                }}>
                     <MenuItemBox>
                         <MenuItemTxt txtColor={txtColor}>사진첩</MenuItemTxt>
                         <MoveIcon>›</MoveIcon>
                     </MenuItemBox>
                 </MenuItemLayoutBtn>
-                <MenuItemLayoutBtn name="긴급연락처" onPress={()=>{screenChange("EMERGENCY_CALL_MAIN")}}>
+                <MenuItemLayoutBtn name="긴급연락처" onPress={()=>{
+                    screenChange({screen : "EMERGENCY_CALL_MAIN", stage:1});
+                    setPagingDataContext({...pagingDataContext, "EMERGENCY_CALL_MAIN" :0});
+                }}>
                     <MenuItemBox>
                         <MenuItemTxt txtColor={txtColor}>긴급연락처</MenuItemTxt>
                         <MoveIcon>›</MoveIcon>
                     </MenuItemBox>
                 </MenuItemLayoutBtn>
-                <MenuItemLayoutBtn name="건강정보" onPress={()=>{screenChange("HEALTH_INFO_MAIN")}}>
+                <MenuItemLayoutBtn name="건강정보" onPress={()=>{
+                    screenChange({screen : "HEALTH_INFO_MAIN", stage:1});
+                    if(healthInfoDataListContext[0] !== undefined){
+                        setHealthInfoDataContext({...healthInfoDataListContext[0]});
+                    }
+                    setPagingDataContext({...pagingDataContext, "HEALTH_INFO_MAIN" :0});
+                }}>
                     <MenuItemBox>
                         <MenuItemTxt txtColor={txtColor}>건강정보</MenuItemTxt>
                         <MoveIcon>›</MoveIcon>

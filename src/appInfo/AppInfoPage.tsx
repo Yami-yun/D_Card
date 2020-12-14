@@ -1,11 +1,15 @@
-import React from 'react';
-import styled from 'styled-components/native';
-
+import React, {useEffect, useState, useRef} from 'react';
+import { View, Image, BackHandler } from 'react-native';
+import styled, {css} from 'styled-components/native';
+import {useSetScreenDisplayStateContext, useAppInfoPageContext} from '../base/context';
 // Close 기능
 // Paging 기능
 
+
+
 const Whole = styled.View`
     height : 100%;
+    background: #ffffff;
 `;
 
 // 상단 레이아웃
@@ -32,12 +36,25 @@ const InfoHeaderTxt = styled.Text`
     font-size: 15px;
     color: #FFFFFF;
 `;
-const InfoHeaderCloseIcon = styled.Image`
+
+const InfoHeaderCloseIconBox = styled.TouchableHighlight.attrs({
+    activeOpacity: 0.6,
+    underlayColor:"rgba(255, 255, 255, 0)"}
+)`
     position: absolute;
     right: 0.01px;
 `;
 
+const InfoHeaderCloseIcon = styled.Image``;
+
+const FirtInfoMainImg = styled.Image``;
+
 const InfoMainImg = styled.Image`
+    background: #ffffff;
+    border-radius: 10px;
+
+    height: 310px;
+    width: 245px;
 `;
 
 // App 소개 하단 레이아웃 (Description 부분)
@@ -55,14 +72,12 @@ const InfoQuestionBox = styled.View`
     justify-content: center;
     align-items: center;
 
-    background: #AAD462;
     border: 2px #FFFFFF;
     border-radius: 5px;
 `;
 const InfoQuestionTxt = styled.Text`
     font-weight: bold;
     font-size: 12px;
-    color: #000000;
 `;
 
 // Answer Box
@@ -79,13 +94,22 @@ const InfoAnswerBox = styled.View`
 `;
 const InfoAnswerTxt = styled.Text`
     /* width: 249px; */
-    width: 79%;
-    height: 50%;
-    border: 1px black;
 
-    text-align: center;
-    font-weight: bold;
+    ${props=>props.data === 0 && css`
+        text-align:center;
+    `}
+    ${props=>props.data === 2 && css`
+        text-align:center;
+    `}
+    width: 100%;
+    /* height: 100%; */
+    padding: 4px 32px;
+    /* border: 1px black; */
+
+    /* text-align: center; */
+    font-weight: normal;
     font-size: 13px;
+    line-height: 18px;
     color: rgba(0, 0, 0, 0.8);
     
 `;
@@ -104,45 +128,128 @@ const InfoPagingCircle = styled.View`
     width: 10px;
     height: 10px;
 
-    background: #164580;
+    background: ${props=>props.active ? '#164580' : '#C4C4C4'};
     border-radius: 16px;
 `;
 
-function AppInfoPage(){
+const swipeDirections = {
+    SWIPE_UP: "SWIPE_UP",
+    SWIPE_DOWN: "SWIPE_DOWN",
+    SWIPE_LEFT: "SWIPE_LEFT",
+    SWIPE_RIGHT: "SWIPE_RIGHT"
+};
+
+const imgSrc = [
+    require("../img/infoImg1.png"),
+    require("../img/infoImg2.png"),
+    require("../img/infoImg3.png"),
+];
+
+const titleSrc = [
+    {
+        title:"치매노인수첩 [ D- card ] 이란? 무엇인가요?",
+        background:"#AAD462",
+        color:"#000000",
+    },
+    {
+        title:"치매노인수첩 [ D- card ]이 만들어진 이유는 무엇인가요?",
+        background:"#AAD462",
+        color:"#000000",
+    },
+    {
+        title:"치매노인수첩 [ D- card ]의 포함 내용",
+        background:"#F28D53",
+        color:"#000000",
+    },
+    {
+        title:"치매노인수첩 [ D- card ] 주의사항",
+        background:"#ED3B3B",
+        color:"#FFFFFF",
+    },
+];
+
+const descriptionSrc = [
+    {
+        width:249,
+        uri: require("../img/infoDescription1.png"),
+    },
+    {
+        width:297,
+        uri: require("../img/infoDescription2.png"),
+    },
+    {
+        width:340,
+        uri: require("../img/infoDescription3.png"),
+    },
+    {
+        width:296,
+        uri: require("../img/infoDescription4.png"),
+    },
     
+];
+
+function AppInfoPage(){
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    const appInfoPageContext = useAppInfoPageContext();
+
+    useEffect(() => {    
+        const backAction = () => {
+            setScreenDisplayStateContext({screen:"MAIN",stage:0});
+            return true;
+        };
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
+
+    const infoPagingCircleList = () => {
+        let circle = [];
+        for(let i=0; i<4; i++){
+            if(i !== appInfoPageContext){
+                circle.push(false);
+            }else{ circle.push(true); }
+        }
+        return(
+                circle.map((tmp)=>(
+                <InfoPagingCircle active={tmp}/>))
+        );
+    };
+
     return(
         <Whole>
             <InfoTopLayout>
                 <InfoHeader>
                     <InfoHeaderTxt>치매노인수첩(D- Card) App. 소개</InfoHeaderTxt>
-                    <InfoHeaderCloseIcon source={require('../img/xicon2.png')} />
+                    <InfoHeaderCloseIconBox onPress={()=>{setScreenDisplayStateContext({screen : "MAIN", stage:0});}}>
+                        <InfoHeaderCloseIcon source={require('../img/xicon2.png')} />
+                    </InfoHeaderCloseIconBox>
                 </InfoHeader>
-                <InfoMainImg source={require('../img/logo.png')}/>
-
+                <View style={{justifyContent:"center"}}>
+                    {appInfoPageContext ===0 && <FirtInfoMainImg source={require('../img/logo.png')}/>}
+                    {appInfoPageContext !==0 && <InfoMainImg source={imgSrc[appInfoPageContext-1]}/>}
+                </View>
+                
             </InfoTopLayout>
             <InfoBottomLayout>
-                <InfoQuestionBox>
-                    <InfoQuestionTxt>치매노인수첩 [ D- card ] 이란? 무엇인가요?</InfoQuestionTxt>
+                <InfoQuestionBox style={{backgroundColor:titleSrc[appInfoPageContext].background}}>
+                    <InfoQuestionTxt style={{color:titleSrc[appInfoPageContext].color}}>{titleSrc[appInfoPageContext].title}</InfoQuestionTxt>
                 </InfoQuestionBox>
-                <InfoAnswerBox>
-                    <InfoAnswerTxt>치매노인수첩 [ D- card ]이란? 소지자에 대한 정보와
-                    소지자에 보호 연락처 및 긴급 연락처, 
-                    건강에 대한 정보
-                    등이 기록된 곳입니다.
-                    </InfoAnswerTxt>
+                <InfoAnswerBox data={appInfoPageContext}>
+                    <Image style={{width:descriptionSrc[appInfoPageContext].width,height:200}} resizeMode="contain" source={descriptionSrc[appInfoPageContext].uri} />
                 </InfoAnswerBox>
 
                 <InfoPagingLayout>
-                    <InfoPagingCircle />
-                    <InfoPagingCircle />
-                    <InfoPagingCircle />
-                    <InfoPagingCircle />
+                    
+                    {infoPagingCircleList()}
                 </InfoPagingLayout>
 
             </InfoBottomLayout>
 
         </Whole>
+
     );
 }
-
+// resizeMode='contain' cover contain stretch repeat center
 export default AppInfoPage;

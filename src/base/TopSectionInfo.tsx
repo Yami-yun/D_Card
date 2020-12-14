@@ -1,5 +1,7 @@
 import React from 'react';
 import styled, {css} from 'styled-components/native';
+import {Alert, ToastAndroid} from 'react-native';
+
 // import Button from './button';
 
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -12,15 +14,20 @@ import {
     useSetScreenDisplayStateContext,
     useSetPhotoZoneDataListContext,
     initPhotoZoneData,
+    useSetPagingDataContext,
     usePagingDataContext,
     useHealthInfoDataContext,
     useSetHealthInfoDataContext,
     useSetHealthInfoDataListContext,
     useEmergencyCallDataContext,
     useSetEmergencyCallDataContext,
+    useEmergencyCallDataListContext,
     useSetEmergencyCallDataListContext,
     initHealthInfoData,
     initEmergencyCallData,
+    useHealthInfoDataListContext,
+    usePhotoZoneDataListContext,
+    ChekIsEmptyData,
 } from "../base/context";
 
 // 기능 : main일 경우 내용 Count, Add, Modify 버튼 기능
@@ -87,49 +94,93 @@ interface Props{
     type?: 'INFO' | 'MODIFY' | 'ADD' | 'H_MODIFY';
     text?: string;
     screen: string;
+    emergencyId?: string;
 };
 
-function TopSectionInfo({totalCount, type, text, screen}:Props){
+function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
     const screenDisplayStateContext = useScreenDisplayStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
 
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
     const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
     const photoZoneDataContext = usePhotoZoneDataContext();
+    const photoZoneDataListContext = usePhotoZoneDataListContext();
     
     const pagingDataContext = usePagingDataContext();
+    const setPagingDataContext = useSetPagingDataContext();
 
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
     const healthInfoDataContext = useHealthInfoDataContext();
     const setHealthInfoDataListContext = useSetHealthInfoDataListContext()
+    const healthInfoDataListContext = useHealthInfoDataListContext();
 
     const emergencyCallDataContext = useEmergencyCallDataContext();
     const setEmergencyCallDataContext = useSetEmergencyCallDataContext();
     const setEmergencyCallDataListContext = useSetEmergencyCallDataListContext();
-
+    const emergencyCallDataListContext = useEmergencyCallDataListContext();
+    
+    // const initPhotoZoneData = {
+    //     id:"",
+    //     title:"",
+    //     description:"",
+    //     uri:"",
+    //     width:"",
+    //     height:"",
+    // };
 
     const setData = () => {
         if(screen === "PHOTO_MODIFY"){
-            console.log("TopSectionInfo, setData ");
-            /* console.log(setPhotoZoneDataContext); */
 
-            setPhotoZoneDataListContext({type:type, data:photoZoneDataContext, index:pagingDataContext.PHOTO_MAIN});
+            if(photoZoneDataContext.title !== "" && photoZoneDataContext.uri !== "" && photoZoneDataContext.uri !== undefined)
+            {
+                setPhotoZoneDataListContext({type:type, data:photoZoneDataContext, index:pagingDataContext.PHOTO_MAIN});
+                if(type === "ADD"){
+                    setPagingDataContext({...pagingDataContext, PHOTO_MAIN : photoZoneDataListContext.length});
+                    // setPhotoZoneDataContext({...photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]});
+                }
+            }else{
+                ToastAndroid.show('제목과 사진을 넣어주세요.',ToastAndroid.SHORT);
+            }
+            
+            
+            console.log("TopSectionInfo, setData ");
+            console.log(photoZoneDataListContext.length);
+            console.log(pagingDataContext.PHOTO_MAIN);
             // data init 함수 넣기
-            setPhotoZoneDataContext({...initPhotoZoneData});
+            
         }
         else if(screen === "EMERGENCY_CALL_MODIFY"){
             console.log("EMERGENCY_CALL_MODIFY!");
-
-            setEmergencyCallDataListContext({type:type, data:emergencyCallDataContext, index:pagingDataContext.EMERGENCY_CALL_MAIN});
+            if(screen === "EMERGENCY_CALL_MODIFY" && emergencyCallDataContext.title !== "" && emergencyCallDataContext.call.numBack !== "" && emergencyCallDataContext.call.numBack !== undefined)
+            {
+                setEmergencyCallDataListContext({type:type, data:emergencyCallDataContext, index:emergencyId});
+            }
+            else{
+                ToastAndroid.show('제목과 연락처를 넣어주세요.',ToastAndroid.SHORT);
+            }
             // data init 함수 넣기
-            setEmergencyCallDataContext({...initEmergencyCallData});
+            // setEmergencyCallDataContext({...initEmergencyCallData});
         }
         else if(screen === "HEALTH_INFO_MODIFY"){
             console.log("HEALTH_INFO_MODIFY!");
 
-            setHealthInfoDataListContext({type:type, data:healthInfoDataContext, index:pagingDataContext.HEALTH_INFO_MAIN});
+            if(screen === "HEALTH_INFO_MODIFY" && healthInfoDataContext.title !== "" && healthInfoDataContext.uri !== "" && healthInfoDataContext.uri !== undefined)
+            {
+                setHealthInfoDataListContext({type:type, data:healthInfoDataContext, index:pagingDataContext.HEALTH_INFO_MAIN});
+                if(type === "ADD"){
+                    setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN : healthInfoDataListContext.length});
+                    // setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MODIFY]});
+                }
+            }
+            else{
+                ToastAndroid.show('제목과 사진을 넣어주세요.',ToastAndroid.SHORT);
+            }
+
+            // if(type === "ADD"){
+            //     setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN : healthInfoDataListContext.length});
+            // }
             // data init 함수 넣기
-            setHealthInfoDataContext({...initHealthInfoData});
+            // setHealthInfoDataContext({...initHealthInfoData});
         }
     }
 
@@ -139,12 +190,48 @@ function TopSectionInfo({totalCount, type, text, screen}:Props){
             setPhotoZoneDataContext({...initPhotoZoneData});
             setEmergencyCallDataContext({...initEmergencyCallData});
             setHealthInfoDataContext({...initHealthInfoData});
-            setScreenDisplayStateContext(screenDisplayStateContext.replace(/MAIN/g, 'ADD'));
+            setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MAIN/g, 'ADD'), stage:2});
+            // console.log("testtest");
+            // console.log(screenDisplayStateContext);
+            // setScreenDisplayStateContext(screenDisplayStateContext.replace(/MAIN/g, 'ADD'));
             //console.log(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY') );
         }else if(type === "MODIFY" || type === "H_MODIFY"){
-            setScreenDisplayStateContext(screenDisplayStateContext.replace(/MODIFY/g, 'MAIN'));
+            if(screen === "PHOTO_MODIFY" && photoZoneDataContext.title !== "" && photoZoneDataContext.uri !== "" && photoZoneDataContext.uri !== undefined)
+            {
+                // setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN:Math.round(emergencyCallDataListContext.length/2)-1 });
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MODIFY/g, 'MAIN'), stage:1});
+            }
+            if(screen === "HEALTH_INFO_MODIFY" && healthInfoDataContext.title !== "" && healthInfoDataContext.uri !== "" && healthInfoDataContext.uri !== undefined)
+            {
+                // setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN:Math.round(emergencyCallDataListContext.length/2)-1 });
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MODIFY/g, 'MAIN'), stage:1});
+            }
+            if(screen === "EMERGENCY_CALL_MODIFY" && emergencyCallDataContext.title !== "" && emergencyCallDataContext.call.numBack !== "" && emergencyCallDataContext.call.numBack !== undefined)
+            {
+                console.log("TESTTEST");
+                console.log(emergencyCallDataContext);
+                setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN:Math.round(emergencyCallDataListContext.length/2)-1 });
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MODIFY/g, 'MAIN'), stage:1});
+            }
+            
         }else if(type === "ADD"){
-            setScreenDisplayStateContext(screenDisplayStateContext.replace(/ADD/g, 'MAIN'));
+            // setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN:Math.round(emergencyCallDataListContext.length/2)-1 });
+            
+            if(screen === "PHOTO_MODIFY" && photoZoneDataContext.title !== "" && photoZoneDataContext.uri !== "" && photoZoneDataContext.uri !== undefined)
+            {
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/ADD/g, 'MAIN'), stage:1});
+            }
+            if(screen === "HEALTH_INFO_MODIFY" && healthInfoDataContext.title !== "" && healthInfoDataContext.uri !== "" && healthInfoDataContext.uri !== undefined)
+            {
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/ADD/g, 'MAIN'), stage:1});
+            }
+            if(screen === "EMERGENCY_CALL_MODIFY" && emergencyCallDataContext.title !== "" && emergencyCallDataContext.call.numBack !== "" && emergencyCallDataContext.call.numBack !== undefined)
+            {
+                console.log("TESTTEST");
+                console.log(emergencyCallDataContext);
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/ADD/g, 'MAIN'), stage:1});
+            }
+        
         }
     }
     // type='INFO';
@@ -158,6 +245,7 @@ function TopSectionInfo({totalCount, type, text, screen}:Props){
             <FuncBtn onPress={()=>{
                 screenMove();
                 setData();
+                
                 }}>
                 <BtnTxt>{text}</BtnTxt>
             </FuncBtn>

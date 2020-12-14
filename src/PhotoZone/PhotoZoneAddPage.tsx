@@ -1,12 +1,20 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import Header from '../base/Header';
 import TopSectionInfo from '../base/TopSectionInfo';
 import PhotoLayout from '../base/PhotoLayout';
 import {InputBox, Input, InputLabel} from '../base/input';
-import { ScrollView } from 'react-native';
+import { ScrollView, BackHandler} from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {usePhotoZoneDataContext, useSetPhotoZoneDataContext} from '../base/context';
+import {
+    usePhotoZoneDataContext, 
+    useSetPhotoZoneDataContext, 
+    useSetScreenDisplayStateContext, 
+    usePhotoZoneDataListContext, 
+    usePagingDataContext, 
+    useSetPhotoZoneDataListContext,
+    initPhotoZoneData,
+} from '../base/context';
 
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
@@ -26,7 +34,28 @@ function PhotoZoneAddPage(){
     const photoZoneDataContext = usePhotoZoneDataContext();
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
 
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
+    const photoZoneDataListContext = usePhotoZoneDataListContext();
+    const pagingDataContext = usePagingDataContext();
+
+    useEffect(() => {
+        // add page 데이터 초기화
+        setPhotoZoneDataContext({...initPhotoZoneData});
+        // setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
+        const backAction = () => {
+            // 뒤로 갈때 이전 페이지 정보 갱신
+            setPhotoZoneDataContext({...photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]});
+            setScreenDisplayStateContext({screen:"PHOTO_MAIN",stage:1});
+            return true;
+        };
     
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
 
     return(
         <>
@@ -40,16 +69,18 @@ function PhotoZoneAddPage(){
 
                     <InputBox>
                         <InputLabel>제목</InputLabel>
-                        <Input onChangeText={text=>setPhotoZoneDataContext({...photoZoneDataContext, title:text})} value={photoZoneDataContext.title} style={{height:40}}/>
+                        <Input maxLength={20} onChangeText={text=>setPhotoZoneDataContext({...photoZoneDataContext, title:text})} value={photoZoneDataContext.title} style={{height:40}}/>
                     </InputBox>
                     <InputBox>
                         <InputLabel >내용</InputLabel>
                         <Input 
+                        multiline
+                        maxLength={150}
                         onChangeText={text=>setPhotoZoneDataContext({...photoZoneDataContext, description:text})} 
                         value={photoZoneDataContext.description} 
                         placeholder="사진에 대한 이야기를 적어주세요." 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:189, fontSize:10}}
+                        style={{height:189, fontSize:10, paddingRight:20}}
                         />
                     </InputBox>
                 </Whole>

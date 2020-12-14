@@ -7,6 +7,7 @@ import {
     useSetPhotoZoneDataContext,
     useHealthInfoDataListContext,
     useSetHealthInfoDataContext,
+    useEmergencyCallDataListContext,
 } from '../base/context';
 
 // Paging Btn Layout
@@ -48,50 +49,66 @@ function PagingBtnLayout({screen}:Props){
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
     const healthInfoDataListContext = useHealthInfoDataListContext();
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
+    const emergencyCallDataListContext = useEmergencyCallDataListContext();
 
     const pageLen = (screen === "PHOTO_MAIN") ? photoZoneDataListContext.length : healthInfoDataListContext.length;
+    const emergencyPageLen = emergencyCallDataListContext.length;
 
     const pagingLeft = () =>{
         if(pagingDataContext[screen] !== 0){
-            // console.log("1");
             if(screen === "PHOTO_MAIN"){
-                // console.log("2");
+                console.log("PAGING LEFT BEFORE :");
+                console.log(pagingDataContext);
+
                 setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.PHOTO_MAIN - 1}); 
-                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
+
+                console.log("PAGING LEFT AFTER :");
+                console.log(pagingDataContext);
+                // ??????????? why update pagingdatacontext?
+                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN - 1]);
+                
             }
             else if(screen === "HEALTH_INFO_MAIN"){
-                // console.log("3");
+                // paging 하면 해당 page의 보여주는 정보를 갱신한다.
                 setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.HEALTH_INFO_MAIN - 1});
-                setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]);
+                setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN - 1]);
+                
             }
             else{
-                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN - 1}); 
-                // setHealthInfoDataContext({healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]});
+                // emergency page는 해당 페이지에 정보가 두개 이므로 다른 main script에서 갱신한다.
+                setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN - 1}); 
             }
-            // setPagingDataContext({...pagingDataContext, :});
         }
-        // console.log(pagingDataContext);
     };
 
     const pagingRight = () =>{
+        console.log("Test!!!!!!!!!");
+        console.log(pageLen - 1);
+        // console.log(pageLen - 1);
         if(pagingDataContext[screen] !== (pageLen - 1)){
-            // console.log("4");
             if(screen === "PHOTO_MAIN"){
-                // console.log("5");
+                console.log("PAGING RIGHT BEFORE :");
+                console.log(pagingDataContext);
+                
                 setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.PHOTO_MAIN + 1}); 
-                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
+                console.log("PAGING RIGHT AFTER :");
+                console.log(pagingDataContext);
+                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN + 1]);
+                console.log("test!!!");
+                
             }
             else if(screen === "HEALTH_INFO_MAIN"){
-                // console.log("6");
+                
                 setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.HEALTH_INFO_MAIN + 1}); 
-                setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]);
+                setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN + 1]);
             }
-            else{
-                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN + 1}); 
-            }
-            // setPagingDataContext({...pagingDataContext, :});
         }
-        // console.log(pagingDataContext);
+
+        if(screen === "EMERGENCY_CALL_MAIN"){
+            if(pagingDataContext[screen] !== Math.round(emergencyPageLen/2) - 1){
+                setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN + 1}); 
+            }
+        }
     };
 
 

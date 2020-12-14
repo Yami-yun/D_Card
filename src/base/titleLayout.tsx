@@ -8,6 +8,12 @@ import {
     useScreenDisplayStateContext,
     useSetHealthInfoDataListContext,
     useSetEmergencyCallDataListContext,
+    useSetEmergencyCallDataContext,
+    useSetPagingDataContext,
+    useEmergencyCallDataListContext,
+    useSetPhotoZoneDataContext,
+    useSetHealthInfoDataContext,
+    useHealthInfoDataListContext,
 } from '../base/context';
 
 const Whole = styled.View`
@@ -25,7 +31,7 @@ const TitleBox = styled.View`
     align-items: center;
     
     background: ${props=>(props.color)};
-    border: 1px;
+    /* border: 1px; */
     border-radius: 5px;
 `;
 
@@ -85,24 +91,39 @@ interface Props{
     title?: string;
     color?: string;
     screen?: string;
+    id?: string;
+    emergencyData?:any;
 };
 
-function TitleLayout({title, color, screen}:Props){
+function TitleLayout({title, color, screen, id, emergencyData}:Props){
     const pagingDataContext = usePagingDataContext();
+    const setPagingDataContext = useSetPagingDataContext();
+
     const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
     const photoZoneDataListContext = usePhotoZoneDataListContext();
+    const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
+
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
     const screenDisplayStateContext = useScreenDisplayStateContext();
     const [isShowIcon, setIsShowIcon] = useState(false);
     const setHealthInfoDataListContext = useSetHealthInfoDataListContext();
 
     const setEmergencyCallDataListContext = useSetEmergencyCallDataListContext();
-
+    const setEmergencyCallDataContext = useSetEmergencyCallDataContext();
+    const emergencyCallDataListContext = useEmergencyCallDataListContext();
+    const setHealthInfoDataContext = useSetHealthInfoDataContext();
+    const healthInfoDataListContext = useHealthInfoDataListContext();
+    // console.log("TTTTTTTTTTTTTTTTTTTTest");
+    // console.log(color);
+    // color = "#ED3B3B";
     if(color === undefined){
         if(screen === "PHOTO_MAIN"){
             color = "#2A65AF";
         }
         else if(screen === "HEALTH_INFO_MAIN"){
+            color = "#ED3B3B";
+        }
+        else{
             color = "#ED3B3B";
         }
     }
@@ -112,23 +133,75 @@ function TitleLayout({title, color, screen}:Props){
         setIsShowIcon(!isShowIcon);
     }
 
-    // click > show PhotoZone Modify Page about current shown photo data
-    const editPhoto = () => {
-        setScreenDisplayStateContext(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY'));
-    }
+    const initEmergencyCallData = {
+        id:"",
+        title:"",
+        call:{
+            numFront:"",
+            numMiddle:"",
+            numBack:"",
+        },
+        importance:"",
+        description:"",
+    };
 
-    // current shown photo data delete
-    const deletePhoto = () => {
-        if(screen === "PHOTO_MAIN"){
-            setPhotoZoneDataListContext({type:"DELETE", data:pagingDataContext[screen]});
-        }
-        else if(screen === "HEALTH_INFO_MAIN"){
-            setHealthInfoDataListContext({type:"DELETE", data:pagingDataContext[screen]})
+    // click > show Modify Page about current shown data
+    const moveEditPage = () => {
+        if(screen === "EMERGENCY_CALL_MAIN"){
+            if(emergencyCallDataListContext.length !== 0){          // 데이터가 없을 경우 modify 방지
+                console.log("EMERGENCY_CALL_MAIN");
+                console.log(emergencyData);
+                setEmergencyCallDataContext({...emergencyData});
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MAIN/g, 'MODIFY'), stage:2});
+            }
         }
         else{
-            // 지우는 거 생각하기 다시.... 하...
-            setEmergencyCallDataListContext({type:"DELETE", data:pagingDataContext[screen]})
+            if(photoZoneDataListContext.length !== 0 && screen === "PHOTO_MAIN"){
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MAIN/g, 'MODIFY'), stage:2});
+            }
+
+            if(healthInfoDataListContext.length !== 0 && screen === "HEALTH_INFO_MAIN"){
+                setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MAIN/g, 'MODIFY'), stage:2});
+            }
         }
+    }
+
+    // current shown data delete
+    const deleteData = () => {
+        if(screen === "PHOTO_MAIN"){
+            setPhotoZoneDataListContext({type:"DELETE", data:pagingDataContext[screen]});
+            // 삭제했을때 페이지 갱신
+            // setPhotoZoneDataContext({...photoZoneDataListContext[pagingDataContext.PHOTO_MAIN+1]});
+            if(pagingDataContext.PHOTO_MAIN === 0){
+                setPagingDataContext({...pagingDataContext, PHOTO_MAIN:pagingDataContext.PHOTO_MAIN});
+            }else{
+                setPagingDataContext({...pagingDataContext, PHOTO_MAIN:pagingDataContext.PHOTO_MAIN-1});
+            }
+            
+        }
+        else if(screen === "HEALTH_INFO_MAIN"){
+            setHealthInfoDataListContext({type:"DELETE", data:pagingDataContext[screen]});
+            // setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN+1]});
+
+            if(pagingDataContext.HEALTH_INFO_MAIN === 0){
+                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:pagingDataContext.HEALTH_INFO_MAIN});
+            }else{
+                setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:pagingDataContext.HEALTH_INFO_MAIN-1});
+            }
+        }
+        else{
+            let cmp = emergencyCallDataListContext.length;
+            console.log("PLEASE!!!!!!!!!!!!!!!!!!!");
+            console.log(cmp);
+
+            // 맨 마지막에 하나 연락처 삭제하면 마지막 페이지로 넘기기
+            setEmergencyCallDataListContext({type:"DELETE", data:id});
+            // 삭제요소가 홀수번째이고 마지막 페이지 요소 이며, 요소 개수가 하나가 아닐때
+            if((pagingDataContext.EMERGENCY_CALL_MAIN ===  Math.round(cmp/2)-1) && (cmp%2 !== 0) && (cmp !== 1)){
+                setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: Math.round(cmp/2)-2});
+            }
+        }
+        setIsShowIcon(false);
         
     }
 
@@ -141,10 +214,10 @@ function TitleLayout({title, color, screen}:Props){
                         <LeftBtn source={require('../img/leftBtn.png')}/>
                     </LeftBtnBox>
                     {isShowIcon &&<HideBtnBoxList>
-                        <HideBtnBox onPress={()=>{editPhoto();}}>
+                        <HideBtnBox onPress={()=>{moveEditPage();}}>
                             <LeftBtn source={require('../img/pencilIcon.png')}/>
                         </HideBtnBox>
-                        <HideBtnBox onPress={()=>{deletePhoto();}}>
+                        <HideBtnBox onPress={()=>{deleteData();}}>
                             <LeftBtn source={require('../img/trashIcon.png')}/>
                         </HideBtnBox>
                     </HideBtnBoxList>}

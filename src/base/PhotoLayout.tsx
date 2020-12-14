@@ -1,7 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import styled from 'styled-components/native';
+import {Image} from 'react-native';
 import * as ImagePicker from '../imagePicker/index';
-import {usePhotoZoneDataContext, useSetPhotoZoneDataContext, useSetHealthInfoDataContext, useHealthInfoDataContext, useHealthInfoDataListContext, usePagingDataContext, usePhotoZoneDataListContext} from '../base/context';
+import {
+    usePhotoZoneDataContext, 
+    useSetPhotoZoneDataContext, 
+    useSetHealthInfoDataContext, 
+    useHealthInfoDataContext, 
+    useHealthInfoDataListContext, 
+    usePagingDataContext, 
+    usePhotoZoneDataListContext,
+    baseSRC,
+    useSetPhotoZoneDataListContext,
+    isADD,
+} from '../base/context';
 
 
 const Whole = styled.View`
@@ -14,7 +26,6 @@ const Whole = styled.View`
 
     border: 1px #9D9A9A;;
 `;
-
 
 const PhotoBox = styled.View`
     height: 100%;
@@ -42,8 +53,13 @@ const PhotoBoxBtnLayout = styled.TouchableHighlight.attrs({
 const PhotoBoxImg = styled.Image`
     width: ${props=>(props.uri === "" || props.uri === undefined) ? 65 : 100}%;
     height: ${props=>(props.uri === "" || props.uri === undefined)? 65 : 100}%;
-    
-    /* border: 1px blue; */
+
+`;
+
+const PhotoBoxImg2 = styled.Image`
+    width: 65%;
+    height: 65%;
+
 `;
 
 const DefaultPhotoBoxImg = styled.Image`
@@ -80,6 +96,7 @@ const imgSrc = {
 function PhotoLayout({defaultTypes, text, height, screen, src}: Props){    
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
     const photoZoneDataContext = usePhotoZoneDataContext();
+    const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
 
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
     const healthInfoDataContext = useHealthInfoDataContext();
@@ -89,7 +106,11 @@ function PhotoLayout({defaultTypes, text, height, screen, src}: Props){
     const photoZoneDataListContext = usePhotoZoneDataListContext();
     // const [isPhotoUpload, setIsPhotoUpload] = useState(false);
 
-    console.log(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN.uri]);
+    const [cmpURI, setCmpURI] = useState("");
+
+    
+    
+    // console.log(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN.uri]);
     const pickImg = () =>{ 
         if(screen !== "PHOTO_MAIN" && screen !== "HEALTH_INFO_MAIN"){
         ImagePicker.launchImageLibrary(
@@ -100,30 +121,81 @@ function PhotoLayout({defaultTypes, text, height, screen, src}: Props){
                 maxWidth: 1200,
             },
                 (response) => {
+                    console.log(response);
                     // setIsPhotoUpload(true);
                     if(screen === "PHOTO_MODIFY"){
-                        setPhotoZoneDataContext({...photoZoneDataContext, uri:response.uri, width:response.width, height:response.height });
+                        setPhotoZoneDataContext({...photoZoneDataContext, uri:response.fileName, width:response.width, height:response.height });
                         
                     }
                     else if(screen === "HEALTH_INFO_MODIFY"){
-                        setHealthInfoDataContext({...healthInfoDataContext, uri:response.uri, width:response.width, height:response.height });
+                        setHealthInfoDataContext({...healthInfoDataContext, uri:response.fileName, width:response.width, height:response.height });
                     }
+                    setCmpURI(response.uri);
 
-                    console.log(response);
+                    console.log(cmpURI);
                 },
             )
         }
     };
-    
-    // cover contain stretch repeat center
+
+    let isEmpty = useRef(false);
+    if(photoZoneDataContext === undefined || healthInfoDataContext === undefined){
+        isEmpty.current = true;
+    }
+    else{
+        isEmpty.current = false;
+    }
+    console.log("TEST : ");
+    // console.log(test.uri === );
+    console.log(isEmpty);
+    // console.log(cmpURI);
+    // let test = require(`${baseSRC}/${photoZoneDataContext.id}_${photoZoneDataContext.uri}`);
+    // let test = '0_rn_image_picker_lib_temp_689d1da4-d3a1-42d8-abe5-781d260c1191.jpg';
+    // let test = '/storage/emulated/0/Android/data/com.d_card/files/0_rn_image_picker_lib_temp_689d1da4-d3a1-42d8-abe5-781d260c1191.jpg';
+    // let test = '0_rn_image_picker_lib_temp_689d1da4-d3a1-42d8-abe5-781d260c1191.jpg';
+    // let test = '';
+    // resizeMode='contain' cover contain stretch repeat center
+
+    useEffect(()=>{
+        // if data add, modify, remove => render
+        setPhotoZoneDataContext({...photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]});
+        setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]});
+        
+    }, [photoZoneDataListContext.length, healthInfoDataListContext.length]);
+
     return(
         <Whole height={height}>
 
             <PhotoBoxBtnLayout onPress={()=>{pickImg()}}>
                 <PhotoBox>
-                    {(screen === "PHOTO_MODIFY") && <PhotoBoxImg uri={photoZoneDataContext.uri} resizeMode='contain' source={photoZoneDataContext.uri === "" || photoZoneDataContext.uri === undefined ? imgSrc[defaultTypes] : {uri:photoZoneDataContext.uri}}/>}
-                    {(screen === "HEALTH_INFO_MODIFY") && <PhotoBoxImg uri={healthInfoDataContext.uri} resizeMode='contain' source={healthInfoDataContext.uri === "" || healthInfoDataContext.uri === undefined ? imgSrc[defaultTypes] : {uri:healthInfoDataContext.uri}}/>}
-                    {(screen === "PHOTO_MAIN" || screen === "HEALTH_INFO_MAIN") && <PhotoBoxImg uri={src.uri} resizeMode='contain' source={src.uri === "" || src.uri === undefined? imgSrc[defaultTypes] : {uri:src.uri}}/>}
+                {/* photoZoneDataListContext.length pagingDataContext.PHOTO_MAIN */}
+                    {((screen === "PHOTO_MODIFY") && (photoZoneDataContext.uri === "" || photoZoneDataContext.uri === undefined || photoZoneDataListContext === 0)) && <PhotoBoxImg uri={photoZoneDataContext.uri} resizeMode='contain' source={imgSrc[defaultTypes]} />}
+                    {((screen === "PHOTO_MODIFY") && (photoZoneDataContext.uri !== "" && photoZoneDataContext.uri !== undefined && photoZoneDataListContext !== 0)) && <PhotoBoxImg uri={photoZoneDataContext.uri} resizeMode='contain' source={cmpURI != "" ? {uri:cmpURI} : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${photoZoneDataContext.id}_${photoZoneDataContext.uri}`} } />}
+
+                    
+                    {(!isEmpty.current && screen === "PHOTO_MAIN") && 
+                    <PhotoBoxImg 
+                    uri={photoZoneDataContext.uri} 
+                    resizeMode='contain' 
+                    source={photoZoneDataContext.uri === "" || photoZoneDataContext.uri === undefined ? imgSrc[defaultTypes] : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${photoZoneDataContext.id}_${photoZoneDataContext.uri}`} }/>}
+
+                    {isEmpty.current && screen !== "PHOTO_MODIFY" && <PhotoBoxImg2 resizeMode='contain' source={imgSrc[defaultTypes]}/>}
+
+
+                    {((screen === "HEALTH_INFO_MODIFY") && (healthInfoDataContext.uri === "" || healthInfoDataContext.uri === undefined)) && <PhotoBoxImg uri={healthInfoDataContext.uri} resizeMode='contain' source={imgSrc[defaultTypes]} />}
+                    {((screen === "HEALTH_INFO_MODIFY") && (healthInfoDataContext.uri !== "" && healthInfoDataContext.uri !== undefined)) && <PhotoBoxImg uri={healthInfoDataContext.uri} resizeMode='contain' source={cmpURI != "" ? {uri:cmpURI} : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${healthInfoDataContext.id}_${healthInfoDataContext.uri}`} } />}
+                    
+                    {(!isEmpty.current && screen === "HEALTH_INFO_MAIN") && 
+                    <PhotoBoxImg 
+                    uri={healthInfoDataContext.uri} 
+                    resizeMode='contain' 
+                    source={healthInfoDataContext.uri === "" || healthInfoDataContext.uri === undefined ? imgSrc[defaultTypes] : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${healthInfoDataContext.id}_${healthInfoDataContext.uri}`} }/>}
+                    
+                    {/* {(screen === "PHOTO_MAIN" || screen === "HEALTH_INFO_MAIN") && <PhotoBoxImg uri={src.uri} resizeMode='contain' source={src.uri === "" || src.uri === undefined? imgSrc[defaultTypes] : require(src.uri) }/>} */}
+                    {/* {(screen === "PHOTO_MAIN" || screen === "HEALTH_INFO_MAIN") && <PhotoBoxImg uri={src.uri} resizeMode='contain' source={src.uri === "" || src.uri === undefined? imgSrc[defaultTypes] : {uri:src.uri}}/>} */}
+                    {/* <PhotoBoxImg uri={src.uri} resizeMode='contain' source={require('/storage/emulated/0/Android/data/com.d_card/files/rn_image_picker_lib_temp_8110cd13-f3dc-4a6b-adac-297b3f8aaf7a.jpg')}/> */}
+                    {/* `/storage/emulated/0/Folder_name/${File_name}` */}
+
                     {/* {(screen === "PHOTO_MODIFY" || screen === "PHOTO_MAIN") && ((photoZoneDataContext.uri === "" && (src.uri === "" || src.uri === undefined)) && <PhotoBoxDefaultTxt>{text}</PhotoBoxDefaultTxt>)} */}
 
                     {/* {(screen === "PHOTO_MODIFY" || screen === "PHOTO_MAIN") &&

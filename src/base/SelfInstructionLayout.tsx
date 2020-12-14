@@ -107,7 +107,7 @@ function SelfInstructionLayout({name, birth, guardCall, myCall, address, uri}:Pr
     const setMenuStateContext = useSetMenuStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
 
-    const screenChange =(screenName:string) => {
+    const screenChange =(screenName) => {
 
         setScreenDisplayStateContext(screenName);
         
@@ -120,6 +120,8 @@ function SelfInstructionLayout({name, birth, guardCall, myCall, address, uri}:Pr
     let _guardCall = SetCall(guardCall);
     let _myCall = SetCall(myCall);
 
+
+    
 
     return(
         <Whole>
@@ -138,7 +140,7 @@ function SelfInstructionLayout({name, birth, guardCall, myCall, address, uri}:Pr
                 <ImageView source={uri ==="" ? require('../img/defaultPersonalImg.png') : {uri} } />
             </ImageBox>
 
-            <IconBox onPress={ ()=>{screenChange("INSTRUCTION_MODIFY")} }  >
+            <IconBox onPress={ ()=>{screenChange({screen:"INSTRUCTION_MODIFY", stage:2})} }  >
                 <PencilIcon source={require('../img/pencilIcon.png')}/>
             </IconBox>
         </Whole>

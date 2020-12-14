@@ -7,9 +7,9 @@ import CategorySelectorLayout from '../base/CategorySelectorLayout';
 import PhotoLayout from '../base/PhotoLayout';
 
 import {InputBox, Input, BigInput, InputLabel} from '../base/input';
-import { ScrollView } from 'react-native';
+import { ScrollView, BackHandler } from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useHealthInfoDataContext, useSetHealthInfoDataContext} from '../base/context';
+import {useHealthInfoDataContext, useSetHealthInfoDataContext, useSetScreenDisplayStateContext, useHealthInfoDataListContext, usePagingDataContext, initHealthInfoData} from '../base/context';
 
 // Health Info Modify Page  건강 정보 변경 페이지
 const Whole = styled.View`
@@ -137,6 +137,27 @@ function HealthInfoAddPage(){
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
     const healthInfoDataContext = useHealthInfoDataContext();
 
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+
+    const healthInfoDataListContext = useHealthInfoDataListContext();
+    const pagingDataContext = usePagingDataContext();
+
+    useEffect(() => {
+        setHealthInfoDataContext({...initHealthInfoData});
+        const backAction = () => {
+            // 뒤로 갈때 이전 페이지 정보 갱신
+            setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.PHOTO_MAIN]});
+            setScreenDisplayStateContext({screen:"HEALTH_INFO_MAIN",stage:1});
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
+
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [isCategoryNum, setIsCategoryNum] = useState(0);
     holderTxt.replace(/\n/g, '<br/>');
@@ -179,17 +200,19 @@ function HealthInfoAddPage(){
 
                     <InputBox style={{marginTop:15, elevation:1}}>
                         <InputLabel>제목</InputLabel>
-                        <Input onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, title:text})} value={healthInfoDataContext.title} style={{height:40}}/>
+                        <Input maxLength={20} onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, title:text})} value={healthInfoDataContext.title} style={{height:40}}/>
                     </InputBox>
 
                     <InputBox style={{marginTop:15}}>
                         <InputLabel >내용</InputLabel>
                         <BigInput 
+                        maxLength={150}
+                        multiline
                         onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, description:text})} 
                         value={healthInfoDataContext.description} 
                         placeholder={holderTxt} 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:204, fontSize:10, marginBottom:31}}/>
+                        style={{height:204, fontSize:10, marginBottom:31, paddingRight:20}}/>
                     </InputBox>  
 
                 </ScrollView>

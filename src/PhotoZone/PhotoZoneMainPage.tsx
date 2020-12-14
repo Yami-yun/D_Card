@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {BackHandler} from 'react-native';
 import styled from 'styled-components/native';
 import TopSectionInfo from '../base/TopSectionInfo';
 import MainFunctionLayout from '../base/MainFunctionLayout';
@@ -8,7 +9,7 @@ import Header from '../base/Header';
 import TitleLayout from '../base/TitleLayout';
 import PhotoLayout from '../base/PhotoLayout';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useSetPhotoZoneDataListContext, usePhotoZoneDataListContext, usePagingDataContext} from '../base/context';
+import {useSetPhotoZoneDataListContext, usePhotoZoneDataListContext, usePagingDataContext, useSetScreenDisplayStateContext, useScreenDisplayStateContext} from '../base/context';
 
 
 const Whole = styled.View`
@@ -28,7 +29,24 @@ function PhotoZoneMainPage(){
     const photoZoneDataListContext = usePhotoZoneDataListContext();
     const pagingDataContext = usePagingDataContext();
     const curShowPhotoData = photoZoneDataListContext[pagingDataContext.PHOTO_MAIN] || "";
-    // console.log(pagingDataContext);
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    console.log("PHOTO MAIN");
+    console.log(pagingDataContext.PHOTO_MAIN);
+
+    useEffect(() => {
+
+        const backAction = () => {
+            setScreenDisplayStateContext({screen:"MAIN",stage:0});
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
+
     return(
         <>
         <Header text="사진첩"/>

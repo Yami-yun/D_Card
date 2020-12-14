@@ -1,15 +1,20 @@
 import React, {useRef, useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {View} from 'react-native';
 import TopSectionInfo from '../base/TopSectionInfo';
 import Header from '../base/Header';
 import CategorySelectorLayout from '../base/CategorySelectorLayout';
 import PhotoLayout from '../base/PhotoLayout';
 
 import {InputBox, Input, BigInput, InputLabel} from '../base/input';
-import { ScrollView } from 'react-native';
+import { ScrollView, BackHandler } from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useHealthInfoDataContext, useSetHealthInfoDataContext, usePagingDataContext, useHealthInfoDataListContext} from '../base/context';
+import {
+    useHealthInfoDataContext, 
+    useSetHealthInfoDataContext, 
+    usePagingDataContext, 
+    useHealthInfoDataListContext, 
+    useSetScreenDisplayStateContext,
+} from '../base/context';
 
 // Health Info Modify Page  건강 정보 변경 페이지
 const Whole = styled.View`
@@ -133,22 +138,32 @@ const categoryData = [
 
 function HealthInfoAddPage(){
     // const desciptionInputRef = useRef(null);
-
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
-    
-
     const pagingDataContext = usePagingDataContext();
     const healthInfoDataListContext = useHealthInfoDataListContext();
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+
+    useEffect(() => {
+        setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]);
+        setIsCategoryNum(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN].importance);
+        
+        const backAction = () => {
+            setScreenDisplayStateContext({screen:"HEALTH_INFO_MAIN",stage:1});
+            setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.PHOTO_MAIN]});
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
 
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [isCategoryNum, setIsCategoryNum] = useState(0);
     holderTxt.replace(/\n/g, '<br/>');
 
-    useEffect(()=>{
-        
-        setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN]);
-        setIsCategoryNum(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN].importance);
-    },[])
     const healthInfoDataContext = useHealthInfoDataContext();
 
     return(
@@ -190,18 +205,19 @@ function HealthInfoAddPage(){
 
                     <InputBox style={{marginTop:15, elevation:1}}>
                         <InputLabel>제목</InputLabel>
-                        <Input onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, title:text})} value={healthInfoDataContext.title} style={{height:40}}/>
+                        <Input maxLength={20} onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, title:text})} value={healthInfoDataContext.title} style={{height:40}}/>
                     </InputBox>
 
                     <InputBox style={{marginTop:15}}>
                         <InputLabel >내용</InputLabel>
                         <BigInput 
-
+                        maxLength={150}
+                        multiline
                         onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, description:text})} 
                         value={healthInfoDataContext.description} 
                         placeholder={holderTxt} 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:204, fontSize:10, marginBottom:31}}/>
+                        style={{height:204, fontSize:10, marginBottom:31, paddingRight:20}}/>
                     </InputBox>  
 
                 </ScrollView>

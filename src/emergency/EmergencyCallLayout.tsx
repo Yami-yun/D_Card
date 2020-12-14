@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import MainFunctionLayout from '../base/MainFunctionLayout';
 import TitleLayout from '../base/TitleLayout';
-
+import {Linking} from 'react-native';
 import { faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { StyleSheet } from 'react-native';
@@ -10,20 +10,26 @@ import { StyleSheet } from 'react-native';
 // Emergency Call & Description Box
 const Whole = styled.View``;
 
-const EmergencyCallBox = styled.View`
+const EmergencyCallBox = styled.TouchableHighlight.attrs({
+    activeOpacity: 0.6,
+    underlayColor:"rgba(255, 255, 255, 0)"}
+)`
     /* padding-left: 29px; */
     /* padding-right: 17px; */
-    padding-left: 7.5%;
-    padding-right: 4.5%;
-
-    flex-direction:row;
-    justify-content:space-between;
-    align-items:center;
-
+    height: 55px;
     background: #FFFFFF;
     border: 1px solid rgba(244, 239, 239, 0.5);
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 3px;
+`;
+
+const EmergencyCallContentBox = styled.View`
+    height: 100%;
+    padding-left: 7.5%;
+    padding-right: 4.5%;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
 `;
 const EmergencyCallNum = styled.Text`
     font-style: normal;
@@ -47,7 +53,7 @@ const EmergencyCallDescription = styled.Text`
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
-    color: #000000;
+    color:${props=>props.data === "true" ? 'rgba(34, 34, 34, 0.5)' : '#000000'};
 `;
 
 const IconBox = styled.View`
@@ -61,23 +67,11 @@ const IconBox = styled.View`
     border-radius: 26px;
 `;
 
-const initEmergencyCallData = {
-    id:"",
-    title:"",
-    call:{
-        numFront:"",
-        numMiddle:"",
-        numBack:"",
-    },
-    importance:"",
-    description:"",
-    uri:"",
-    width:"",
-    height:"",
-};
+
 
 // number? >> importance?
 interface Props{
+defaults?: string;
 title?:string;
 call?:{
     numFront:"",
@@ -86,30 +80,39 @@ call?:{
 };
 importance?:string;
 description?:string;
+id?:string;
 };
 
-function EmergencyCallLayout({title, call, importance, description}:Props){
+function EmergencyCallLayout({defaults, title, call, importance, description, id}:Props){
     const color = {
         0:"#ED3B3B",
         1:"#FE8C49",
         2:"#AAD462",
     };
-    console.log("importance type??? :")
-    console.log(color[importance]);
+
+    
+    let fullCall = '';
+    if(call !== undefined){
+     fullCall = 'tel:' + call.numFront + call.numMiddle + call.numBack;
+    }
+    // let fullCall = 'tel:';
+
     return(
         <>
         <Whole>
-            <TitleLayout title={title} color={color[importance]} screen="EMERGENCY_CALL_MAIN"/>
+            <TitleLayout title={title} color={color[importance]} screen="EMERGENCY_CALL_MAIN" id={id} emergencyData={{title, call, importance, description, id}}/>
             <MainFunctionLayout>
-                <EmergencyCallBox style={[styles.CallBoxShadow, {flexGrow:1}]}>
-                    {call ? <EmergencyCallNum> {call.numFront + " - " + call.numMiddle + " - " + call.numBack} </EmergencyCallNum>
-                    : <EmergencyCallNum> {"연락처를 추가해주세요."} </EmergencyCallNum>}
-                    <IconBox>
-                        <FontAwesomeIcon icon={faPhoneAlt} size={22} color={"#FF6044"} />                    
-                    </IconBox>
+                <EmergencyCallBox onPress={()=>{ if(call != undefined){Linking.openURL(fullCall); }}} style={[styles.CallBoxShadow, {flexGrow:1}]}>
+                    <EmergencyCallContentBox>
+                        {call ? <EmergencyCallNum> {call.numFront + " - " + call.numMiddle + " - " + call.numBack} </EmergencyCallNum>
+                        : <EmergencyCallNum> {"연락처를 추가해주세요."} </EmergencyCallNum>}
+                        <IconBox>
+                            <FontAwesomeIcon icon={faPhoneAlt} size={22} color={"#FF6044"} />                    
+                        </IconBox>
+                    </EmergencyCallContentBox>
                 </EmergencyCallBox>
                 <EmergencyDescriptionBox style={{flexGrow:4}}>
-                    <EmergencyCallDescription>
+                    <EmergencyCallDescription data={defaults}>
                         {description}
                     </EmergencyCallDescription>
                 </EmergencyDescriptionBox>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import TopSectionInfo from '../base/TopSectionInfo';
 
@@ -8,9 +8,9 @@ import TitleLayout from '../base/TitleLayout';
 import MainFunctionLayout from '../base/MainFunctionLayout';
 import MainDescriptionLayout from '../base/MainDescriptionLayout';
 import PhotoLayout from '../base/PhotoLayout';
-import {View} from 'react-native';
+import {View, BackHandler} from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useHealthInfoDataListContext, usePagingDataContext} from '../base/context';
+import {useHealthInfoDataListContext, usePagingDataContext, useSetScreenDisplayStateContext} from '../base/context';
 
 
 const Whole = styled.View`
@@ -26,6 +26,23 @@ function HealthInfoMainPage(){
     const healthInfoDataListContext = useHealthInfoDataListContext();
     const pagingDataContext = usePagingDataContext();
     const curShowHealthData = healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN] || "";
+
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+
+    useEffect(() => {
+        
+        const backAction = () => {
+            setScreenDisplayStateContext({screen:"MAIN",stage:0});
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
+
     console.log(curShowHealthData.title);
     const color = {
         0:"#ED3B3B",

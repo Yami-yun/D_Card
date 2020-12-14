@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components/native';
 import TopSectionInfo from '../base/TopSectionInfo';
 import Header from '../base/Header';
 import CategorySelectorLayout from '../base/CategorySelectorLayout';
 import {InputBox, Input, BigInput, InputLabel, InputList, InputSideTxt, NumInput} from '../base/input';
-import { ScrollView } from 'react-native';
+import { ScrollView, BackHandler } from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useEmergencyCallDataContext, useSetEmergencyCallDataContext} from '../base/context';
+import {useEmergencyCallDataContext, useSetEmergencyCallDataContext, useSetScreenDisplayStateContext} from '../base/context';
 
 // Emenrgecy Call Book Modeify Screen
 const Whole = styled.View`
@@ -135,6 +135,23 @@ function EmergencyCallAddPage(){
     const setEmergencyCallDataContext = useSetEmergencyCallDataContext();
     const emergencyCallDataContext = useEmergencyCallDataContext();
 
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+
+    useEffect(() => {
+
+        const backAction = () => {
+            
+            setScreenDisplayStateContext({screen:"EMERGENCY_CALL_MAIN",stage:1});
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
+
     return(
         <>
             <Header text="긴급연락처 | 추가하기"/>
@@ -172,6 +189,7 @@ function EmergencyCallAddPage(){
                     <InputBox>
                         <InputLabel>제목</InputLabel>
                         <Input style={{height:40}} 
+                        maxLength={20}
                         onChangeText={text=>setEmergencyCallDataContext({...emergencyCallDataContext, title:text})} 
                         value={emergencyCallDataContext.title}
                         />
@@ -202,11 +220,13 @@ function EmergencyCallAddPage(){
                     <InputBox>
                         <InputLabel >내용</InputLabel>
                         <BigInput 
+                        maxLength={150}
+                        multiline
                         placeholder={holderTxt} 
                         onChangeText={text=>setEmergencyCallDataContext({...emergencyCallDataContext, description:text})} 
                         value={emergencyCallDataContext.description} 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:194, fontSize:10}}
+                        style={{height:194, fontSize:10, paddingRight:20}}
                         />
                     </InputBox>       
                 </Whole>

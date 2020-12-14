@@ -2,7 +2,13 @@ import React, {useCallback} from 'react';
 import styled from 'styled-components/native';
 import {widthCal, heightCal} from '../base/Tool';
 import {Alert, Linking} from 'react-native';
-import { useSetScreenDisplayStateContext} from "../base/context";
+import { 
+    useSetScreenDisplayStateContext, 
+    useSetPhotoZoneDataContext, 
+    usePhotoZoneDataListContext, 
+    useSetPagingDataContext, 
+    usePagingDataContext,
+} from "../base/context";
 
 /*
 추가 구현 해야할 것 : 본인이미지 등록 되면 받아오기,  대표 포토 이미지와 제목 받아오기
@@ -72,12 +78,8 @@ const MainPhotoImgBox = styled.View`
 `;
 
 const MainPhotoImg = styled.Image`
-    width: ${widthCal(90)}px;
-    height: ${heightCal(80)}px;
-    /* width: 80px;
-    height: 60px; */
-
-    margin-bottom: 15px;
+    width: 100%;
+    height: 100%;
 `;
 
 const MainPhotoHelpTxt = styled.Text`
@@ -113,10 +115,10 @@ const MainPhotoEmergencyIcon = styled.Image`
 `;
 
 interface Props{
-    imgRoute?:string;
+
 };
 
-function MainPhotoLayout({imgRoute}: Props){
+function MainPhotoLayout({}: Props){
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
     const url = 'tel:01031927469';
     // const handlePress = useCallback(async () => {
@@ -133,25 +135,45 @@ function MainPhotoLayout({imgRoute}: Props){
     //     }
     //   }, [url]);
 
+    const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
+    const photoZoneDataListContext = usePhotoZoneDataListContext();
+
+    const setPagingDataContext = useSetPagingDataContext();
+    const pagingDataContext = usePagingDataContext();
+
+    let {title, id, uri} = photoZoneDataListContext.length !== 0 ? photoZoneDataListContext[photoZoneDataListContext.length-1] : {title:"", id:"", uri:""};
+
 
     return(
         <Whole>
             <MainPhotoLeftLayout>
                 <MainPhotoTextLine1>일상을 담는</MainPhotoTextLine1>
                 <MainPhotoTextLine2>사진첩</MainPhotoTextLine2>
-                <PlusIconBox onPress={()=>{setScreenDisplayStateContext("PHOTO_MAIN")}} >
+                <PlusIconBox onPress={()=>{
+                    setScreenDisplayStateContext({screen:"PHOTO_MAIN", stage:1});
+                    if(photoZoneDataListContext[0] !== undefined){
+                        setPhotoZoneDataContext({...photoZoneDataListContext[0]});
+                    }
+                    setPagingDataContext({...pagingDataContext, "PHOTO_MAIN" :0});
+                    }} >
                     <MainPhotoPlusIcon source={require("../img/plusIcon.png")}/>
                 </PlusIconBox>
-                <EmergencyIconBox onPress={()=>{setScreenDisplayStateContext("EMERGENCY_CALL_MAIN")}} >
+                <EmergencyIconBox onPress={()=>{
+                    setScreenDisplayStateContext({screen:"EMERGENCY_CALL_MAIN", stage:1});
+                    setPagingDataContext({...pagingDataContext, "EMERGENCY_CALL_MAIN" :0});
+                    }} >
                     <MainPhotoEmergencyIcon source={require("../img/emergencyCallIcon.png")}/>
                 </EmergencyIconBox>
             </MainPhotoLeftLayout>
             <MainPhotoRightLayout>
                 <MainPhotoImgBox >
-                    <MainPhotoImg source={imgRoute === undefined ? require("../img/camera.png") : imgRoute}/>
-                    {/* <MainPhotoHelpTxt>사진을 선택해주세요.</MainPhotoHelpTxt> */}
+                    <MainPhotoImg 
+                    resizeMode='contain' 
+                    source={id === "" ? require("../img/camera.png") : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${id}_${uri}`} }
+                    />
+
                 </MainPhotoImgBox>
-                <MainPhotoDescriptionTxt>[2020.08.30] 우리 가족사진을 찍다...</MainPhotoDescriptionTxt>
+                <MainPhotoDescriptionTxt> {title}</MainPhotoDescriptionTxt>
             </MainPhotoRightLayout>
             
         </Whole>

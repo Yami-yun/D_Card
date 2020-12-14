@@ -1,13 +1,14 @@
 
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
+import {BackHandler} from 'react-native';
 import Button from '../base/button';
 import Header from '../base/Header'
 import {InputBox, InputList, InputSideTxt, Input, InputLabel, NumInput} from '../base/input';
 import {widthCal, heightCal, getDeviceWidth, getDeviceHeight} from '../base/Tool';
 import * as ImagePicker from '../imagePicker/index';
 
-import {useInstructionDataContext, ChekIsEmptyData} from '../base/context';
+import {useInstructionDataContext, ChekIsEmptyData, useSetScreenDisplayStateContext} from '../base/context';
 // import { Button, StyleSheet } from "react-native";
 
 
@@ -120,6 +121,22 @@ function InstructionModify(){
     const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
     // const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
 
+    const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+
+    useEffect(() => {
+        
+        const backAction = () => {
+            setScreenDisplayStateContext({screen:"INSTRUCTION_MAIN",stage:1});
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
+
     const pickImg = () =>{ 
         ImagePicker.launchImageLibrary(
             {
@@ -142,7 +159,7 @@ function InstructionModify(){
         <Header text={HeaderTxt}/>
             <Whole >
             
-                <BtnLayout><Button screenType="INSTRUCTION_MAIN" processType="MODIFY" text={BtnTxt} data={form}/></BtnLayout>
+                <BtnLayout><Button screenType={{screen:"INSTRUCTION_MAIN", stage:1}} processType="MODIFY" text={BtnTxt} data={form}/></BtnLayout>
                 <ImgLayout>
                     <PersonalImgBox>
                         <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:form.uri} }/>
