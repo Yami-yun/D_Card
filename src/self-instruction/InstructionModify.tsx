@@ -45,14 +45,14 @@ const PersonalImgBox = styled.View`
     /* border-radius: 5px; */
     /* border: 1px; */
     margin-bottom: 12px;
-    border: 2px solid #164580;
+    /* border: 2px solid #164580; */
     border-radius: 256px;
 
 `;
 
 const PersonalImg = styled.Image`
-    width: 150px;
-    height: 150px;
+    width: 145px;
+    height: 145px;
     border-radius: 256px;
     
 `;
@@ -122,7 +122,9 @@ function InstructionModify(){
     // const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
 
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    const [cmpURI, setCmpURI] = useState("");
 
+    // console.log(instructionDataContext);
     useEffect(() => {
         
         const backAction = () => {
@@ -147,8 +149,8 @@ function InstructionModify(){
             },
                 (response) => {
                     console.log(response);
-                    setForm({...form, uri:response.uri })
-
+                    setForm({...form, uri:response.fileName })
+                    setCmpURI(response.uri);
                 },
             )
     };
@@ -162,7 +164,8 @@ function InstructionModify(){
                 <BtnLayout><Button screenType={{screen:"INSTRUCTION_MAIN", stage:1}} processType="MODIFY" text={BtnTxt} data={form}/></BtnLayout>
                 <ImgLayout>
                     <PersonalImgBox>
-                        <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:form.uri} }/>
+                        {(cmpURI == "" || cmpURI == undefined) ? <PersonalImg source={instructionDataContext.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${instructionDataContext.id}_${instructionDataContext.uri}`}}/>
+                        : <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:cmpURI} }/>}
                         {/* <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:"content://com.d_card.imagepickerprovider/external/Android/data/com.d_card/files/rn_image_picker_lib_temp_b3d477be-b53a-47fe-bb2e-9f80bb7a37c3.jpg"} }/> */}
                         <ImgAddIconBox onPress={()=>{pickImg()}}>
                             <ImgAddIcon source={require('../img/imgAddIcon.png')}/>

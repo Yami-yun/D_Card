@@ -12,32 +12,29 @@ import {
 
 // Paging Btn Layout
 const Whole = styled.View`
-    height: 40px;
-    /* height: 5%; */
-
+    height: 10%;
+    margin-right: 2px;
     flex-direction: row;
     justify-content:flex-end;
-    align-items:center;
+    align-items:flex-start;
 `;
 
 const IconBox = styled.TouchableHighlight.attrs({
     activeOpacity: 0.6,
     underlayColor:"rgba(255, 255, 255, 0)"}
 )`
-    width : 36px;
-    height: 36px;
-    margin : 0 2%;
+    width : 38px;
+    height: 38px;
+    margin : 0 2.5%;
 
     justify-content:center;
-    align-items:center;
-    
+    align-items:center; 
 `;
 
 const IconImg = styled.Image`
     width: 100%;
     height: 100%;
 `;
-
 interface Props{
     screen?: "PHOTO_MAIN" | "HEALTH_INFO_MAIN" | "EMERGENCY_CALL_MAIN";
 };

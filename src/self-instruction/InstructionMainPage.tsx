@@ -9,6 +9,7 @@ import InstructionDetail from './InstructionDetail';
 import {getDeviceWidth, getDeviceHeight} from '../base/Tool';
 import {useInstructionDataContext, useSetScreenDisplayStateContext} from '../base/context';
 
+
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
     height: ${getDeviceHeight()}px;

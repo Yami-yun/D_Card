@@ -212,7 +212,7 @@ function HealthInfoAddPage(){
                         value={healthInfoDataContext.description} 
                         placeholder={holderTxt} 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:204, fontSize:10, marginBottom:31, paddingRight:20}}/>
+                        style={{height:204, fontSize:11.2, marginBottom:31, paddingRight:20}}/>
                     </InputBox>  
 
                 </ScrollView>

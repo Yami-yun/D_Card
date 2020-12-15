@@ -54,7 +54,10 @@ const InfoTxt = styled.Text`
     color: #555555;
 `;
 
-const DeleteIconBox = styled.View`
+const DeleteIconBox = styled.TouchableHighlight.attrs({
+    activeOpacity: 0.6,
+    underlayColor:"rgba(255, 255, 255, 0)"}
+)`
     width:43px;
     height: 43px;
     justify-content:center;
@@ -118,15 +121,6 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
     const setEmergencyCallDataContext = useSetEmergencyCallDataContext();
     const setEmergencyCallDataListContext = useSetEmergencyCallDataListContext();
     const emergencyCallDataListContext = useEmergencyCallDataListContext();
-    
-    // const initPhotoZoneData = {
-    //     id:"",
-    //     title:"",
-    //     description:"",
-    //     uri:"",
-    //     width:"",
-    //     height:"",
-    // };
 
     const setData = () => {
         if(screen === "PHOTO_MODIFY"){
@@ -141,8 +135,7 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
             }else{
                 ToastAndroid.show('제목과 사진을 넣어주세요.',ToastAndroid.SHORT);
             }
-            
-            
+
             console.log("TopSectionInfo, setData ");
             console.log(photoZoneDataListContext.length);
             console.log(pagingDataContext.PHOTO_MAIN);
@@ -176,12 +169,48 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
                 ToastAndroid.show('제목과 사진을 넣어주세요.',ToastAndroid.SHORT);
             }
 
-            // if(type === "ADD"){
-            //     setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN : healthInfoDataListContext.length});
-            // }
-            // data init 함수 넣기
-            // setHealthInfoDataContext({...initHealthInfoData});
         }
+    }
+
+    // current shown data delete
+    const deleteData = () => {
+        if(screen === "PHOTO_MODIFY"){
+            setPhotoZoneDataListContext({type:"DELETE", data:photoZoneDataContext});
+            setPagingDataContext({...pagingDataContext, PHOTO_MAIN:0})
+            // 삭제했을때 페이지 갱신
+            // setPhotoZoneDataContext({...photoZoneDataListContext[pagingDataContext.PHOTO_MAIN+1]});
+            // if(pagingDataContext.PHOTO_MAIN === 0){
+            //     setPagingDataContext({...pagingDataContext, PHOTO_MAIN:pagingDataContext.PHOTO_MAIN});
+            // }else{
+            //     setPagingDataContext({...pagingDataContext, PHOTO_MAIN:pagingDataContext.PHOTO_MAIN-1});
+            // }
+            
+        }
+        else if(screen === "HEALTH_INFO_MODIFY"){
+            setHealthInfoDataListContext({type:"DELETE", data:pagingDataContext[screen]});
+            // setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN+1]});
+
+            setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:0});
+            // if(pagingDataContext.HEALTH_INFO_MAIN === 0){
+            //     setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:pagingDataContext.HEALTH_INFO_MAIN});
+            // }else{
+            //     setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:pagingDataContext.HEALTH_INFO_MAIN-1});
+            // }
+        }
+        else{
+            let cmp = emergencyCallDataListContext.length;
+            console.log("PLEASE!!!!!!!!!!!!!!!!!!!");
+            console.log(cmp);
+
+            // 맨 마지막에 하나 연락처 삭제하면 마지막 페이지로 넘기기
+            setEmergencyCallDataListContext({type:"DELETE", data:emergencyId});
+            setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: 0});
+            // 삭제요소가 홀수번째이고 마지막 페이지 요소 이며, 요소 개수가 하나가 아닐때
+            // if((pagingDataContext.EMERGENCY_CALL_MAIN ===  Math.round(cmp/2)-1) && (cmp%2 !== 0) && (cmp !== 1)){
+            //     setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: Math.round(cmp/2)-2});
+            // }
+        }
+        setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MODIFY/g, 'MAIN'), stage:1});
     }
 
     const screenMove = () => {
@@ -191,10 +220,7 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
             setEmergencyCallDataContext({...initEmergencyCallData});
             setHealthInfoDataContext({...initHealthInfoData});
             setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MAIN/g, 'ADD'), stage:2});
-            // console.log("testtest");
-            // console.log(screenDisplayStateContext);
-            // setScreenDisplayStateContext(screenDisplayStateContext.replace(/MAIN/g, 'ADD'));
-            //console.log(screenDisplayStateContext.replace(/MAIN/g, 'MODIFY') );
+
         }else if(type === "MODIFY" || type === "H_MODIFY"){
             if(screen === "PHOTO_MODIFY" && photoZoneDataContext.title !== "" && photoZoneDataContext.uri !== "" && photoZoneDataContext.uri !== undefined)
             {
@@ -208,8 +234,6 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
             }
             if(screen === "EMERGENCY_CALL_MODIFY" && emergencyCallDataContext.title !== "" && emergencyCallDataContext.call.numBack !== "" && emergencyCallDataContext.call.numBack !== undefined)
             {
-                console.log("TESTTEST");
-                console.log(emergencyCallDataContext);
                 setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN:Math.round(emergencyCallDataListContext.length/2)-1 });
                 setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MODIFY/g, 'MAIN'), stage:1});
             }
@@ -231,16 +255,15 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
                 console.log(emergencyCallDataContext);
                 setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/ADD/g, 'MAIN'), stage:1});
             }
-        
         }
     }
     // type='INFO';
     return(
         <Whole screen={screen} >
             {type==='INFO' && <InfoTxt>총 {totalCount}개의 내용이 존재합니다.</InfoTxt>}
-            {type=== ('MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
-            {type=== ('H_MODIFY') && <DeleteIconBox><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
-            {type=== ('ADD') && <EmptyBox></EmptyBox>}
+            {/* {type=== ('MODIFY') && <DeleteIconBox onPress={()=>{deleteData();}}><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
+            {type=== ('H_MODIFY') && <DeleteIconBox onPress={()=>{deleteData();}}><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>} */}
+            {type !== ('INFO') && <EmptyBox></EmptyBox>}
             
             <FuncBtn onPress={()=>{
                 screenMove();

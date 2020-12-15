@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-
+import {StyleSheet} from 'react-native';
 import {widthCal, heightCal} from '../base/Tool';
 
 const Whole= styled.View`
@@ -15,8 +15,8 @@ const InstructionDetailBox = styled.View`
     height: ${heightCal(216)}px;
     width: 100%;
     /* height: 288px; */
-
-    /* border: 1px; */
+    border-radius: 5px;
+    background: #ffffff;
 `;
 
 const InstructionDetailHeader = styled.View`
@@ -40,7 +40,9 @@ const InstructionDetailHeaderTxt = styled.Text`
 `;
 const InstructionDetailBody = styled.View`
     height: 82%;
-    border : 1px red;
+    
+    /* background: #ffffff; */
+    /* border: 1px rgba(196, 196, 196, 0.8); */
     padding : 22px 20px 20px 20px;
 `;
 const InstructionDetailBodyTxt = styled.Text`
@@ -58,8 +60,8 @@ interface Props{
 function InstructionDetail({detail}:Props){
 
     
-    return(<Whole>
-        <InstructionDetailBox>
+    return(<Whole >
+        <InstructionDetailBox style={styles.BoxShadow}>
             <InstructionDetailHeader><InstructionDetailHeaderTxt>자세한 내용</InstructionDetailHeaderTxt></InstructionDetailHeader>
             <InstructionDetailBody>
                 <InstructionDetailBodyTxt>
@@ -69,6 +71,12 @@ function InstructionDetail({detail}:Props){
         </InstructionDetailBox>
     </Whole>);
 }
+
+const styles = StyleSheet.create({
+    BoxShadow:{
+        elevation: 4,
+    },
+});
 
 
 export default InstructionDetail;

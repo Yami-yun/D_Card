@@ -5,11 +5,6 @@ import {heightCal} from '../base/Tool';
 import { useSetMenuStateContext, useSetScreenDisplayStateContext} from "../base/context";
 
 const Whole = styled.View`
-
-    /* margin-bottom: ${(props: { page: string; }) => props.page === "instruction" ? 30 : 33}px; */
-    
-    /* border: 1px; */
-
     align-items: center;
 `;
 
@@ -52,8 +47,7 @@ const ImageView = styled.Image`
     height: 150px;
 
     /* border: 2px solid #164580; */
-    border-radius: 256px;
-    
+    border-radius: 75px;
     
 `;
 
@@ -64,17 +58,13 @@ const ImageBox = styled.View`
     /* width: 100%; */
     /* height: ${heightCal(141)}px; */
 
-    width: 150px;
-    height: 150px;
+    width: 134px;
+    height: 134px;
 
-
-    border-radius: 256px;
+    border-radius: 67px;
 
     align-items:center;
     justify-content: center;
-
-    
-
     /* border : 1px blue; */
 `;
 
@@ -85,6 +75,7 @@ interface Props{
     myCall?:any;
     address?:string;
     uri?:string;
+    id?:any;
 };
 
 const SetBirth = (birth:any) =>{
@@ -102,11 +93,10 @@ const SetCall = (call:any) =>{
     
 };
 
-function SelfInstructionLayout({name, birth, guardCall, myCall, address, uri}:Props){
+function SelfInstructionLayout({id, name, birth, guardCall, myCall, address, uri}:Props){
 
     const setMenuStateContext = useSetMenuStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-
     const screenChange =(screenName) => {
 
         setScreenDisplayStateContext(screenName);
@@ -137,7 +127,9 @@ function SelfInstructionLayout({name, birth, guardCall, myCall, address, uri}:Pr
             </DescriptionBox>
 
             <ImageBox style={styles.SelfInstructionImg}>
-                <ImageView source={uri ==="" ? require('../img/defaultPersonalImg.png') : {uri} } />
+                <ImageView 
+                style={{width:140, height:140}}
+                source={uri ==="" ? require('../img/defaultPersonalImg.png') : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${id}_${uri}`} } />
             </ImageBox>
 
             <IconBox onPress={ ()=>{screenChange({screen:"INSTRUCTION_MODIFY", stage:2})} }  >
@@ -151,11 +143,11 @@ const styles = StyleSheet.create({
 
     SelfInstructionImg:{
        
-        elevation: 7,
+        elevation: 3,
     },
 
     SelfInstructionDescriptionBoxMain: {
-        elevation: 5,    
+        elevation: 2,    
     },
   });
 

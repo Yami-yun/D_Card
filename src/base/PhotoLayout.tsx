@@ -12,7 +12,6 @@ import {
     usePhotoZoneDataListContext,
     baseSRC,
     useSetPhotoZoneDataListContext,
-    isADD,
 } from '../base/context';
 
 
@@ -25,6 +24,7 @@ const Whole = styled.View`
     align-items: center;
 
     border: 1px #9D9A9A;;
+    border-radius: 5px;
 `;
 
 const PhotoBox = styled.View`
@@ -51,9 +51,8 @@ const PhotoBoxBtnLayout = styled.TouchableHighlight.attrs({
 `;
 
 const PhotoBoxImg = styled.Image`
-    width: ${props=>(props.uri === "" || props.uri === undefined) ? 65 : 100}%;
-    height: ${props=>(props.uri === "" || props.uri === undefined)? 65 : 100}%;
-
+    width: ${props=>(props.uri === "" || props.uri === undefined) ? 55 : 100}%;
+    height: ${props=>(props.uri === "" || props.uri === undefined)? 55 : 100}%;
 `;
 
 const PhotoBoxImg2 = styled.Image`
@@ -148,13 +147,6 @@ function PhotoLayout({defaultTypes, text, height, screen, src}: Props){
     console.log("TEST : ");
     // console.log(test.uri === );
     console.log(isEmpty);
-    // console.log(cmpURI);
-    // let test = require(`${baseSRC}/${photoZoneDataContext.id}_${photoZoneDataContext.uri}`);
-    // let test = '0_rn_image_picker_lib_temp_689d1da4-d3a1-42d8-abe5-781d260c1191.jpg';
-    // let test = '/storage/emulated/0/Android/data/com.d_card/files/0_rn_image_picker_lib_temp_689d1da4-d3a1-42d8-abe5-781d260c1191.jpg';
-    // let test = '0_rn_image_picker_lib_temp_689d1da4-d3a1-42d8-abe5-781d260c1191.jpg';
-    // let test = '';
-    // resizeMode='contain' cover contain stretch repeat center
 
     useEffect(()=>{
         // if data add, modify, remove => render

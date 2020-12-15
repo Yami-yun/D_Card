@@ -188,7 +188,7 @@ const descriptionSrc = [
     
 ];
 
-function AppInfoPage(){
+function AppInfoPage0(){
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
     const appInfoPageContext = useAppInfoPageContext();
     const setInstructionDataContext = useSetInstructionDataContext();
@@ -225,13 +225,11 @@ function AppInfoPage(){
             <InfoTopLayout>
                 <InfoHeader>
                     <InfoHeaderTxt>치매노인수첩(D- Card) App. 소개</InfoHeaderTxt>
-                    <InfoHeaderCloseIconBox onPress={()=>{
+                    {/* <InfoHeaderCloseIconBox onPress={()=>{
                         setScreenDisplayStateContext({screen : "MAIN", stage:0});
-                        // setInstructionDataContext({...instructionDataContext, id:9998})
-                        // DataSave({type:"INIT_APP", data:true});
                         }}>
                         <InfoHeaderCloseIcon source={require('../img/xicon2.png')} />
-                    </InfoHeaderCloseIconBox>
+                    </InfoHeaderCloseIconBox> */}
                 </InfoHeader>
                 <View style={{justifyContent:"center"}}>
                     {appInfoPageContext ===0 && <FirtInfoMainImg source={require('../img/logo.png')}/>}
@@ -259,4 +257,4 @@ function AppInfoPage(){
     );
 }
 // resizeMode='contain' cover contain stretch repeat center
-export default AppInfoPage;
+export default AppInfoPage0;

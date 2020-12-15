@@ -28,6 +28,8 @@ function HealthInfoMainPage(){
     const curShowHealthData = healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN] || "";
 
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
+    // console.log("TTTTTTT");
+    // console.log(healthInfoDataListContext);
 
     useEffect(() => {
         

@@ -78,8 +78,9 @@ const MainPhotoImgBox = styled.View`
 `;
 
 const MainPhotoImg = styled.Image`
-    width: 100%;
-    height: 100%;
+    width :${props=>props.id === "" ? 65 : 100}%;
+    height :${props=>props.id === "" ? 65 : 100}%;
+
 `;
 
 const MainPhotoHelpTxt = styled.Text`
@@ -143,7 +144,6 @@ function MainPhotoLayout({}: Props){
 
     let {title, id, uri} = photoZoneDataListContext.length !== 0 ? photoZoneDataListContext[photoZoneDataListContext.length-1] : {title:"", id:"", uri:""};
 
-
     return(
         <Whole>
             <MainPhotoLeftLayout>
@@ -151,10 +151,10 @@ function MainPhotoLayout({}: Props){
                 <MainPhotoTextLine2>사진첩</MainPhotoTextLine2>
                 <PlusIconBox onPress={()=>{
                     setScreenDisplayStateContext({screen:"PHOTO_MAIN", stage:1});
-                    if(photoZoneDataListContext[0] !== undefined){
-                        setPhotoZoneDataContext({...photoZoneDataListContext[0]});
+                    if(photoZoneDataListContext[photoZoneDataListContext.length-1] !== undefined){
+                        setPhotoZoneDataContext({...photoZoneDataListContext[photoZoneDataListContext.length-1]});
                     }
-                    setPagingDataContext({...pagingDataContext, "PHOTO_MAIN" :0});
+                    setPagingDataContext({...pagingDataContext, "PHOTO_MAIN" :photoZoneDataListContext.length-1});
                     }} >
                     <MainPhotoPlusIcon source={require("../img/plusIcon.png")}/>
                 </PlusIconBox>
@@ -169,6 +169,7 @@ function MainPhotoLayout({}: Props){
                 <MainPhotoImgBox >
                     <MainPhotoImg 
                     resizeMode='contain' 
+                    id={id}
                     source={id === "" ? require("../img/camera.png") : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${id}_${uri}`} }
                     />
 

@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import styled, {css} from 'styled-components/native';
 import * as Animatable from 'react-native-animatable';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View, BackHandler } from 'react-native';
 import { 
     useMenuStateContext, 
     useSetMenuStateContext, 
@@ -16,10 +16,7 @@ import {
 } from "./base/context";
 import 'react-native-gesture-handler';
 
-
-
 const TopLayout = styled.View`
-
     height: 80px;
     padding-top: 22px;
     padding-left: 12px;
@@ -75,9 +72,7 @@ const MenuItemBox = styled.View`
 const MenuItemLayoutBtn = styled.TouchableHighlight.attrs({
     activeOpacity: 0.6,
     underlayColor:"rgba(255, 255, 255, 0.9)"}
-)`
-
-`;
+)``;
 
 const MenuItemTxt = styled.Text`
     font-weight: normal;
@@ -92,10 +87,12 @@ const MoveIcon = styled.Text`
     margin-bottom: 5px;
 `;
 
+// 저작권 표시 Section
 const CopyrightBox = styled.View`
     width: 100%;
     height: 100%;
-    padding-bottom: 17px;
+    padding-bottom: 55px;
+    
 
     justify-content: center;
     align-items: center;
@@ -132,47 +129,20 @@ function SideMenu(){
     const pagingDataContext = usePagingDataContext();
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
     const healthInfoDataListContext = useHealthInfoDataListContext();
-    // const [isCloseMenu, setIsCloseMenu] = useState(0);
-    // console.log(screenDisplayStateContext);
+
     const aniRef = useRef(null);
 
     let txtColor:"basic" | "press" = "basic";
-    // const fadeAnim = useRef(new Animated.Value(-300)).current;
 
     const screenChange =(screenName) => {
         setMenuStateContext(false);
         setScreenDisplayStateContext(screenName);
         txtColor = "press";
-        // console.log(screenDisplayStateContext);
     }
     
     const isClose = () => {
-        // setIsCloseMenu(-100);
         setMenuStateContext(false);
-        // console.log("Okay");
     }
-    // , (isCloseMenu===-100)&&styles.menuNoOpacity
-    // React.useEffect(()=>{
-    //     Animated.timing(
-    //         fadeAnim, {toValue: isCloseMenu, duration: 300, useNativeDriver: true}).start();
-    //     }, [fadeAnim, isCloseMenu])
-
-    /*
-        0 : <MainPage/>
-        1 :<InstructionMainPage/ >
-        2 :<InstructionModify/>
-
-        3 : <PhotoZoneMainPage />
-        4 : <PhotoZoneModifyPage/>
-
-        5: <EmergencyCallMainPage/>
-        6 : <EmergencyCallModifyPage/>
-
-        7 : <HealthInfoMainPage/>
-        8 : <HealthInfoModifyPage/>
-        9 : <AppInfoPage/>
-    */
-
 
     return(
     <>    
@@ -245,15 +215,13 @@ function SideMenu(){
 const styles = StyleSheet.create({
 menu:{
     position:'absolute',
-     left: 0,
-     top:0,
-     /* width: 55.55%; */
-     width:'55.5%',
-     height: '100%',
-     
-     backgroundColor: '#8EB9E1',
-
-     elevation: 9,
+    left: 0,
+    top:0,
+    width:'57%',
+    height: '100%',
+    
+    backgroundColor: '#8EB9E1',
+    elevation: 9,
 },
 menuNoOpacity:{
     display:'none',

@@ -80,7 +80,7 @@ function PhotoZoneAddPage(){
                         value={photoZoneDataContext.description} 
                         placeholder="사진에 대한 이야기를 적어주세요." 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:189, fontSize:10, paddingRight:20}}
+                        style={{height:189, fontSize:11.2, paddingRight:20}}
                         />
                     </InputBox>
                 </Whole>

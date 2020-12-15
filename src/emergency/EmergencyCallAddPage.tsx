@@ -226,7 +226,7 @@ function EmergencyCallAddPage(){
                         onChangeText={text=>setEmergencyCallDataContext({...emergencyCallDataContext, description:text})} 
                         value={emergencyCallDataContext.description} 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:194, fontSize:10, paddingRight:20}}
+                        style={{height:194, fontSize:11.2, paddingRight:20}}
                         />
                     </InputBox>       
                 </Whole>
