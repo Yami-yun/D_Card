@@ -340,7 +340,8 @@ function PhotoZoneDataListReducer(state, action){
                 }
             });
             console.log("[S] : context.tsx, [F] : PhotoZoneDataListReducer, [T] : DELETE, [D] : ");
-            console.log(state);
+            console.log(cmp);
+            console.log(action.data);
             //check
             DataSave({type:"PHOTO_DATA", data:{photoZoneId:savePhotoZoneId, photoZoneDataList:cmp}});
             return cmp;

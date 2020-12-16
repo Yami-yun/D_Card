@@ -175,27 +175,15 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
     // current shown data delete
     const deleteData = () => {
         if(screen === "PHOTO_MODIFY"){
-            setPhotoZoneDataListContext({type:"DELETE", data:photoZoneDataContext});
+            console.log("DELETE !!!!!!!!!!!!!!!!!!!!!");
+            console.log(pagingDataContext["PHOTO_MAIN"]);
+            setPhotoZoneDataListContext({type:"DELETE", data:pagingDataContext["PHOTO_MAIN"]});
             setPagingDataContext({...pagingDataContext, PHOTO_MAIN:0})
-            // 삭제했을때 페이지 갱신
-            // setPhotoZoneDataContext({...photoZoneDataListContext[pagingDataContext.PHOTO_MAIN+1]});
-            // if(pagingDataContext.PHOTO_MAIN === 0){
-            //     setPagingDataContext({...pagingDataContext, PHOTO_MAIN:pagingDataContext.PHOTO_MAIN});
-            // }else{
-            //     setPagingDataContext({...pagingDataContext, PHOTO_MAIN:pagingDataContext.PHOTO_MAIN-1});
-            // }
             
         }
         else if(screen === "HEALTH_INFO_MODIFY"){
-            setHealthInfoDataListContext({type:"DELETE", data:pagingDataContext[screen]});
-            // setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN+1]});
-
+            setHealthInfoDataListContext({type:"DELETE", data:pagingDataContext["HEALTH_INFO_MAIN"]});
             setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:0});
-            // if(pagingDataContext.HEALTH_INFO_MAIN === 0){
-            //     setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:pagingDataContext.HEALTH_INFO_MAIN});
-            // }else{
-            //     setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:pagingDataContext.HEALTH_INFO_MAIN-1});
-            // }
         }
         else{
             let cmp = emergencyCallDataListContext.length;
@@ -205,10 +193,7 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
             // 맨 마지막에 하나 연락처 삭제하면 마지막 페이지로 넘기기
             setEmergencyCallDataListContext({type:"DELETE", data:emergencyId});
             setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: 0});
-            // 삭제요소가 홀수번째이고 마지막 페이지 요소 이며, 요소 개수가 하나가 아닐때
-            // if((pagingDataContext.EMERGENCY_CALL_MAIN ===  Math.round(cmp/2)-1) && (cmp%2 !== 0) && (cmp !== 1)){
-            //     setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: Math.round(cmp/2)-2});
-            // }
+
         }
         setScreenDisplayStateContext({screen:screenDisplayStateContext.screen.replace(/MODIFY/g, 'MAIN'), stage:1});
     }
@@ -261,8 +246,8 @@ function TopSectionInfo({totalCount, type, text, screen, emergencyId}:Props){
     return(
         <Whole screen={screen} >
             {type==='INFO' && <InfoTxt>총 {totalCount}개의 내용이 존재합니다.</InfoTxt>}
-            {/* {type=== ('MODIFY') && <DeleteIconBox onPress={()=>{deleteData();}}><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
-            {type=== ('H_MODIFY') && <DeleteIconBox onPress={()=>{deleteData();}}><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>} */}
+            {type=== ('MODIFY') && <DeleteIconBox onPress={()=>{deleteData();}}><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
+            {type=== ('H_MODIFY') && <DeleteIconBox onPress={()=>{deleteData();}}><FontAwesomeIcon icon={faTrashAlt} size={24} color={'#ffffff'} /></DeleteIconBox>}
             {type !== ('INFO') && <EmptyBox></EmptyBox>}
             
             <FuncBtn onPress={()=>{
