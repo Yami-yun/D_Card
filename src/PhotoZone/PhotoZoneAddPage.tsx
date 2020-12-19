@@ -12,37 +12,26 @@ import {
     useSetScreenDisplayStateContext, 
     usePhotoZoneDataListContext, 
     usePagingDataContext, 
-    useSetPhotoZoneDataListContext,
     initPhotoZoneData,
 } from '../base/context';
 
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
     height: ${getDeviceHeightNoInfo()}px;
-    /* border: 3px red; */
     flex-grow:1;
     padding: 0 4%;
-    /* justify-content: space-around; */
 `;
-
-
-// id:"",
-// title:"",
-// description:"",
 
 function PhotoZoneAddPage(){
     const photoZoneDataContext = usePhotoZoneDataContext();
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
-
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-    const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
     const photoZoneDataListContext = usePhotoZoneDataListContext();
     const pagingDataContext = usePagingDataContext();
 
     useEffect(() => {
         // add page 데이터 초기화
         setPhotoZoneDataContext({...initPhotoZoneData});
-        // setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
         const backAction = () => {
             // 뒤로 갈때 이전 페이지 정보 갱신
             setPhotoZoneDataContext({...photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]});
@@ -63,9 +52,7 @@ function PhotoZoneAddPage(){
             <ScrollView>
                 <TopSectionInfo type="ADD" text="등록 하기" screen="PHOTO_MODIFY"/>
                 <Whole>
-
-                    <PhotoLayout src="" defaultTypes="camera" height={180} screen="PHOTO_MODIFY"/>
-
+                    <PhotoLayout defaultTypes="camera" height={180} screen="PHOTO_MODIFY"/>
 
                     <InputBox>
                         <InputLabel>제목</InputLabel>

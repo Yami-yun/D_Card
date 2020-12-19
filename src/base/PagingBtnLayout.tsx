@@ -10,7 +10,7 @@ import {
     useEmergencyCallDataListContext,
 } from '../base/context';
 
-// Paging Btn Layout
+// Paging Btn Layout ok
 const Whole = styled.View`
     height: 10%;
     margin-right: 2px;
@@ -36,7 +36,7 @@ const IconImg = styled.Image`
     height: 100%;
 `;
 interface Props{
-    screen?: "PHOTO_MAIN" | "HEALTH_INFO_MAIN" | "EMERGENCY_CALL_MAIN";
+    screen: "PHOTO_MAIN" | "HEALTH_INFO_MAIN" | "EMERGENCY_CALL_MAIN";
 };
 
 function PagingBtnLayout({screen}:Props){
@@ -51,51 +51,37 @@ function PagingBtnLayout({screen}:Props){
     const pageLen = (screen === "PHOTO_MAIN") ? photoZoneDataListContext.length : healthInfoDataListContext.length;
     const emergencyPageLen = emergencyCallDataListContext.length;
 
+    // paging 하면 해당 page의 보여주는 정보를 갱신한다.
     const pagingLeft = () =>{
         if(pagingDataContext[screen] !== 0){
+            console.log(`[S] : PagingBtnLayout.tsx, [F] : PagingBtnLayout, [T] : PAGING LEFT BEFORE, [D] : pagingDataContext, `);
+            console.log(pagingDataContext);
             if(screen === "PHOTO_MAIN"){
-                console.log("PAGING LEFT BEFORE :");
-                console.log(pagingDataContext);
-
                 setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.PHOTO_MAIN - 1}); 
-
-                console.log("PAGING LEFT AFTER :");
-                console.log(pagingDataContext);
-                // ??????????? why update pagingdatacontext?
-                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN - 1]);
-                
+                setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN - 1]);    
             }
             else if(screen === "HEALTH_INFO_MAIN"){
-                // paging 하면 해당 page의 보여주는 정보를 갱신한다.
                 setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.HEALTH_INFO_MAIN - 1});
                 setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN - 1]);
-                
             }
             else{
                 // emergency page는 해당 페이지에 정보가 두개 이므로 다른 main script에서 갱신한다.
                 setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN - 1}); 
             }
+            console.log(`[S] : PagingBtnLayout.tsx, [F] : PagingBtnLayout, [T] : PAGING LEFT AFTER, [D] : pagingDataContext, `);
+            console.log(pagingDataContext);
         }
     };
 
     const pagingRight = () =>{
-        console.log("Test!!!!!!!!!");
-        console.log(pageLen - 1);
-        // console.log(pageLen - 1);
+        console.log(`[S] : PagingBtnLayout.tsx, [F] : PagingBtnLayout, [T] : PAGING RIGHT BEFORE, [D] : pagingDataContext, `);
+        console.log(pagingDataContext);
         if(pagingDataContext[screen] !== (pageLen - 1)){
             if(screen === "PHOTO_MAIN"){
-                console.log("PAGING RIGHT BEFORE :");
-                console.log(pagingDataContext);
-                
                 setPagingDataContext({...pagingDataContext, PHOTO_MAIN: pagingDataContext.PHOTO_MAIN + 1}); 
-                console.log("PAGING RIGHT AFTER :");
-                console.log(pagingDataContext);
                 setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN + 1]);
-                console.log("test!!!");
-                
             }
             else if(screen === "HEALTH_INFO_MAIN"){
-                
                 setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN: pagingDataContext.HEALTH_INFO_MAIN + 1}); 
                 setHealthInfoDataContext(healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN + 1]);
             }
@@ -106,6 +92,8 @@ function PagingBtnLayout({screen}:Props){
                 setPagingDataContext({...pagingDataContext, EMERGENCY_CALL_MAIN: pagingDataContext.EMERGENCY_CALL_MAIN + 1}); 
             }
         }
+        console.log(`[S] : PagingBtnLayout.tsx, [F] : PagingBtnLayout, [T] : PAGING RIGHT AFTER, [D] : pagingDataContext, `);
+        console.log(pagingDataContext);
     };
 
 

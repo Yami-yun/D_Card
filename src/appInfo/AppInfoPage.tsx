@@ -1,27 +1,32 @@
-import React, {useEffect, useState, useRef} from 'react';
-import { View, Image, BackHandler } from 'react-native';
-import styled, {css} from 'styled-components/native';
-import {useSetScreenDisplayStateContext, useAppInfoPageContext, DataSave, useSetInstructionDataContext, useInstructionDataContext} from '../base/context';
-// Close 기능
-// Paging 기능
+import React from 'react';
+import { View, Image } from 'react-native';
+import styled from 'styled-components/native';
+import {
+    useSetScreenDisplayStateContext, 
+    useAppInfoPageContext, DataSave, 
+    useSetAppInfoPageContext,
+} from '../base/context';
 
-
+/*
+ok
+ App introduce page
+*/
 
 const Whole = styled.View`
     height : 100%;
     background: #ffffff;
 `;
 
-// 상단 레이아웃
+// Top Layout
 const InfoTopLayout = styled.View`
     height: 57.5%;
+    padding-bottom: 20%;
+
     justify-content: space-between;
     align-items:center;
     background: #164580;
-    padding-bottom: 20%;
 `;
 
-// App 소개 상단 타이틀 레이아웃
 const InfoHeader = styled.View`
     width: 88%;
     height: 35%;
@@ -47,6 +52,7 @@ const InfoHeaderCloseIconBox = styled.TouchableHighlight.attrs({
 
 const InfoHeaderCloseIcon = styled.Image``;
 
+// Info Img on first page
 const FirtInfoMainImg = styled.Image``;
 
 const InfoMainImg = styled.Image`
@@ -57,7 +63,7 @@ const InfoMainImg = styled.Image`
     width: 245px;
 `;
 
-// App 소개 하단 레이아웃 (Description 부분)
+// Bottom Layout
 const InfoBottomLayout = styled.View`
     height: 42.5%;
     align-items: center;
@@ -84,34 +90,13 @@ const InfoQuestionTxt = styled.Text`
 const InfoAnswerBox = styled.View`
     width: 87.3%;
     height: 73%;
+    margin-top: 8.8%;
+
     justify-content: center;
     align-items: center;
 
-    /* margin-top: 27.5px; */
-    margin-top: 8.8%;
     border: 1px solid #9D9A9A;
     border-radius: 3px;
-`;
-const InfoAnswerTxt = styled.Text`
-    /* width: 249px; */
-
-    ${props=>props.data === 0 && css`
-        text-align:center;
-    `}
-    ${props=>props.data === 2 && css`
-        text-align:center;
-    `}
-    width: 100%;
-    /* height: 100%; */
-    padding: 4px 32px;
-    /* border: 1px black; */
-
-    /* text-align: center; */
-    font-weight: normal;
-    font-size: 13px;
-    line-height: 18px;
-    color: rgba(0, 0, 0, 0.8);
-    
 `;
 
 //Paging Layout oooo
@@ -128,17 +113,11 @@ const InfoPagingCircle = styled.View`
     width: 10px;
     height: 10px;
 
-    background: ${props=>props.active ? '#164580' : '#C4C4C4'};
+    background: ${props=>props.active ? '#164580' : '#C4C4C4'};     
     border-radius: 16px;
 `;
 
-const swipeDirections = {
-    SWIPE_UP: "SWIPE_UP",
-    SWIPE_DOWN: "SWIPE_DOWN",
-    SWIPE_LEFT: "SWIPE_LEFT",
-    SWIPE_RIGHT: "SWIPE_RIGHT"
-};
-
+// info img
 const imgSrc = [
     require("../img/infoImg1.png"),
     require("../img/infoImg2.png"),
@@ -168,6 +147,7 @@ const titleSrc = [
     },
 ];
 
+// descripition text img
 const descriptionSrc = [
     {
         width:249,
@@ -185,38 +165,21 @@ const descriptionSrc = [
         width:296,
         uri: require("../img/infoDescription4.png"),
     },
-    
 ];
 
 function AppInfoPage(){
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
     const appInfoPageContext = useAppInfoPageContext();
-    const setInstructionDataContext = useSetInstructionDataContext();
-    const instructionDataContext = useInstructionDataContext();
+    const setAppInfoPageContext = useSetAppInfoPageContext();
 
-    useEffect(() => {    
-        const backAction = () => {
-            setScreenDisplayStateContext({screen:"MAIN",stage:0});
-            DataSave({type:"INIT_APP", data:true});                         // 두번째 앱 실행시 , 첫 info page 실행 해제
-            return true;
-        };
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        );
-        return () => backHandler.remove();
-    }, []);
-
+    // change page per sliding
     const infoPagingCircleList = () => {
         let circle = [];
         for(let i=0; i<4; i++){
-            if(i !== appInfoPageContext){
-                circle.push(false);
-            }else{ circle.push(true); }
+            i !== appInfoPageContext ? circle.push({id:i, active: false}) : circle.push({id:i, active: true});
         }
         return(
-                circle.map((tmp)=>(
-                <InfoPagingCircle active={tmp}/>))
+                circle.map((tmp)=>(<InfoPagingCircle id={tmp.id} active={tmp.active}/>))
         );
     };
 
@@ -225,17 +188,10 @@ function AppInfoPage(){
             <InfoTopLayout>
                 <InfoHeader>
                     <InfoHeaderTxt>치매노인수첩(D- Card) App. 소개</InfoHeaderTxt>
-                    <InfoHeaderCloseIconBox onPress={()=>{
-                        setScreenDisplayStateContext({screen : "MAIN", stage:0});
-                        // setInstructionDataContext({...instructionDataContext, id:9998})
-                        // DataSave({type:"INIT_APP", data:true});
-                        }}>
-                        <InfoHeaderCloseIcon source={require('../img/xicon2.png')} />
-                    </InfoHeaderCloseIconBox>
                 </InfoHeader>
                 <View style={{justifyContent:"center"}}>
-                    {appInfoPageContext ===0 && <FirtInfoMainImg source={require('../img/logo.png')}/>}
-                    {appInfoPageContext !==0 && <InfoMainImg source={imgSrc[appInfoPageContext-1]}/>}
+                    {appInfoPageContext ===0 ? <FirtInfoMainImg source={require('../img/logo.png')}/> 
+                    : appInfoPageContext !==0 && <InfoMainImg source={imgSrc[appInfoPageContext-1]}/>}
                 </View>
                 
             </InfoTopLayout>
@@ -248,15 +204,11 @@ function AppInfoPage(){
                 </InfoAnswerBox>
 
                 <InfoPagingLayout>
-                    
                     {infoPagingCircleList()}
                 </InfoPagingLayout>
-
             </InfoBottomLayout>
-
         </Whole>
 
     );
 }
-// resizeMode='contain' cover contain stretch repeat center
 export default AppInfoPage;

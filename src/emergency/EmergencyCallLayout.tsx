@@ -7,15 +7,13 @@ import { faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { StyleSheet } from 'react-native';
 
-// Emergency Call & Description Box
+// Emergency Call & Description Box Layout
 const Whole = styled.View``;
 
 const EmergencyCallBox = styled.TouchableHighlight.attrs({
     activeOpacity: 0.6,
     underlayColor:"rgba(255, 255, 255, 0)"}
 )`
-    /* padding-left: 29px; */
-    /* padding-right: 17px; */
     height: 55px;
     background: #FFFFFF;
     border: 1px solid rgba(244, 239, 239, 0.5);
@@ -27,6 +25,7 @@ const EmergencyCallContentBox = styled.View`
     height: 100%;
     padding-left: 7.5%;
     padding-right: 4.5%;
+
     flex-direction:row;
     justify-content:space-between;
     align-items:center;
@@ -39,14 +38,12 @@ const EmergencyCallNum = styled.Text`
 `;
 
 const EmergencyDescriptionBox = styled.Text`
-    border: 1px solid #9D9A9A;
-    border-radius: 3px;
-    /* padding-top: 23px; */
-    /* padding-left: 27px; */
-    /* padding-right: 54px; */
     padding-top: 6.5%;
     padding-left: 7%;
     padding-right: 12%;
+
+    border: 1px solid #9D9A9A;
+    border-radius: 3px;
 `;
 
 const EmergencyCallDescription = styled.Text`
@@ -67,20 +64,17 @@ const IconBox = styled.View`
     border-radius: 26px;
 `;
 
-
-
-// number? >> importance?
 interface Props{
-defaults?: string;
-title?:string;
-call?:{
-    numFront:"",
-    numMiddle:"",
-    numBack:"",
-};
-importance?:string;
-description?:string;
-id?:string;
+    defaults?: string;
+    title?:string;
+    call?:{
+        numFront:"",
+        numMiddle:"",
+        numBack:"",
+    };
+    importance?:string;
+    description?:string;
+    id?:string;
 };
 
 function EmergencyCallLayout({defaults, title, call, importance, description, id}:Props){
@@ -90,13 +84,11 @@ function EmergencyCallLayout({defaults, title, call, importance, description, id
         2:"#AAD462",
     };
 
-    
     let fullCall = '';
     if(call !== undefined){
-     fullCall = 'tel:' + call.numFront + call.numMiddle + call.numBack;
+        fullCall = 'tel:' + call.numFront + call.numMiddle + call.numBack;
     }
-    // let fullCall = 'tel:';
-
+    
     return(
         <>
         <Whole>
@@ -122,13 +114,10 @@ function EmergencyCallLayout({defaults, title, call, importance, description, id
     );
 }
 
-
 const styles = StyleSheet.create({
-
     CallBoxShadow:{
         elevation: 6,
     },
-
-  });
+});
 
 export default EmergencyCallLayout;

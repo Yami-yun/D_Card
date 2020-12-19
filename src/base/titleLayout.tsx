@@ -11,13 +11,11 @@ import {
     useSetEmergencyCallDataContext,
     useSetPagingDataContext,
     useEmergencyCallDataListContext,
-    useSetPhotoZoneDataContext,
-    useSetHealthInfoDataContext,
     useHealthInfoDataListContext,
 } from '../base/context';
 
-const Whole = styled.View`
-`;
+// Title above Photo Layout, ok
+const Whole = styled.View``;
 
 // Main(Medicine photo, self Photo, Emergency call) Layout
 const TitleBox = styled.View`
@@ -26,12 +24,10 @@ const TitleBox = styled.View`
     padding-left : 20px;
 
     flex-direction: row;
-    /* justify-content: space-between; */
     justify-content: space-between;
     align-items: center;
     
     background: ${props=>(props.color)};
-    /* border: 1px; */
     border-radius: 5px;
 `;
 
@@ -45,12 +41,10 @@ const BtnList = styled.View`
     position:absolute;
     right:0px;
     width: ${props=>(props.wide ? 150 : 50)}px;
-    /* width: ${props=>(props.wide && 50)}px; */
+
     flex-direction:row;
     justify-content:flex-end;
     align-items:center;
-
-    /* border: 1px yellow; */
 `;
 
 const LeftBtnBox = styled.TouchableHighlight.attrs({
@@ -101,21 +95,19 @@ function TitleLayout({title, color, screen, id, emergencyData}:Props){
 
     const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
     const photoZoneDataListContext = usePhotoZoneDataListContext();
-    const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
 
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
     const screenDisplayStateContext = useScreenDisplayStateContext();
+
+    // show (delete, modify icon) if click
     const [isShowIcon, setIsShowIcon] = useState(false);
     const setHealthInfoDataListContext = useSetHealthInfoDataListContext();
+    const healthInfoDataListContext = useHealthInfoDataListContext();
 
     const setEmergencyCallDataListContext = useSetEmergencyCallDataListContext();
     const setEmergencyCallDataContext = useSetEmergencyCallDataContext();
     const emergencyCallDataListContext = useEmergencyCallDataListContext();
-    const setHealthInfoDataContext = useSetHealthInfoDataContext();
-    const healthInfoDataListContext = useHealthInfoDataListContext();
-    // console.log("TTTTTTTTTTTTTTTTTTTTest");
-    // console.log(color);
-    // color = "#ED3B3B";
+
     if(color === undefined){
         if(screen === "PHOTO_MAIN"){
             color = "#2A65AF";
@@ -127,23 +119,6 @@ function TitleLayout({title, color, screen, id, emergencyData}:Props){
             color = "#ED3B3B";
         }
     }
-
-    //click > show delete & modify icon
-    const showIcon = () => {
-        setIsShowIcon(!isShowIcon);
-    }
-
-    const initEmergencyCallData = {
-        id:"",
-        title:"",
-        call:{
-            numFront:"",
-            numMiddle:"",
-            numBack:"",
-        },
-        importance:"",
-        description:"",
-    };
 
     // click > show Modify Page about current shown data
     const moveEditPage = () => {
@@ -181,7 +156,6 @@ function TitleLayout({title, color, screen, id, emergencyData}:Props){
         }
         else if(screen === "HEALTH_INFO_MAIN"){
             setHealthInfoDataListContext({type:"DELETE", data:pagingDataContext[screen]});
-            // setHealthInfoDataContext({...healthInfoDataListContext[pagingDataContext.HEALTH_INFO_MAIN+1]});
 
             if(pagingDataContext.HEALTH_INFO_MAIN === 0){
                 setPagingDataContext({...pagingDataContext, HEALTH_INFO_MAIN:pagingDataContext.HEALTH_INFO_MAIN});
@@ -202,7 +176,6 @@ function TitleLayout({title, color, screen, id, emergencyData}:Props){
             }
         }
         setIsShowIcon(false);
-        
     }
 
     return(
@@ -210,7 +183,7 @@ function TitleLayout({title, color, screen, id, emergencyData}:Props){
             <TitleBox color={color}>
                 <TitleTxt>{title}</TitleTxt>
                 <BtnList wide={isShowIcon}>
-                    <LeftBtnBox onPress={()=>{showIcon();}}>
+                    <LeftBtnBox onPress={()=>{setIsShowIcon(!isShowIcon);}}>
                         <LeftBtn source={require('../img/leftBtn.png')}/>
                     </LeftBtnBox>
                     {isShowIcon &&<HideBtnBoxList>

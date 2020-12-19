@@ -1,36 +1,34 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {View} from 'react-native';
 import TopSectionInfo from '../base/TopSectionInfo';
 import Header from '../base/Header';
-import CategorySelectorLayout from '../base/CategorySelectorLayout';
 import PhotoLayout from '../base/PhotoLayout';
 
 import {InputBox, Input, BigInput, InputLabel} from '../base/input';
 import { ScrollView, BackHandler } from 'react-native';
-import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useHealthInfoDataContext, useSetHealthInfoDataContext, useSetScreenDisplayStateContext, useHealthInfoDataListContext, usePagingDataContext, initHealthInfoData} from '../base/context';
+import { getDeviceWidth } from '../base/Tool';
+import {
+    useHealthInfoDataContext, 
+    useSetHealthInfoDataContext, 
+    useSetScreenDisplayStateContext, 
+    useHealthInfoDataListContext, 
+    usePagingDataContext, 
+    initHealthInfoData
+} from '../base/context';
 
 // Health Info Modify Page  건강 정보 변경 페이지
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
-
-    /* height: ${props => (getDeviceHeightNoInfo() + props.isFocus)}px; */
-    /* height: ${props=>props.isFocus && 1500}px; */
-    /* border: 3px red; */
-    flex-grow:1;
     padding: 0 4%;
-    /* justify-content: space-around; */
+
+    flex-grow:1;
 `;
 
 const CategoryLayout = styled.View`
-    /* height : 70px; */
-    /* height: 45px; */
     margin-top:4.5%;
     
     justify-content: space-around;
-
-    /* border : 1px blue; */
 `;
 
 const CategoryTitle = styled.Text`
@@ -43,9 +41,7 @@ const CategoryTitle = styled.Text`
     color: #222222;
 `;
 
-const CategoryList = styled.View`
-    
-`;
+const CategoryList = styled.View``;
 
 const SelectedCategoryItem = styled.TouchableHighlight.attrs({
     activeOpacity: 0.6,
@@ -53,11 +49,9 @@ const SelectedCategoryItem = styled.TouchableHighlight.attrs({
 )`
     height: 44px;
     
-
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    
     
     border: 1px solid #9D9A9A;
     border-radius: 5px;    
@@ -66,8 +60,8 @@ const SelectedCategoryItem = styled.TouchableHighlight.attrs({
 const SelectedBox = styled.View`
     width: 100%;
     height: 100%;
-
     padding : 0 18px;
+
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -83,17 +77,11 @@ const CategoryItemTxt = styled.Text`
 `;
 
 const BelowBtnBox = styled.View``;
-
 const BelowBtn = styled.Image``;
 
 const SelectBtnBoxList = styled.View`
-    /* position:absolute; */
-    /* top: 0px; */
-    /* left: 0px; */
-
     width: 100%;
     height: 126px;
-
 `;
 
 const SelectBtnBox = styled.TouchableHighlight.attrs({
@@ -108,10 +96,6 @@ const SelectBtnBox = styled.TouchableHighlight.attrs({
     align-items: center;
     
     border-radius: 5px;  
-    
-`;
-const SelectBtnTxt = styled.Text`
-
 `;
 
 let holderTxt = "치매노인환자분에 대한 건강과 관련된 자세한 내용을 적어주세요.\n- 약물 복용 관련\n작성예시)\n진단명 :\n복용약:\n혈액형 :\n\n특이사항:\n\n- 기타 약물 관련\n작성예시)\n눈이 자주 건조하셔서 00 안약을 넣어 주시면 좋습니다";
@@ -132,14 +116,12 @@ const categoryData = [
 ];
 
 function HealthInfoAddPage(){
-    // const desciptionInputRef = useRef(null);
-
     const setHealthInfoDataContext = useSetHealthInfoDataContext();
     const healthInfoDataContext = useHealthInfoDataContext();
+    const healthInfoDataListContext = useHealthInfoDataListContext();
 
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
 
-    const healthInfoDataListContext = useHealthInfoDataListContext();
     const pagingDataContext = usePagingDataContext();
 
     useEffect(() => {
@@ -158,8 +140,8 @@ function HealthInfoAddPage(){
         return () => backHandler.remove();
     }, []);
 
-    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-    const [isCategoryNum, setIsCategoryNum] = useState(0);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false);        // if category selector open
+    const [isCategoryNum, setIsCategoryNum] = useState(0);              // selected category type
     holderTxt.replace(/\n/g, '<br/>');
     return(
         <>
@@ -168,8 +150,8 @@ function HealthInfoAddPage(){
                 <ScrollView>
                     <TopSectionInfo totalCount={2} type="ADD" text="등록 하기" screen = "HEALTH_INFO_MODIFY"/>
 
-                    <PhotoLayout text="복용하는 약물 사진을 넣어주세요." src="" defaultTypes="pill" screen = "HEALTH_INFO_MODIFY"/>
-                    
+                    <PhotoLayout defaultTypes="pill" screen = "HEALTH_INFO_MODIFY"/>
+                    {/* Category Selector */}
                     <CategoryLayout >
                         <CategoryTitle>구분</CategoryTitle>
                         <CategoryList>
@@ -198,6 +180,7 @@ function HealthInfoAddPage(){
                         
                     </CategoryLayout>
 
+                    {/* Input Area */}
                     <InputBox style={{marginTop:15, elevation:1}}>
                         <InputLabel>제목</InputLabel>
                         <Input maxLength={20} onChangeText={text=>setHealthInfoDataContext({...healthInfoDataContext, title:text})} value={healthInfoDataContext.title} style={{height:40}}/>
@@ -212,8 +195,10 @@ function HealthInfoAddPage(){
                         value={healthInfoDataContext.description} 
                         placeholder={holderTxt} 
                         placeholderTextColor="rgba(34, 34, 34, 0.5);" 
-                        style={{height:204, fontSize:11.2, marginBottom:31, paddingRight:20}}/>
+                        style={{height:235, fontSize:11.2, marginBottom:31, paddingRight:20}}/>
                     </InputBox>  
+                    
+                    <View style={{width:190, height: 155}}></View>
 
                 </ScrollView>
             </Whole>

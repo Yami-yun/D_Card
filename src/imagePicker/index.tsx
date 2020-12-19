@@ -3,6 +3,8 @@ import {NativeModules} from 'react-native';
 import {CameraOptions, ImageLibraryOptions, Callback} from './types';
 export * from './types';
 
+// Image Picker Exteranl Library
+
 const DEFAULT_OPTIONS: CameraOptions = {
   mediaType: 'photo',
   videoQuality: 'high',
@@ -11,6 +13,8 @@ const DEFAULT_OPTIONS: CameraOptions = {
   maxHeight: 0,
   includeBase64: false,
   saveToPhotos: false,
+  // storageOptions: {skipBackup:true, waitUntilSaved: false, privateDirectory:true, path:null},
+
 };
 
 export function launchCamera(options: CameraOptions, callback: Callback) {

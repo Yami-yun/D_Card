@@ -2,30 +2,24 @@ import React, {useState, useEffect} from 'react';
 import styled from 'styled-components/native';
 import TopSectionInfo from '../base/TopSectionInfo';
 import Header from '../base/Header';
-import CategorySelectorLayout from '../base/CategorySelectorLayout';
 import {InputBox, Input, BigInput, InputLabel, InputList, InputSideTxt, NumInput} from '../base/input';
 import { ScrollView, BackHandler } from 'react-native';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
 import {useEmergencyCallDataContext, useSetEmergencyCallDataContext, useSetScreenDisplayStateContext} from '../base/context';
 
-// Emenrgecy Call Book Modeify Screen
+// Emenrgecy Call Add Page
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
     height: ${getDeviceHeightNoInfo()}px;
-    /* border: 3px red; */
-    flex-grow:1;
     padding: 0 4%;
-    /* justify-content: space-around; */
+
+    flex-grow:1;
 `;
 
 const CategoryLayout = styled.View`
-    /* height : 70px; */
-    /* height: 45px; */
     margin-top:4.5%;
     
     justify-content: space-around;
-
-    /* border : 1px blue; */
 `;
 
 const CategoryTitle = styled.Text`
@@ -38,9 +32,7 @@ const CategoryTitle = styled.Text`
     color: #222222;
 `;
 
-const CategoryList = styled.View`
-    
-`;
+const CategoryList = styled.View``;
 
 const SelectedCategoryItem = styled.TouchableHighlight.attrs({
     activeOpacity: 0.6,
@@ -48,12 +40,10 @@ const SelectedCategoryItem = styled.TouchableHighlight.attrs({
 )`
     height: 44px;
     
-
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    
-    
+
     border: 1px solid #9D9A9A;
     border-radius: 5px;    
 `;
@@ -61,8 +51,8 @@ const SelectedCategoryItem = styled.TouchableHighlight.attrs({
 const SelectedBox = styled.View`
     width: 100%;
     height: 100%;
-
     padding : 0 18px;
+
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -73,7 +63,6 @@ const CategoryItemTxt = styled.Text`
     font-style: normal;
     font-weight: bold;
     font-size: 12px;
-
     color: #FFFFFF;
 `;
 
@@ -82,13 +71,8 @@ const BelowBtnBox = styled.View``;
 const BelowBtn = styled.Image``;
 
 const SelectBtnBoxList = styled.View`
-    /* position:absolute; */
-    /* top: 0px; */
-    /* left: 0px; */
-
     width: 100%;
     height: 126px;
-
 `;
 
 const SelectBtnBox = styled.TouchableHighlight.attrs({
@@ -101,14 +85,10 @@ const SelectBtnBox = styled.TouchableHighlight.attrs({
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    
+
     border-radius: 5px;  
-    
 `;
-const SelectBtnTxt = styled.Text`
-
-`;
-
+// Cayergory Selector data type
 const categoryData = [
     {
         title:"필수 : 상대방이 반드시 알아야 할 내용",
@@ -138,9 +118,8 @@ function EmergencyCallAddPage(){
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
 
     useEffect(() => {
-
+        // press back key to move main page
         const backAction = () => {
-            
             setScreenDisplayStateContext({screen:"EMERGENCY_CALL_MAIN",stage:1});
             return true;
         };
@@ -158,6 +137,7 @@ function EmergencyCallAddPage(){
             <ScrollView>
                 <TopSectionInfo type="ADD" text="등록 하기" screen="EMERGENCY_CALL_MODIFY"/>
                 <Whole>
+                    {/* Category Selector */}
                     <CategoryLayout >
                             <CategoryTitle>구분</CategoryTitle>
                             <CategoryList>
@@ -186,6 +166,7 @@ function EmergencyCallAddPage(){
                             
                         </CategoryLayout>
 
+                    {/* Input Area */}
                     <InputBox>
                         <InputLabel>제목</InputLabel>
                         <Input style={{height:40}} 

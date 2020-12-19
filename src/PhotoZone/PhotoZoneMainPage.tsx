@@ -9,13 +9,16 @@ import Header from '../base/Header';
 import TitleLayout from '../base/TitleLayout';
 import PhotoLayout from '../base/PhotoLayout';
 import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
-import {useSetPhotoZoneDataListContext, usePhotoZoneDataListContext, usePagingDataContext, useSetScreenDisplayStateContext, useScreenDisplayStateContext} from '../base/context';
+import {
+    usePhotoZoneDataListContext, 
+    usePagingDataContext, 
+    useSetScreenDisplayStateContext
+} from '../base/context';
 
-
+// Photo Main Page Ok
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
     height: ${getDeviceHeightNoInfo()}px;
-    /* border: 3px red; */
     flex-grow:1;
     padding: 0 4%;
     justify-content: space-around;
@@ -23,18 +26,16 @@ const Whole = styled.View`
 
 const TView = styled.View``;
 
-
 function PhotoZoneMainPage(){
-    // let index = 0;
     const photoZoneDataListContext = usePhotoZoneDataListContext();
     const pagingDataContext = usePagingDataContext();
     const curShowPhotoData = photoZoneDataListContext[pagingDataContext.PHOTO_MAIN] || "";
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-    console.log("PHOTO MAIN");
-    console.log(pagingDataContext.PHOTO_MAIN);
+    console.log(`[S] : PhotoZoneMainPage.tsx, [F] : PhotoZoneMainPage, [T] : PHOTO_MAIN, [D] : curShowPhotoData, `);
+    console.log(curShowPhotoData);
 
+    // back btn click > move to MAIN page
     useEffect(() => {
-
         const backAction = () => {
             setScreenDisplayStateContext({screen:"MAIN",stage:0});
             return true;
@@ -49,19 +50,18 @@ function PhotoZoneMainPage(){
 
     return(
         <>
-        <Header text="사진첩"/>
-        <TopSectionInfo totalCount={photoZoneDataListContext.length} type="INFO" text="추가 하기" screen="PHOTO_MAIN"/>
-        <Whole>
-            
-            <TView >  
-                <TitleLayout title={curShowPhotoData.title} color="#2A65AF" screen="PHOTO_MAIN"/ >
-                <MainFunctionLayout>
-                    <PhotoLayout screen="PHOTO_MAIN" defaultTypes= "camera" text="사진을 선택해주세요." src={curShowPhotoData}/>
-                </MainFunctionLayout>
-            </TView>
-            <MainDescriptionLayout src={curShowPhotoData}/>
-            <PagingBtnLayout screen="PHOTO_MAIN"/>
-        </Whole>
+            <Header text="사진첩"/>
+            <TopSectionInfo totalCount={photoZoneDataListContext.length} type="INFO" text="추가 하기" screen="PHOTO_MAIN"/>
+            <Whole>
+                <TView >  
+                    <TitleLayout title={curShowPhotoData.title} color="#2A65AF" screen="PHOTO_MAIN"/ >
+                    <MainFunctionLayout>
+                        <PhotoLayout screen="PHOTO_MAIN" defaultTypes= "camera" />
+                    </MainFunctionLayout>
+                </TView>
+                <MainDescriptionLayout src={curShowPhotoData} type="PHOTO_MAIN"/>
+                <PagingBtnLayout screen="PHOTO_MAIN"/>
+            </Whole>
         </>
     );
 }

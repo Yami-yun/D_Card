@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import Header from '../base/Header';
 import TopSectionInfo from '../base/TopSectionInfo';
@@ -9,7 +9,6 @@ import {getDeviceWidth, getDeviceHeightNoInfo} from '../base/Tool';
 import {
     usePhotoZoneDataContext,
     useSetPhotoZoneDataContext,
-    useSetPhotoZoneDataListContext,
     usePhotoZoneDataListContext,
     usePagingDataContext,
     useSetScreenDisplayStateContext,
@@ -18,24 +17,14 @@ import {
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
     height: ${getDeviceHeightNoInfo()}px;
-    /* border: 3px red; */
     flex-grow:1;
     padding: 0 4%;
-    /* justify-content: space-around; */
 `;
 
-
-// id:"",
-// title:"",
-// description:"",
-
 function PhotoZoneModifyPage(){
-    
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
-    const setPhotoZoneDataListContext = useSetPhotoZoneDataListContext();
     const photoZoneDataListContext = usePhotoZoneDataListContext();
     const pagingDataContext = usePagingDataContext();
-
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
 
     useEffect(() => {
@@ -53,11 +42,6 @@ function PhotoZoneModifyPage(){
         );
         return () => backHandler.remove();
     }, []);
-
-    
-    // useEffect(()=>{
-    //     setPhotoZoneDataContext(photoZoneDataListContext[pagingDataContext.PHOTO_MAIN]);
-    // },[])
     
     const photoZoneDataContext = usePhotoZoneDataContext();
 
@@ -67,7 +51,7 @@ function PhotoZoneModifyPage(){
             <ScrollView>
                 <TopSectionInfo type="MODIFY" text="수정 완료" screen="PHOTO_MODIFY"/>
                 <Whole>
-                    <PhotoLayout text="사진을 선택해주세요." defaultTypes="camera" height={180} screen="PHOTO_MODIFY" src={photoZoneDataContext.uri}/>
+                    <PhotoLayout defaultTypes="camera" height={180} screen="PHOTO_MODIFY"/>
 
                     <InputBox>
                         <InputLabel>제목</InputLabel>

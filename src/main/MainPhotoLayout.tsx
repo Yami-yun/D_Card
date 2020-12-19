@@ -1,7 +1,6 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 import {widthCal, heightCal} from '../base/Tool';
-import {Alert, Linking} from 'react-native';
 import { 
     useSetScreenDisplayStateContext, 
     useSetPhotoZoneDataContext, 
@@ -10,22 +9,13 @@ import {
     usePagingDataContext,
 } from "../base/context";
 
-/*
-추가 구현 해야할 것 : 본인이미지 등록 되면 받아오기,  대표 포토 이미지와 제목 받아오기
-*/
-
 const Whole = styled.View`
-    /* height: 260px; */
     flex-direction: row;
-    /* border: 1px blue; */
     justify-content: space-between;
     margin: ${heightCal(38.8)}px 0;
-    
 `;
 
-const MainPhotoLeftLayout = styled.View`
-    /* padding: 19px; */
-`;
+const MainPhotoLeftLayout = styled.View``;
 
 const MainPhotoTextLine1 = styled.Text`
     font-style: normal;
@@ -55,13 +45,9 @@ const PlusIconBox = styled.TouchableHighlight.attrs({
     margin-left: 29px;
 `;
 
-const MainPhotoPlusIcon = styled.Image`
-    
-`;
+const MainPhotoPlusIcon = styled.Image``;
 
-const MainPhotoRightLayout = styled.View`
-
-`;
+const MainPhotoRightLayout = styled.View``;
 
 const MainPhotoImgBox = styled.View`
         /* width: 230px;
@@ -80,14 +66,6 @@ const MainPhotoImgBox = styled.View`
 const MainPhotoImg = styled.Image`
     width :${props=>props.id === "" ? 65 : 100}%;
     height :${props=>props.id === "" ? 65 : 100}%;
-
-`;
-
-const MainPhotoHelpTxt = styled.Text`
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 16px;
-    color: rgba(51, 51, 51, 0.5);
 `;
 
 const MainPhotoDescriptionTxt = styled.Text`
@@ -109,32 +87,12 @@ const EmergencyIconBox = styled.TouchableHighlight.attrs({
     height: ${heightCal(70)}px;
 `;
 
-const MainPhotoEmergencyIcon = styled.Image`
-    
-    /* width: 70px;
-    height: 70px; */
-`;
+const MainPhotoEmergencyIcon = styled.Image``;
 
-interface Props{
-
-};
+interface Props{};
 
 function MainPhotoLayout({}: Props){
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-    const url = 'tel:01031927469';
-    // const handlePress = useCallback(async () => {
-    //     // Checking if the link is supported for links with custom URL scheme.
-    //     const supported = await Linking.canOpenURL(url);
-    //     console.log("test");
-    
-    //     if (supported) {
-    //       // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-    //       // by some browser in the mobile
-    //       await Linking.openURL(url);
-    //     } else {
-    //       Alert.alert(`Don't know how to open this URL: ${url}`);
-    //     }
-    //   }, [url]);
 
     const setPhotoZoneDataContext = useSetPhotoZoneDataContext();
     const photoZoneDataListContext = usePhotoZoneDataListContext();
@@ -165,6 +123,7 @@ function MainPhotoLayout({}: Props){
                     <MainPhotoEmergencyIcon source={require("../img/emergencyCallIcon.png")}/>
                 </EmergencyIconBox>
             </MainPhotoLeftLayout>
+
             <MainPhotoRightLayout>
                 <MainPhotoImgBox >
                     <MainPhotoImg 

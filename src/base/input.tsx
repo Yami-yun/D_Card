@@ -2,17 +2,18 @@
 import styled from 'styled-components/native';
 import {heightCal} from '../base/Tool';
 
+// input component
+//ok
 const InputBox = styled.View`
     margin-top: ${heightCal(19)}px;
 `;
 
-
 const InputList = styled.View`
     flex-direction: row;
     justify-content:space-between;
-    
 `;
 
+// -, 년, 월, 일
 const InputSideTxt = styled.Text`
     font-style: normal;
     font-weight: normal;
@@ -34,6 +35,7 @@ const NumInput = styled.TextInput.attrs({
     color: rgba(34, 34, 34, 0.5);
 `;
 
+// base input
 const Input = styled.TextInput`
     padding-left: 6%;
 
@@ -44,13 +46,13 @@ const Input = styled.TextInput`
     color: rgba(34, 34, 34, 0.5);
 `;
 
+// base big size input
 const BigInput = styled.TextInput`
     padding-left: 6%;
 
     border: 1px #9D9A9A;
     border-radius: 5px;
 `;
-
 
 const InputLabel = styled.Text`
     margin-left: 5px;
@@ -61,6 +63,5 @@ const InputLabel = styled.Text`
     font-size: 12px;
     color: #222222;
 `;
-
 
 export {InputBox, InputList, InputSideTxt, Input, BigInput, InputLabel, NumInput};

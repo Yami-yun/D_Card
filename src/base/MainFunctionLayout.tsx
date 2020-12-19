@@ -1,14 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-// 사진 선택하기, 전화번호 내용
+// Photo, Health Main Layout ok
 const Whole = styled.View``;
 
 const MainLayout = styled.View`
     height: 176px;
-    /* height: 50%; */
     background: #FFFFFF;
-    /* border: 1px solid #9D9A9A; */
     border-radius: 3px;
 `;
 

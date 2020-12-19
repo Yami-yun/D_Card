@@ -9,7 +9,6 @@ import InstructionDetail from './InstructionDetail';
 import {getDeviceWidth, getDeviceHeight} from '../base/Tool';
 import {useInstructionDataContext, useSetScreenDisplayStateContext} from '../base/context';
 
-
 const Whole = styled.View`
     width: ${getDeviceWidth()}px;
     height: ${getDeviceHeight()}px;
@@ -17,8 +16,6 @@ const Whole = styled.View`
     flex-grow:1;
     padding: 4% 4% ;
     justify-content: center;
-    
-
 `;
 
 interface Props{
@@ -27,7 +24,6 @@ interface Props{
 
 const InstructionMainPage = ({}:Props)=> {
     const instructionDataContext = useInstructionDataContext();
-
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
 
     useEffect(() => {
@@ -53,6 +49,5 @@ const InstructionMainPage = ({}:Props)=> {
 
     );
 };
-
 
 export default InstructionMainPage;

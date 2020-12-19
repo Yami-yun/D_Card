@@ -1,38 +1,29 @@
 
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {BackHandler} from 'react-native';
+import {BackHandler, View} from 'react-native';
 import Button from '../base/button';
 import Header from '../base/Header'
 import {InputBox, InputList, InputSideTxt, Input, InputLabel, NumInput} from '../base/input';
-import {widthCal, heightCal, getDeviceWidth, getDeviceHeight} from '../base/Tool';
+import { heightCal} from '../base/Tool';
 import * as ImagePicker from '../imagePicker/index';
 
 import {useInstructionDataContext, ChekIsEmptyData, useSetScreenDisplayStateContext} from '../base/context';
-// import { Button, StyleSheet } from "react-native";
-
-
-/* 카메라 버튼 클릭시 갤러리에서 이미지 받아오기 */
 
 const Whole = styled.ScrollView`
     padding: 0 4%;
 `;
 
 const BtnLayout = styled.View`
-    /* height: 10%; */
-    /* border-bottom-width: 1px; */
     height: ${heightCal(90)}px;
-    /* border: 1px blue; */
     
     padding-top: 25px;
     align-items:flex-end;
 `;
 
 const ImgLayout = styled.View`
-    /* height: 40%; */
     height: 200px;
-    /* border : 1px; */
-    /* border-bottom-width: 1px; */
+
     justify-content: center;
     align-items: center;
 `;
@@ -42,19 +33,15 @@ const PersonalImgBox = styled.View`
     height: 150px;
     justify-content:center;
     align-items:center;
-    /* border-radius: 5px; */
-    /* border: 1px; */
-    margin-bottom: 12px;
-    /* border: 2px solid #164580; */
-    border-radius: 256px;
 
+    margin-bottom: 12px;
+    border-radius: 256px;
 `;
 
 const PersonalImg = styled.Image`
     width: 145px;
     height: 145px;
     border-radius: 256px;
-    
 `;
 
 const ImgAddIconBox = styled.TouchableOpacity`
@@ -67,66 +54,28 @@ const ImgAddIconBox = styled.TouchableOpacity`
 
 const ImgAddIcon = styled.Image``;
 
-
 const ImgAddDescription = styled.Text`
-    
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 16px;
     text-align: center;
-
     color: #333333;
 `;
 
-const InputLayout = styled.View`
-    /* height: 50%; */
-    /* border-bottom-width: 1px; */
-    
-`;
-
-const inputForm = {
-    name:"",
-    birth:{
-        y:"",
-        m:"",
-        d:"",
-    },
-    guardCall:{
-        numFront:"",
-        numMiddle:"",
-        numBack:"",
-    },
-    myCall:{
-        numFront:"",
-        numMiddle:"",
-        numBack:"",
-    },
-    address:"",
-    detail:"",
-    uri:"",
-};
-
-
-// empty: undefined   no empty : true  16
-
+const InputLayout = styled.View``;
 
 function InstructionModify(){
-
     const instructionDataContext = useInstructionDataContext();
-
-    const [form, setForm] = useState(instructionDataContext);
+    const [form, setForm] = useState(instructionDataContext);                       // input form
 
     const HeaderTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "자기소개 등록" : "자기소개  |  수정하기"; 
     const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
-    // const BtnTxt = ChekIsEmptyData(instructionDataContext) === undefined ? "등록 하기" : "수정 완료"; 
-
+    
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-    const [cmpURI, setCmpURI] = useState("");
+    const [cmpURI, setCmpURI] = useState("");                                   // cmpURI is photo uri when get photo from user gallery
 
-    // console.log(instructionDataContext);
     useEffect(() => {
-        
         const backAction = () => {
             setScreenDisplayStateContext({screen:"INSTRUCTION_MAIN",stage:1});
             return true;
@@ -143,36 +92,34 @@ function InstructionModify(){
         ImagePicker.launchImageLibrary(
             {
                 mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: 1200,
-                maxWidth: 1200,
+                includeBase64: true,
+                maxHeight: 300,
+                maxWidth: 300,
             },
                 (response) => {
-                    console.log(response);
                     setForm({...form, uri:response.fileName })
                     setCmpURI(response.uri);
                 },
             )
     };
-    // {response === null ? <PersonalImg source={require('../img/defaultPersonalModify.png')}/> : <PersonalImg source={{uri:response}}/>}
+
     return(
-        // <Whole style={{flex:1}}>
         <>
         <Header text={HeaderTxt}/>
             <Whole >
-            
                 <BtnLayout><Button screenType={{screen:"INSTRUCTION_MAIN", stage:1}} processType="MODIFY" text={BtnTxt} data={form}/></BtnLayout>
                 <ImgLayout>
                     <PersonalImgBox>
                         {(cmpURI == "" || cmpURI == undefined) ? <PersonalImg source={instructionDataContext.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${instructionDataContext.id}_${instructionDataContext.uri}`}}/>
                         : <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:cmpURI} }/>}
-                        {/* <PersonalImg source={ form.uri === "" ? require('../img/defaultPersonalModify.png') : {uri:"content://com.d_card.imagepickerprovider/external/Android/data/com.d_card/files/rn_image_picker_lib_temp_b3d477be-b53a-47fe-bb2e-9f80bb7a37c3.jpg"} }/> */}
                         <ImgAddIconBox onPress={()=>{pickImg()}}>
                             <ImgAddIcon source={require('../img/imgAddIcon.png')}/>
                         </ImgAddIconBox>
                     </PersonalImgBox>
                     <ImgAddDescription>사용자 사진을 선택해주세요.</ImgAddDescription>
                 </ImgLayout>
+
+                {/* input area */}
                 <InputLayout >
                     <InputBox>
                         <InputLabel >이름</InputLabel>
@@ -226,13 +173,11 @@ function InstructionModify(){
                         maxLength={200}
                         />
                     </InputBox>
-                    
-                
+                    <View style={{width:200, height: 25}}></View>
                 </InputLayout>
 
             </Whole>
         </>
-        
     );
 }
 

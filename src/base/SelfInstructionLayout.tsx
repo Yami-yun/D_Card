@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components/native";
-import {StyleSheet, Image, View} from "react-native";
-import {heightCal} from '../base/Tool';
-import { useSetMenuStateContext, useSetScreenDisplayStateContext} from "../base/context";
+import { StyleSheet } from "react-native";
+import { heightCal } from '../base/Tool';
+import { useSetScreenDisplayStateContext} from "../base/context";
 
+// main, instruction page show data layout, ok
 const Whole = styled.View`
     align-items: center;
 `;
 
 const DescriptionBox = styled.View`
-    /* width: 360px; */
     width: 100%;
     height: ${heightCal(240)}px;
     margin-top: ${heightCal(96)}px;
@@ -21,7 +21,6 @@ const DescriptionBox = styled.View`
 `;
 
 const DescriptionTxt = styled.Text`
-    /* width: 230px; */
     width: 80%;
 
     font-weight: normal;
@@ -38,34 +37,25 @@ const IconBox = styled.TouchableOpacity`
     height: 45px;
 `;
 
-const PencilIcon = styled.Image`
-    
-`;
+const PencilIcon = styled.Image``;
 
 const ImageView = styled.Image`
     width: 150px;
     height: 150px;
 
-    /* border: 2px solid #164580; */
     border-radius: 75px;
-    
 `;
 
 const ImageBox = styled.View`
     position: absolute;
     top: ${heightCal(36)}px;
-
-    /* width: 100%; */
-    /* height: ${heightCal(141)}px; */
-
     width: 134px;
     height: 134px;
 
-    border-radius: 67px;
-
     align-items:center;
     justify-content: center;
-    /* border : 1px blue; */
+    
+    border-radius: 67px;
 `;
 
 interface Props{
@@ -78,6 +68,7 @@ interface Props{
     id?:any;
 };
 
+// process birth data and show instruction page
 const SetBirth = (birth:any) =>{
     if(birth.y !== "" && birth.m !== "" && birth.d !== ""){
         return birth.y + "." + birth.m + "." + birth.d;
@@ -85,45 +76,29 @@ const SetBirth = (birth:any) =>{
     return "";
 }
 
+// process call data and show instruction page
 const SetCall = (call:any) =>{
     if(call.numFront !== "" && call.numMiddle !== "" && call.numBack !== ""){
         return call.numFront + " - " + call.numMiddle + " - " + call.numBack;
     }
     return "";
-    
 };
 
 function SelfInstructionLayout({id, name, birth, guardCall, myCall, address, uri}:Props){
-
-    const setMenuStateContext = useSetMenuStateContext();
     const setScreenDisplayStateContext = useSetScreenDisplayStateContext();
-    const screenChange =(screenName) => {
 
-        setScreenDisplayStateContext(screenName);
-        
-    }
-
-    (()=>{
-
-    })();
     let _birth = SetBirth(birth);
     let _guardCall = SetCall(guardCall);
     let _myCall = SetCall(myCall);
 
-
-    
-
     return(
         <Whole>
-            
             <DescriptionBox style={styles.SelfInstructionDescriptionBoxMain}>
-
                 <DescriptionTxt>이름 : {name}</DescriptionTxt>
                 { (_birth !== "") && <DescriptionTxt>생일 : {_birth}</DescriptionTxt> }
                 <DescriptionTxt>보호자 연락처 : {_guardCall}</DescriptionTxt>
                 {(_myCall !== "") && <DescriptionTxt>연락처 : {_myCall}</DescriptionTxt>}
                 <DescriptionTxt>집 주소 : {address}</DescriptionTxt>
-                
             </DescriptionBox>
 
             <ImageBox style={styles.SelfInstructionImg}>
@@ -132,7 +107,7 @@ function SelfInstructionLayout({id, name, birth, guardCall, myCall, address, uri
                 source={uri ==="" ? require('../img/defaultPersonalImg.png') : {uri:`file:///storage/emulated/0/Android/data/com.d_card/files/${id}_${uri}`} } />
             </ImageBox>
 
-            <IconBox onPress={ ()=>{screenChange({screen:"INSTRUCTION_MODIFY", stage:2})} }  >
+            <IconBox onPress={ ()=>{setScreenDisplayStateContext({screen:"INSTRUCTION_MODIFY", stage:2})} }  >
                 <PencilIcon source={require('../img/pencilIcon.png')}/>
             </IconBox>
         </Whole>
@@ -140,15 +115,13 @@ function SelfInstructionLayout({id, name, birth, guardCall, myCall, address, uri
 }
 
 const styles = StyleSheet.create({
-
     SelfInstructionImg:{
-       
         elevation: 3,
     },
 
     SelfInstructionDescriptionBoxMain: {
         elevation: 2,    
     },
-  });
+});
 
 export default SelfInstructionLayout;
