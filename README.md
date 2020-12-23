@@ -31,4 +31,33 @@
 
 
 
-![ex_screenshot](./src/img/Home.jpg)
+### Home 화면
+
+![Home](./src/img/Home.jpg){: width="100" height="100"}
+
+
+
+### Instruction 화면
+
+![Instruction](./src/img/Instruction.jpg){: width="100" height="100"}
+
+
+
+### Photo 화면
+
+![Photo](./src/img/Photo.jpg){: width="100" height="100"}
+
+
+
+### Health 화면
+
+![Health](./src/img/Health.jpg){: width="100" height="100"}
+
+
+
+### Emergency 화면
+
+![Emergency](./src/img/Emergency.jpg){: width="100" height="100"}
+
+
+
