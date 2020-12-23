@@ -27,3 +27,8 @@
 - User Health Info Page
 
   > 치매 환자들이 건강 및 약 정보를 등록, 수정, 삭제를 할 수 있음
+
+
+
+
+![ex_screenshot](./src/img/Home.jpg)
