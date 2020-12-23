@@ -33,31 +33,32 @@
 
 ### Home 화면
 
-![Home](./src/img/Home.jpg){: width="100" height="100"}
 
+<img src = "./src/img/Home.jpg" width="182px" height="384px">
 
 
 ### Instruction 화면
 
-![Instruction](./src/img/Instruction.jpg){: width="100" height="100"}
+
+<img src = "./src/img/Instruction.jpg" width="182px" height="384px">
 
 
 
 ### Photo 화면
 
-![Photo](./src/img/Photo.jpg){: width="100" height="100"}
+<img src = "./src/img/Photo.jpg" width="182px" height="384px">
 
 
 
 ### Health 화면
 
-![Health](./src/img/Health.jpg){: width="100" height="100"}
+<img src = "./src/img/Health.jpg" width="182px" height="384px">
 
 
 
 ### Emergency 화면
 
-![Emergency](./src/img/Emergency.jpg){: width="100" height="100"}
+<img src = "./src/img/Emergency.jpg" width="182px" height="384px">
 
 
 
